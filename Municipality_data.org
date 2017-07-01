@@ -1,6 +1,11 @@
-* Health care expenditures
+#+TITLE: Plotting health data with python
+#+AUTHOR: Jan Boone
 
-In this file we will work with health care data on the level of municipalities. We will plot how health care expenditure varies with age and with location. In the process you will see how libraries like pandas and matplotlib work.
+In this notebook we use publicly available health care data to illustrate the use of some python libraries. We will plot health care expenditure per municipality and how health care varies with age. In the process you will see how libraries like pandas and matplotlib work.
+
+* Health care expenditures per municipality
+
+We start with health care data on the level of municipalities. We will plot how health care expenditure varies with location.
 
 
 ** loading the data
@@ -25,115 +30,6 @@ df_gemeente.head(10)
 
 #+RESULTS: kitten-purple-cardinal-quebec
 :RESULTS:
-GESLACHT LEEFTIJDSKLASSE   GEMEENTENAAM  AANTAL_BSN  AANTAL_VERZEKERDEJAREN  \
-0      NaN             NaN            NaN      298383               185664.92
-1        M   0 t/m  4 jaar    AA EN HUNZE         507                  468.83
-2        M   0 t/m  4 jaar        AALBURG         428                  387.28
-3        M   0 t/m  4 jaar       AALSMEER         876                  790.65
-4        M   0 t/m  4 jaar         AALTEN         667                  600.00
-5        M   0 t/m  4 jaar  ACHTKARSPELEN         810                  737.03
-6        M   0 t/m  4 jaar   ALBLASSERDAM         637                  561.21
-7        M   0 t/m  4 jaar  ALBRANDSWAARD         735                  663.22
-8        M   0 t/m  4 jaar        ALKMAAR        2967                 2660.93
-9        M   0 t/m  4 jaar         ALMELO        1906                 1714.63
-
-   KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG  KOSTEN_FARMACIE  \
-0                          48661669.94       9219422.33
-1                            473370.77         43305.49
-2                            340442.37         23395.86
-3                            932841.57         54597.52
-4                            515879.78         43516.71
-5                            766456.80         88084.16
-6                           1252440.29        140225.60
-7                            927635.48        114174.07
-8                           4005510.06        258936.51
-9                           3518922.31        254976.19
-
-   KOSTEN_TWEEDELIJNS_GGZ  KOSTEN_HUISARTS_INSCHRIJFTARIEF  \
-0              7475481.90                       4092492.35
-1                14056.81                         26239.56
-2                 5555.83                         21673.15
-3                34355.66                         43971.27
-4                 2404.19                         33749.10
-5                 6681.81                         41477.79
-6                 9715.96                         30705.39
-7                 2043.52                         37028.38
-8                22599.87                        147227.49
-9                87437.11                         96757.71
-
-   KOSTEN_HUISARTS_CONSULT      ...        KOSTEN_PARAMEDISCHE_ZORG_OVERIG  \
-0               1388439.07      ...                              290539.66
-1                 12829.29      ...                               13783.67
-2                  9417.98      ...                               15297.60
-3                 22413.37      ...                               14105.95
-4                 18472.64      ...                               31816.27
-5                 19157.34      ...                               30454.49
-6                 15936.39      ...                               19202.75
-7                 21611.09      ...                               30449.94
-8                 71141.10      ...                               67205.26
-9                 51693.62      ...                               81595.14
-
-   KOSTEN_ZIEKENVERVOER_ZITTEND  KOSTEN_ZIEKENVERVOER_LIGGEND  \
-0                     210313.33                    1398151.05
-1                        638.08                       5004.86
-2                        315.06                       6155.09
-3                          0.00                      20465.44
-4                       1173.82                       6282.28
-5                        204.30                      17011.84
-6                          0.00                      11421.05
-7                          0.00                      13027.62
-8                       4086.51                      70806.48
-9                       7742.31                      32328.75
-
-   KOSTEN_KRAAMZORG  KOSTEN_VERLOSKUNDIGE_ZORG  \
-0         1286545.5                 1072906.37
-1               0.0                       0.00
-2               0.0                       0.00
-3               0.0                       0.00
-4               0.0                       0.00
-5               0.0                       0.00
-6               0.0                       0.00
-7               0.0                       0.00
-8               0.0                       0.00
-9               0.0                       0.00
-
-   KOSTEN_GENERALISTISCHE_BASIS_GGZ  KOSTEN_GRENSOVERSCHRIJDENDE_ZORG  \
-0                         490222.49                       21946526.34
-1                              0.00                           2571.36
-2                              0.00                            186.08
-3                            157.44                           1743.72
-4                           1422.67                             62.75
-5                              0.00                            206.11
-6                              0.00                            662.75
-7                              0.00                           1422.76
-8                            168.55                           7153.37
-9                           3777.82                           2492.23
-
-   KOSTEN_EERSTELIJNS_ONDERSTEUNING  KOSTEN_GERIATRISCHE_REVALIDATIEZORG  \
-0                            523.35                            351533.29
-1                             31.05                                 0.00
-2                              5.40                                 0.00
-3                             12.60                                 0.00
-4                              3.60                                 0.00
-5                            955.80                                 0.00
-6                             11.25                                 0.00
-7                              7.20                                 0.00
-8                             36.90                                 0.00
-9                             27.45                                 0.00
-
-   KOSTEN_OVERIG
-0      849751.44
-1         186.03
-2         135.30
-3       13285.23
-4         107.40
-5         453.66
-6         165.60
-7         368.37
-8        2707.21
-9         682.51
-
-[10 rows x 24 columns]
 #+BEGIN_EXPORT HTML
 <div>
 <table border="1" class="dataframe">
@@ -409,6 +305,115 @@ GESLACHT LEEFTIJDSKLASSE   GEMEENTENAAM  AANTAL_BSN  AANTAL_VERZEKERDEJAREN  \
 <p>10 rows × 24 columns</p>
 </div>
 #+END_EXPORT
+  GESLACHT LEEFTIJDSKLASSE   GEMEENTENAAM  AANTAL_BSN  AANTAL_VERZEKERDEJAREN  \
+0      NaN             NaN            NaN      298383               185664.92
+1        M   0 t/m  4 jaar    AA EN HUNZE         507                  468.83
+2        M   0 t/m  4 jaar        AALBURG         428                  387.28
+3        M   0 t/m  4 jaar       AALSMEER         876                  790.65
+4        M   0 t/m  4 jaar         AALTEN         667                  600.00
+5        M   0 t/m  4 jaar  ACHTKARSPELEN         810                  737.03
+6        M   0 t/m  4 jaar   ALBLASSERDAM         637                  561.21
+7        M   0 t/m  4 jaar  ALBRANDSWAARD         735                  663.22
+8        M   0 t/m  4 jaar        ALKMAAR        2967                 2660.93
+9        M   0 t/m  4 jaar         ALMELO        1906                 1714.63
+
+   KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG  KOSTEN_FARMACIE  \
+0                          48661669.94       9219422.33
+1                            473370.77         43305.49
+2                            340442.37         23395.86
+3                            932841.57         54597.52
+4                            515879.78         43516.71
+5                            766456.80         88084.16
+6                           1252440.29        140225.60
+7                            927635.48        114174.07
+8                           4005510.06        258936.51
+9                           3518922.31        254976.19
+
+   KOSTEN_TWEEDELIJNS_GGZ  KOSTEN_HUISARTS_INSCHRIJFTARIEF  \
+0              7475481.90                       4092492.35
+1                14056.81                         26239.56
+2                 5555.83                         21673.15
+3                34355.66                         43971.27
+4                 2404.19                         33749.10
+5                 6681.81                         41477.79
+6                 9715.96                         30705.39
+7                 2043.52                         37028.38
+8                22599.87                        147227.49
+9                87437.11                         96757.71
+
+   KOSTEN_HUISARTS_CONSULT      ...        KOSTEN_PARAMEDISCHE_ZORG_OVERIG  \
+0               1388439.07      ...                              290539.66
+1                 12829.29      ...                               13783.67
+2                  9417.98      ...                               15297.60
+3                 22413.37      ...                               14105.95
+4                 18472.64      ...                               31816.27
+5                 19157.34      ...                               30454.49
+6                 15936.39      ...                               19202.75
+7                 21611.09      ...                               30449.94
+8                 71141.10      ...                               67205.26
+9                 51693.62      ...                               81595.14
+
+   KOSTEN_ZIEKENVERVOER_ZITTEND  KOSTEN_ZIEKENVERVOER_LIGGEND  \
+0                     210313.33                    1398151.05
+1                        638.08                       5004.86
+2                        315.06                       6155.09
+3                          0.00                      20465.44
+4                       1173.82                       6282.28
+5                        204.30                      17011.84
+6                          0.00                      11421.05
+7                          0.00                      13027.62
+8                       4086.51                      70806.48
+9                       7742.31                      32328.75
+
+   KOSTEN_KRAAMZORG  KOSTEN_VERLOSKUNDIGE_ZORG  \
+0         1286545.5                 1072906.37
+1               0.0                       0.00
+2               0.0                       0.00
+3               0.0                       0.00
+4               0.0                       0.00
+5               0.0                       0.00
+6               0.0                       0.00
+7               0.0                       0.00
+8               0.0                       0.00
+9               0.0                       0.00
+
+   KOSTEN_GENERALISTISCHE_BASIS_GGZ  KOSTEN_GRENSOVERSCHRIJDENDE_ZORG  \
+0                         490222.49                       21946526.34
+1                              0.00                           2571.36
+2                              0.00                            186.08
+3                            157.44                           1743.72
+4                           1422.67                             62.75
+5                              0.00                            206.11
+6                              0.00                            662.75
+7                              0.00                           1422.76
+8                            168.55                           7153.37
+9                           3777.82                           2492.23
+
+   KOSTEN_EERSTELIJNS_ONDERSTEUNING  KOSTEN_GERIATRISCHE_REVALIDATIEZORG  \
+0                            523.35                            351533.29
+1                             31.05                                 0.00
+2                              5.40                                 0.00
+3                             12.60                                 0.00
+4                              3.60                                 0.00
+5                            955.80                                 0.00
+6                             11.25                                 0.00
+7                              7.20                                 0.00
+8                             36.90                                 0.00
+9                             27.45                                 0.00
+
+   KOSTEN_OVERIG
+0      849751.44
+1         186.03
+2         135.30
+3       13285.23
+4         107.40
+5         453.66
+6         165.60
+7         368.37
+8        2707.21
+9         682.51
+
+[10 rows x 24 columns]
 :END:
 
 We are going to be interested in total health care costs under the deductible. Hence, we specify the categories that fall under the deductible in the Netherlands in 2014.
@@ -421,7 +426,7 @@ We specify the name of a new variable ~health_expenditure_under_deductible~ whic
 Then we give a dictionary with "old" variable names (in Dutch) and the "new" names in English for the variables where we want to use the English names.
 
 #+NAME: charlie-jig-red-texas
-#+BEGIN_SRC ipython :session :results output drawer :ob-ipython-results text/plain
+#+BEGIN_SRC ipython :session :results output drawer
 cost_categories_under_deductible = ['KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG', 'KOSTEN_MONDZORG', 'KOSTEN_FARMACIE', 'KOSTEN_HULPMIDDELEN', 'KOSTEN_PARAMEDISCHE_ZORG_FYSIOTHERAPIE', 'KOSTEN_PARAMEDISCHE_ZORG_OVERIG', 'KOSTEN_ZIEKENVERVOER_ZITTEND', 'KOSTEN_ZIEKENVERVOER_LIGGEND', 'KOSTEN_GRENSOVERSCHRIJDENDE_ZORG', 'KOSTEN_GERIATRISCHE_REVALIDATIEZORG', 'KOSTEN_OVERIG']
 df_gemeente['health_expenditure_under_deductible'] = df_gemeente[cost_categories_under_deductible].sum(axis=1)
 
@@ -447,8 +452,35 @@ df_gemeente.dtypes
 
 #+RESULTS: charlie-jig-red-texas
 :RESULTS:
-[[async-queued: charlie-jig-red-texas output]]
+sex                                     object
+age                                     object
+MUNICIPALITY                            object
+number_citizens                          int64
+AANTAL_VERZEKERDEJAREN                 float64
+hospital_care                          float64
+pharmaceuticals                        float64
+mental_care                            float64
+GP_capitation                          float64
+GP_fee_for_service                     float64
+GP_other                               float64
+KOSTEN_HULPMIDDELEN                    float64
+dental care                            float64
+physiotherapy                          float64
+KOSTEN_PARAMEDISCHE_ZORG_OVERIG        float64
+KOSTEN_ZIEKENVERVOER_ZITTEND           float64
+KOSTEN_ZIEKENVERVOER_LIGGEND           float64
+maternity_care                         float64
+obstetrics                             float64
+KOSTEN_GENERALISTISCHE_BASIS_GGZ       float64
+KOSTEN_GRENSOVERSCHRIJDENDE_ZORG       float64
+KOSTEN_EERSTELIJNS_ONDERSTEUNING       float64
+KOSTEN_GERIATRISCHE_REVALIDATIEZORG    float64
+KOSTEN_OVERIG                          float64
+health_expenditure_under_deductible    float64
+dtype: object
 :END:
+
+We drop the columns that we no longer need.
 
 #+NAME: kitten-quebec-hawaii-william
 #+BEGIN_SRC ipython :session :results output drawer
@@ -477,13 +509,131 @@ Index(['sex', 'age', 'MUNICIPALITY', 'number_citizens', 'hospital_care',
 Let's look again at the first couple of lines of our data set. The ~head~ method presents the first 5 line as default.
 
 #+NAME: three-quebec-video-yankee
-#+BEGIN_SRC ipython :session :results output drawer :ob-ipython-results text/plain
+#+BEGIN_SRC ipython :session :results output drawer
 df_gemeente.head()
 #+END_SRC
 
 #+RESULTS: three-quebec-video-yankee
 :RESULTS:
-sex             age MUNICIPALITY  number_citizens  hospital_care  \
+#+BEGIN_EXPORT HTML
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sex</th>
+      <th>age</th>
+      <th>MUNICIPALITY</th>
+      <th>number_citizens</th>
+      <th>hospital_care</th>
+      <th>pharmaceuticals</th>
+      <th>mental_care</th>
+      <th>GP_capitation</th>
+      <th>GP_fee_for_service</th>
+      <th>GP_other</th>
+      <th>dental care</th>
+      <th>physiotherapy</th>
+      <th>maternity_care</th>
+      <th>obstetrics</th>
+      <th>health_expenditure_under_deductible</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>298383</td>
+      <td>48661669.94</td>
+      <td>9219422.33</td>
+      <td>7475481.90</td>
+      <td>4092492.35</td>
+      <td>1388439.07</td>
+      <td>3041904.41</td>
+      <td>1249229.61</td>
+      <td>418648.30</td>
+      <td>1286545.5</td>
+      <td>1072906.37</td>
+      <td>86677435.03</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>AA EN HUNZE</td>
+      <td>507</td>
+      <td>473370.77</td>
+      <td>43305.49</td>
+      <td>14056.81</td>
+      <td>26239.56</td>
+      <td>12829.29</td>
+      <td>36034.65</td>
+      <td>9311.14</td>
+      <td>15968.80</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>576750.31</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>AALBURG</td>
+      <td>428</td>
+      <td>340442.37</td>
+      <td>23395.86</td>
+      <td>5555.83</td>
+      <td>21673.15</td>
+      <td>9417.98</td>
+      <td>20159.19</td>
+      <td>7213.81</td>
+      <td>6135.05</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>406856.55</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>AALSMEER</td>
+      <td>876</td>
+      <td>932841.57</td>
+      <td>54597.52</td>
+      <td>34355.66</td>
+      <td>43971.27</td>
+      <td>22413.37</td>
+      <td>61629.32</td>
+      <td>19042.00</td>
+      <td>20086.43</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>1093297.37</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>AALTEN</td>
+      <td>667</td>
+      <td>515879.78</td>
+      <td>43516.71</td>
+      <td>2404.19</td>
+      <td>33749.10</td>
+      <td>18472.64</td>
+      <td>46720.61</td>
+      <td>12909.41</td>
+      <td>20762.75</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>652523.86</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+#+END_EXPORT
+   sex             age MUNICIPALITY  number_citizens  hospital_care  \
 0  NaN             NaN          NaN           298383    48661669.94
 1    M   0 t/m  4 jaar  AA EN HUNZE              507      473370.77
 2    M   0 t/m  4 jaar      AALBURG              428      340442.37
@@ -613,434 +763,19 @@ dtypes: category(2), float64(11), int64(1), object(1)
 memory usage: 1.6+ MB
 :END:
 
-
-
-
-
-
-
-
-
-** read in the data
-
-We use data from [[http://www.vektis.nl/index.php/vektis-open-data][Vektis]]. We import the data, which is a 'csv' file with ";" as separator between columns. We also import some libraries.
-
-Then we look at the columns (variables) in the data.
-
-
-#+NAME: blossom-batman-uniform-princess
-#+BEGIN_SRC ipython :session :results value
-import pandas as pd
-import numpy as np
-import matplotlib as plt
-df = pd.read_csv('Vektis_Open_Databestand_Zorgverzekeringswet_2014_-_postcode3.csv', sep = ';')
-df.dtypes
-#+END_SRC
-
-#+RESULTS: blossom-batman-uniform-princess
-:RESULTS:
-GESLACHT                                   object
-LEEFTIJDSKLASSE                            object
-POSTCODE_3                                float64
-AANTAL_BSN                                  int64
-AANTAL_VERZEKERDEJAREN                    float64
-KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG       float64
-KOSTEN_FARMACIE                           float64
-KOSTEN_TWEEDELIJNS_GGZ                    float64
-KOSTEN_HUISARTS_INSCHRIJFTARIEF           float64
-KOSTEN_HUISARTS_CONSULT                   float64
-KOSTEN_HUISARTS_OVERIG                    float64
-KOSTEN_HULPMIDDELEN                       float64
-KOSTEN_MONDZORG                           float64
-KOSTEN_PARAMEDISCHE_ZORG_FYSIOTHERAPIE    float64
-KOSTEN_PARAMEDISCHE_ZORG_OVERIG           float64
-KOSTEN_ZIEKENVERVOER_ZITTEND              float64
-KOSTEN_ZIEKENVERVOER_LIGGEND              float64
-KOSTEN_KRAAMZORG                          float64
-KOSTEN_VERLOSKUNDIGE_ZORG                 float64
-KOSTEN_GENERALISTISCHE_BASIS_GGZ          float64
-KOSTEN_GRENSOVERSCHRIJDENDE_ZORG          float64
-KOSTEN_EERSTELIJNS_ONDERSTEUNING          float64
-KOSTEN_GERIATRISCHE_REVALIDATIEZORG       float64
-KOSTEN_OVERIG                             float64
-dtype: object
-:END:
-
-The first three columns are 'sex', 'age' and 'postal code' (3 digit). These 3 variables combined determine a unique observation. We think of these observations as if they are from an individual (but an observation is an average, like the average over 18 year old males in postal code 102). The datatypes of the variables are what one would expect. We will "tell" pandas later on that 'sex' only has two categories ('V' for female and 'M' for male) and that 'age' is an integer.
-
-First, we simplify the dataframe a bit. For our analysis here, we do not need all these columns. We are interested in the variables related to costs under the deductible. The list 'cost_categories' specifies all health care costs that are under the deductible in the Netherlands. We add all these costs and then drop the columns as we no longer need them for the analysis below.
-
-#+NAME: mexico-cup-happy-alabama
-#+BEGIN_SRC ipython :session :results output drawer
-df.drop(cost_categories,inplace=True,axis=1)
-df.dtypes
-#+END_SRC
-
-#+RESULTS: mexico-cup-happy-alabama
-:RESULTS:
-GESLACHT                             object
-LEEFTIJDSKLASSE                      object
-POSTCODE_3                          float64
-AANTAL_BSN                            int64
-AANTAL_VERZEKERDEJAREN              float64
-KOSTEN_TWEEDELIJNS_GGZ              float64
-KOSTEN_HUISARTS_INSCHRIJFTARIEF     float64
-KOSTEN_HUISARTS_CONSULT             float64
-KOSTEN_HUISARTS_OVERIG              float64
-KOSTEN_MONDZORG                     float64
-KOSTEN_KRAAMZORG                    float64
-KOSTEN_VERLOSKUNDIGE_ZORG           float64
-KOSTEN_GENERALISTISCHE_BASIS_GGZ    float64
-KOSTEN_EERSTELIJNS_ONDERSTEUNING    float64
-health_costs                        float64
-dtype: object
-:END:
-
-We also drop other variables that we will not use in this notebook.
-
-#+NAME: don-blue-don-island
-#+BEGIN_SRC ipython :session :results output drawer
-df.drop(['AANTAL_VERZEKERDEJAREN', 'KOSTEN_TWEEDELIJNS_GGZ',
-       'KOSTEN_HUISARTS_INSCHRIJFTARIEF', 'KOSTEN_HUISARTS_CONSULT',
-       'KOSTEN_HUISARTS_OVERIG', 'KOSTEN_MONDZORG', 'KOSTEN_KRAAMZORG',
-       'KOSTEN_VERLOSKUNDIGE_ZORG', 'KOSTEN_GENERALISTISCHE_BASIS_GGZ',
-       'KOSTEN_EERSTELIJNS_ONDERSTEUNING'],inplace=True,axis=1)
-df.columns
-#+END_SRC
-
-#+RESULTS: don-blue-don-island
-:RESULTS:
-Index(['GESLACHT', 'LEEFTIJDSKLASSE', 'POSTCODE_3', 'AANTAL_BSN',
-       'health_costs'],
-      dtype='object')
-:END:
-
-For these variables that are left over, let's see what the dataset looks like. We do this by looking at the first 10 rows (if no argument is specified in 'df.head()', the default is 5) of this dataframe.
-
-#+NAME: romeo-twenty-earth-ack
-#+BEGIN_SRC ipython :session :results value
-df.head(10)
-#+END_SRC
-
-#+RESULTS: romeo-twenty-earth-ack
-:RESULTS:
-  GESLACHT LEEFTIJDSKLASSE  POSTCODE_3  AANTAL_BSN  health_costs
-0      NaN             NaN         NaN      296658   84418093.79
-1        M               0         0.0         366    1425142.13
-2        M               0       101.0         590    1753560.87
-3        M               0       102.0         295    1617163.29
-4        M               0       103.0         288     865867.07
-5        M               0       105.0         998    3118190.73
-6        M               0       106.0        1056    3885254.11
-7        M               0       107.0         719    3506486.98
-8        M               0       108.0         287     945872.25
-9        M               0       109.0         540    1061299.70
-:END:
-
-Note that the first postal code is '000' which python thinks of as '0.0'. The
-[[http://www.vektis.nl/images/open_data/Bijsluiter_bij_de_Vektis_Open_Databestanden_Zorgverzekeringswet_2011_-_2014.pdf][data description]] explains that postal code '000' is used to aggregate people who
-live in a postal code with so few people that the privacy of their data is no
-longer guaranteed. As we want to think of `sex`, `age` and `postal code` as an observation, we drop the first row (labelled as `0`) of the dataframe.
-
-#+NAME: one-queen-arizona-venus
-#+BEGIN_SRC ipython :session :results value
-df.drop(df.index[[0]], inplace=True)
-df.head()
-#+END_SRC
-
-#+RESULTS: one-queen-arizona-venus
-:RESULTS:
-  GESLACHT LEEFTIJDSKLASSE  POSTCODE_3  AANTAL_BSN  health_costs
-1        M               0         0.0         366    1425142.13
-2        M               0       101.0         590    1753560.87
-3        M               0       102.0         295    1617163.29
-4        M               0       103.0         288     865867.07
-5        M               0       105.0         998    3118190.73
-:END:
-
-The end of the dataframe is given by the following.
-
-#+NAME: finch-oven-thirteen-nine
-#+begin_src ipython :session :results value
-df.tail(10)
-#+end_src
-
-#+RESULTS: finch-oven-thirteen-nine
-:RESULTS:
-       GESLACHT LEEFTIJDSKLASSE  POSTCODE_3  AANTAL_BSN  health_costs
-136463        V             90+       988.0          10      33079.01
-136464        V             90+       990.0         151     789217.28
-136465        V             90+       991.0          51     206517.60
-136466        V             90+       993.0         170     532719.68
-136467        V             90+       994.0          38     106426.78
-136468        V             90+       995.0          88     375441.63
-136469        V             90+       996.0          44     155325.65
-136470        V             90+       997.0          38     192334.94
-136471        V             90+       998.0         116     454030.84
-136472        V             90+       999.0          38     198813.23
-:END:
-
-As we saw above, the datatype of `age` was `object`, although we would expect `integer`. Now we see that there is this category `90+`, which is not an integer. We will drop this age category as it is quite special. Before we do this, let's count how many people we have in our dataset.
-
-#+NAME: comet-sodium-sink-kansas
-#+BEGIN_SRC ipython :session :results output drawer
-df['AANTAL_BSN'].sum()
-#+END_SRC
-
-#+RESULTS: comet-sodium-sink-kansas
-:RESULTS:
-16886043
-:END:
-
-That is, almost 17 million people, which is about right.
-
-Let's drop the '90+' category and turn `age` into an integer variable.
-
-#+NAME: nevada-nevada-alpha-lithium
-#+BEGIN_SRC ipython :session :results value
-df = df[(df['LEEFTIJDSKLASSE'] != '90+')]
-df['LEEFTIJDSKLASSE'] = df['LEEFTIJDSKLASSE'].astype(int)
-#+END_SRC
-
-#+RESULTS: nevada-nevada-alpha-lithium
-:RESULTS:
-:END:
-
-Let's summarize the variables that are numeric (integer or float). For each of these variables we have 135,064 observations (that is, combinations of `sex`, `age` and `postal code`). The mean for number of citizens is 124. With $135,064*124$ we are close to 17 million again.
-
-#+NAME: mexico-minnesota-carbon-single
-#+BEGIN_SRC ipython :session :results value
-df.describe()
-#+END_SRC
-
-#+RESULTS: mexico-minnesota-carbon-single
-:RESULTS:
-       LEEFTIJDSKLASSE     POSTCODE_3     AANTAL_BSN  health_costs
-count    135064.000000  135064.000000  135064.000000  1.350640e+05
-mean         43.753635     541.245994     123.952119  2.138620e+05
-std          25.535765     258.019990     129.492554  2.689883e+05
-min           0.000000       0.000000      10.000000  0.000000e+00
-25%          22.000000     318.000000      40.000000  4.458340e+04
-50%          44.000000     539.000000      82.000000  1.177054e+05
-75%          66.000000     763.000000     161.000000  2.803667e+05
-max          89.000000     999.000000    2228.000000  8.959803e+06
-:END:
-
-We define `sex` as a category variable which has two values.
-
-#+NAME: bakerloo-lemon-edward-mike
-#+BEGIN_SRC ipython :session
-df['GESLACHT'] = df['GESLACHT'].astype('category')
-df.info()
-#+END_SRC
-
-#+RESULTS: bakerloo-lemon-edward-mike
-:RESULTS:
-<class 'pandas.core.frame.DataFrame'>
-Int64Index: 135064 entries, 1 to 135741
-Data columns (total 5 columns):
-GESLACHT           135064 non-null category
-LEEFTIJDSKLASSE    135064 non-null int64
-POSTCODE_3         135064 non-null float64
-AANTAL_BSN         135064 non-null int64
-health_costs       135064 non-null float64
-dtypes: category(1), float64(2), int64(2)
-memory usage: 5.3 MB
-:END:
-
-Also for `sex` we have 135,064 observations and 2 unique values.
-
-#+NAME: mockingbird-double-alanine-green
-#+BEGIN_SRC ipython :session :results value
-df.GESLACHT.describe()
-#+END_SRC
-
-
-Now let's define the costs per head. For each observation, we divide the total health care costs (under the deductible) for a combination of `sex`, `age` and `postal code` by the number of people in this combination of `sex`, `age` and `postal code`. This gives the health costs per head.
-
-#+NAME: may-three-carpet-texas
-#+BEGIN_SRC ipython :session :results output drawer
-df['health_costs_per_head'] = df['health_costs']/df['AANTAL_BSN']
-#+END_SRC
-
-So for, say, 18 year old males, we have a distribution of costs per head over the different `postal codes`.
-
-#+NAME: edward-minnesota-social-equal
-#+BEGIN_SRC ipython :session :results output drawer
-costs_per_sex_age = df.groupby(['GESLACHT','LEEFTIJDSKLASSE'])['health_costs_per_head'].mean()
-#+END_SRC
-
-#+NAME: cold-gee-johnny-gee
-#+BEGIN_SRC ipython :session :results output drawer
-median_costs_per_sex_age = df.groupby(['GESLACHT','LEEFTIJDSKLASSE'])['health_costs_per_head'].median()
-#+END_SRC
-
-
-#+NAME: london-nuts-mirror-carbon
-#+BEGIN_SRC ipython :session
-import matplotlib.pyplot as plt
-fig = plt.figure()
-ax = costs_per_sex_age['M'].plot()
-ax = costs_per_sex_age['V'].plot()
-ax.set_xlabel('age')
-ax.set_ylabel('costs per head')
-ax.set_title('average costs per age and sex')
-ax.legend(['male','female'])
-fig.savefig("males.png")
-#+END_SRC
-
-#+RESULTS: london-nuts-mirror-carbon
-:RESULTS:
-[[file:ipython-inline-images/ob-ipython-05495c7b5e9ed1609b2cc1edab5a07b4.png]]
-<matplotlib.figure.Figure at 0x11017b208>
-:END:
-
-
-
-
-
-#+NAME: edward-queen-thirteen-spaghetti
-#+BEGIN_SRC ipython :session :results output drawer
-variation_costs_per_sex_age = df.groupby(['GESLACHT','LEEFTIJDSKLASSE'])['health_costs_per_head'].std()
-#+END_SRC
-
-
-#+NAME: monkey-uncle-jupiter-minnesota
-#+BEGIN_SRC ipython :session
-fig = plt.figure()
-ax = variation_costs_per_sex_age['M'].plot()
-ax = variation_costs_per_sex_age['V'].plot()
-ax.set_xlabel('age')
-ax.set_ylabel('std. costs per head')
-ax.set_title('standard deviation costs per age and sex')
-ax.legend(['male','female'])
-fig.savefig("std.png")
-#+END_SRC
-
-#+RESULTS: monkey-uncle-jupiter-minnesota
-:RESULTS:
-[[file:ipython-inline-images/ob-ipython-4bd22ddd85c6467083bc73600f583beb.png]]
-<matplotlib.figure.Figure at 0x11834a550>
-:END:
-
-
-#+NAME: grey-october-xray-red
-#+BEGIN_SRC ipython :session :results output drawer
-plt.style.use('seaborn')
-plt.clf()
-age_range = [14,15,16,17,19,20,21,22]
-
-plt.plot(age_range,costs_per_sex_age['M'][age_range], marker='.', label = 'male')
-plt.plot(age_range,costs_per_sex_age['V'][age_range], marker='.', label = 'female')
-plt.xlabel('age')
-plt.ylabel('health care costs')
-plt.legend()
-fig.savefig('fig14to22.png')
-
-#+END_SRC
-
-
-
+Now that we have the data ready, we are going to plot health care expenditures on the map of the Netherlands.
 
 ** geographical figures
 
-We are going to plot health care expenditures on the map of the Netherlands to see where expenditures per head are highest.
-
-We have map data that links the name of a municipality to coordinates on the map. Hence, here we use the Vektis data on the municipality level instead of the 3 digit postal code level as above.
-
-We import pandas and read in two files. The first is the data on health care expenditure, the second is a file with two columns: 1. the names of municipalities all capitalized and 2. normal capitalization.
-
-#+NAME: december-hot-venus-kitten
-
-#+RESULTS: december-hot-venus-kitten
-:RESULTS:
-Municipality   MUNICIPALITY
-0    Aa en Hunze    AA EN HUNZE
-1        Aalburg        AALBURG
-2       Aalsmeer       AALSMEER
-3         Aalten         AALTEN
-4  Achtkarspelen  ACHTKARSPELEN
-#+BEGIN_EXPORT HTML
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Municipality</th>
-      <th>MUNICIPALITY</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Aa en Hunze</td>
-      <td>AA EN HUNZE</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Aalburg</td>
-      <td>AALBURG</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Aalsmeer</td>
-      <td>AALSMEER</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Aalten</td>
-      <td>AALTEN</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>Achtkarspelen</td>
-      <td>ACHTKARSPELEN</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-#+END_EXPORT
-:END:
-
-As we want to write this in English, all relevant column names are translated.
-
-#+NAME: lima-ten-jupiter-wyoming
-#+BEGIN_SRC ipython :session :results output drawer
-
-# Rename several column names for beter reference and to translate them to English
-
-#+END_SRC
-
-#+RESULTS: lima-ten-jupiter-wyoming
-:RESULTS:
-sex                                     object
-age                                     object
-MUNICIPALITY                            object
-number_citizens                          int64
-AANTAL_VERZEKERDEJAREN                 float64
-hospital_care                          float64
-pharmaceuticals                        float64
-mental_care                            float64
-GP_capitation                          float64
-GP_fee_for_service                     float64
-GP_other                               float64
-KOSTEN_HULPMIDDELEN                    float64
-dental care                            float64
-physiotherapy                          float64
-KOSTEN_PARAMEDISCHE_ZORG_OVERIG        float64
-KOSTEN_ZIEKENVERVOER_ZITTEND           float64
-KOSTEN_ZIEKENVERVOER_LIGGEND           float64
-maternity_care                         float64
-obstetrics                             float64
-KOSTEN_GENERALISTISCHE_BASIS_GGZ       float64
-KOSTEN_GRENSOVERSCHRIJDENDE_ZORG       float64
-KOSTEN_EERSTELIJNS_ONDERSTEUNING       float64
-KOSTEN_GERIATRISCHE_REVALIDATIEZORG    float64
-KOSTEN_OVERIG                          float64
-dtype: object
-:END:
-
-We drop the rows where there is no value for municipality (if such rows exist). The expenditure data has municipality names in capital (like "MUNICIPALITY"), but our map data has normal capitalization (like "Municipality"). Hence, we merge with dataframe `GEMEENTES` that has both.
+We have map data that links the name of a municipality to coordinates
+on the map. In this map data, the names of municipalities are
+capitalized under standard Dutch capitalization like "Aa en Hunze". In
+our Vektis data, the names of municipalities are written in
+capitals. There are a number of ways to resolve this. To illustrate
+the ~merge~ command, we use a file with two columns: 1. the names of
+municipalities all capitalized and 2. normal capitalization. We drop
+the rows where there is no value for municipality (if such rows
+exist). We merge our data ~df_gemeente~ with the dataframe ~Gemeentes~. We use a "left-merge", so all rows in the first dataframe ~df_gemeente~ are kept.
 
 #+NAME: ack-louisiana-california-november
 #+BEGIN_SRC ipython :session :results output drawer
@@ -1052,56 +787,6 @@ df_gem_merged.head()
 
 #+RESULTS: ack-louisiana-california-november
 :RESULTS:
-sex             age   MUNICIPALITY  number_citizens  AANTAL_VERZEKERDEJAREN  \
-0   M   0 t/m  4 jaar    AA EN HUNZE              507                  468.83
-1   M   0 t/m  4 jaar        AALBURG              428                  387.28
-2   M   0 t/m  4 jaar       AALSMEER              876                  790.65
-3   M   0 t/m  4 jaar         AALTEN              667                  600.00
-4   M   0 t/m  4 jaar  ACHTKARSPELEN              810                  737.03
-
-   hospital_care  pharmaceuticals  mental_care  GP_capitation  \
-0      473370.77         43305.49     14056.81       26239.56
-1      340442.37         23395.86      5555.83       21673.15
-2      932841.57         54597.52     34355.66       43971.27
-3      515879.78         43516.71      2404.19       33749.10
-4      766456.80         88084.16      6681.81       41477.79
-
-   GP_fee_for_service      ...        KOSTEN_ZIEKENVERVOER_ZITTEND  \
-0            12829.29      ...                              638.08
-1             9417.98      ...                              315.06
-2            22413.37      ...                                0.00
-3            18472.64      ...                             1173.82
-4            19157.34      ...                              204.30
-
-   KOSTEN_ZIEKENVERVOER_LIGGEND  maternity_care  obstetrics  \
-0                       5004.86             0.0         0.0
-1                       6155.09             0.0         0.0
-2                      20465.44             0.0         0.0
-3                       6282.28             0.0         0.0
-4                      17011.84             0.0         0.0
-
-   KOSTEN_GENERALISTISCHE_BASIS_GGZ  KOSTEN_GRENSOVERSCHRIJDENDE_ZORG  \
-0                              0.00                           2571.36
-1                              0.00                            186.08
-2                            157.44                           1743.72
-3                           1422.67                             62.75
-4                              0.00                            206.11
-
-   KOSTEN_EERSTELIJNS_ONDERSTEUNING  KOSTEN_GERIATRISCHE_REVALIDATIEZORG  \
-0                             31.05                                  0.0
-1                              5.40                                  0.0
-2                             12.60                                  0.0
-3                              3.60                                  0.0
-4                            955.80                                  0.0
-
-   KOSTEN_OVERIG   Municipality
-0         186.03    Aa en Hunze
-1         135.30        Aalburg
-2       13285.23       Aalsmeer
-3         107.40         Aalten
-4         453.66  Achtkarspelen
-
-[5 rows x 25 columns]
 #+BEGIN_EXPORT HTML
 <div>
 <table border="1" class="dataframe">
@@ -1112,22 +797,17 @@ sex             age   MUNICIPALITY  number_citizens  AANTAL_VERZEKERDEJAREN  \
       <th>age</th>
       <th>MUNICIPALITY</th>
       <th>number_citizens</th>
-      <th>AANTAL_VERZEKERDEJAREN</th>
       <th>hospital_care</th>
       <th>pharmaceuticals</th>
       <th>mental_care</th>
       <th>GP_capitation</th>
       <th>GP_fee_for_service</th>
-      <th>...</th>
-      <th>KOSTEN_ZIEKENVERVOER_ZITTEND</th>
-      <th>KOSTEN_ZIEKENVERVOER_LIGGEND</th>
+      <th>GP_other</th>
+      <th>dental care</th>
+      <th>physiotherapy</th>
       <th>maternity_care</th>
       <th>obstetrics</th>
-      <th>KOSTEN_GENERALISTISCHE_BASIS_GGZ</th>
-      <th>KOSTEN_GRENSOVERSCHRIJDENDE_ZORG</th>
-      <th>KOSTEN_EERSTELIJNS_ONDERSTEUNING</th>
-      <th>KOSTEN_GERIATRISCHE_REVALIDATIEZORG</th>
-      <th>KOSTEN_OVERIG</th>
+      <th>health_expenditure_under_deductible</th>
       <th>Municipality</th>
     </tr>
   </thead>
@@ -1138,22 +818,17 @@ sex             age   MUNICIPALITY  number_citizens  AANTAL_VERZEKERDEJAREN  \
       <td>0 t/m  4 jaar</td>
       <td>AA EN HUNZE</td>
       <td>507</td>
-      <td>468.83</td>
       <td>473370.77</td>
       <td>43305.49</td>
       <td>14056.81</td>
       <td>26239.56</td>
       <td>12829.29</td>
-      <td>...</td>
-      <td>638.08</td>
-      <td>5004.86</td>
+      <td>36034.65</td>
+      <td>9311.14</td>
+      <td>15968.80</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.00</td>
-      <td>2571.36</td>
-      <td>31.05</td>
-      <td>0.0</td>
-      <td>186.03</td>
+      <td>576750.31</td>
       <td>Aa en Hunze</td>
     </tr>
     <tr>
@@ -1162,22 +837,17 @@ sex             age   MUNICIPALITY  number_citizens  AANTAL_VERZEKERDEJAREN  \
       <td>0 t/m  4 jaar</td>
       <td>AALBURG</td>
       <td>428</td>
-      <td>387.28</td>
       <td>340442.37</td>
       <td>23395.86</td>
       <td>5555.83</td>
       <td>21673.15</td>
       <td>9417.98</td>
-      <td>...</td>
-      <td>315.06</td>
-      <td>6155.09</td>
+      <td>20159.19</td>
+      <td>7213.81</td>
+      <td>6135.05</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.00</td>
-      <td>186.08</td>
-      <td>5.40</td>
-      <td>0.0</td>
-      <td>135.30</td>
+      <td>406856.55</td>
       <td>Aalburg</td>
     </tr>
     <tr>
@@ -1186,22 +856,17 @@ sex             age   MUNICIPALITY  number_citizens  AANTAL_VERZEKERDEJAREN  \
       <td>0 t/m  4 jaar</td>
       <td>AALSMEER</td>
       <td>876</td>
-      <td>790.65</td>
       <td>932841.57</td>
       <td>54597.52</td>
       <td>34355.66</td>
       <td>43971.27</td>
       <td>22413.37</td>
-      <td>...</td>
-      <td>0.00</td>
-      <td>20465.44</td>
+      <td>61629.32</td>
+      <td>19042.00</td>
+      <td>20086.43</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>157.44</td>
-      <td>1743.72</td>
-      <td>12.60</td>
-      <td>0.0</td>
-      <td>13285.23</td>
+      <td>1093297.37</td>
       <td>Aalsmeer</td>
     </tr>
     <tr>
@@ -1210,22 +875,17 @@ sex             age   MUNICIPALITY  number_citizens  AANTAL_VERZEKERDEJAREN  \
       <td>0 t/m  4 jaar</td>
       <td>AALTEN</td>
       <td>667</td>
-      <td>600.00</td>
       <td>515879.78</td>
       <td>43516.71</td>
       <td>2404.19</td>
       <td>33749.10</td>
       <td>18472.64</td>
-      <td>...</td>
-      <td>1173.82</td>
-      <td>6282.28</td>
+      <td>46720.61</td>
+      <td>12909.41</td>
+      <td>20762.75</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1422.67</td>
-      <td>62.75</td>
-      <td>3.60</td>
-      <td>0.0</td>
-      <td>107.40</td>
+      <td>652523.86</td>
       <td>Aalten</td>
     </tr>
     <tr>
@@ -1234,33 +894,54 @@ sex             age   MUNICIPALITY  number_citizens  AANTAL_VERZEKERDEJAREN  \
       <td>0 t/m  4 jaar</td>
       <td>ACHTKARSPELEN</td>
       <td>810</td>
-      <td>737.03</td>
       <td>766456.80</td>
       <td>88084.16</td>
       <td>6681.81</td>
       <td>41477.79</td>
       <td>19157.34</td>
-      <td>...</td>
-      <td>204.30</td>
-      <td>17011.84</td>
+      <td>53633.01</td>
+      <td>16695.10</td>
+      <td>23423.96</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.00</td>
-      <td>206.11</td>
-      <td>955.80</td>
-      <td>0.0</td>
-      <td>453.66</td>
+      <td>954494.16</td>
       <td>Achtkarspelen</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 25 columns</p>
 </div>
 #+END_EXPORT
+  sex             age   MUNICIPALITY  number_citizens  hospital_care  \
+0   M   0 t/m  4 jaar    AA EN HUNZE              507      473370.77
+1   M   0 t/m  4 jaar        AALBURG              428      340442.37
+2   M   0 t/m  4 jaar       AALSMEER              876      932841.57
+3   M   0 t/m  4 jaar         AALTEN              667      515879.78
+4   M   0 t/m  4 jaar  ACHTKARSPELEN              810      766456.80
+
+   pharmaceuticals  mental_care  GP_capitation  GP_fee_for_service  GP_other  \
+0         43305.49     14056.81       26239.56            12829.29  36034.65
+1         23395.86      5555.83       21673.15             9417.98  20159.19
+2         54597.52     34355.66       43971.27            22413.37  61629.32
+3         43516.71      2404.19       33749.10            18472.64  46720.61
+4         88084.16      6681.81       41477.79            19157.34  53633.01
+
+   dental care  physiotherapy  maternity_care  obstetrics  \
+0      9311.14       15968.80             0.0         0.0
+1      7213.81        6135.05             0.0         0.0
+2     19042.00       20086.43             0.0         0.0
+3     12909.41       20762.75             0.0         0.0
+4     16695.10       23423.96             0.0         0.0
+
+   health_expenditure_under_deductible   Municipality
+0                            576750.31    Aa en Hunze
+1                            406856.55        Aalburg
+2                           1093297.37       Aalsmeer
+3                            652523.86         Aalten
+4                            954494.16  Achtkarspelen
 :END:
 
-We are going to plot expenditure on hospital care per head for each municipality. We need a couple of steps in order to do this:
-1. we add --for each municipality-- the hospital expenditures across age groups;
+We are going to plot expenditure under the deductible per head for each municipality. We need a couple of steps in order to do this:
+1. we add --for each municipality-- the expenditures under the deductible across age groups;
 2. we add --for each municipality-- the number of people across age groups;
 3. we divide --for each municipality-- the expenditures by the number of people.
 
@@ -1272,46 +953,25 @@ We can do other transformations of the data, such as the `cost_index` below whic
 
 #+NAME: thirteen-november-angel-delaware
 #+BEGIN_SRC ipython :session :results output drawer
-results = df_gem_merged.groupby('Municipality')[['hospital_care','number_citizens']].sum()
-results['hospital_care_per_head'] = results['hospital_care']/results['number_citizens']
-min = results['hospital_care_per_head'].min()
-max = results['hospital_care_per_head'].max()
-results['cost_index'] = 100*(results['hospital_care_per_head']-min)/(max-min)
-
+results = df_gem_merged.groupby('Municipality')[['health_expenditure_under_deductible','number_citizens']].sum()
+results['expenditure_per_head'] = results['health_expenditure_under_deductible']/results['number_citizens']
 results.head()
 #+END_SRC
 
 #+RESULTS: thirteen-november-angel-delaware
 :RESULTS:
-hospital_care  number_citizens  hospital_care_per_head  \
-Municipality
-'s-Gravenhage      6.417231e+08           509206             1260.242638
-'s-Hertogenbosch   1.890338e+08           151934             1244.183527
-Aa en Hunze        3.323362e+07            25415             1307.637986
-Aalburg            1.500653e+07            12871             1165.917940
-Aalsmeer           3.351098e+07            31365             1068.419705
-
-                  cost_index
-Municipality
-'s-Gravenhage      46.415919
-'s-Hertogenbosch   44.096307
-Aa en Hunze        53.261802
-Aalburg            32.791461
-Aalsmeer           18.708612
 #+BEGIN_EXPORT HTML
 <div>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>hospital_care</th>
+      <th>health_expenditure_under_deductible</th>
       <th>number_citizens</th>
-      <th>hospital_care_per_head</th>
-      <th>cost_index</th>
+      <th>expenditure_per_head</th>
     </tr>
     <tr>
       <th>Municipality</th>
-      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -1320,43 +980,53 @@ Aalsmeer           18.708612
   <tbody>
     <tr>
       <th>'s-Gravenhage</th>
-      <td>6.417231e+08</td>
+      <td>9.115807e+08</td>
       <td>509206</td>
-      <td>1260.242638</td>
-      <td>46.415919</td>
+      <td>1790.200148</td>
     </tr>
     <tr>
       <th>'s-Hertogenbosch</th>
-      <td>1.890338e+08</td>
+      <td>2.697598e+08</td>
       <td>151934</td>
-      <td>1244.183527</td>
-      <td>44.096307</td>
+      <td>1775.506394</td>
     </tr>
     <tr>
       <th>Aa en Hunze</th>
-      <td>3.323362e+07</td>
+      <td>4.696741e+07</td>
       <td>25415</td>
-      <td>1307.637986</td>
-      <td>53.261802</td>
+      <td>1848.019292</td>
     </tr>
     <tr>
       <th>Aalburg</th>
-      <td>1.500653e+07</td>
+      <td>2.189368e+07</td>
       <td>12871</td>
-      <td>1165.917940</td>
-      <td>32.791461</td>
+      <td>1701.008568</td>
     </tr>
     <tr>
       <th>Aalsmeer</th>
-      <td>3.351098e+07</td>
+      <td>4.864200e+07</td>
       <td>31365</td>
-      <td>1068.419705</td>
-      <td>18.708612</td>
+      <td>1550.837018</td>
     </tr>
   </tbody>
 </table>
 </div>
 #+END_EXPORT
+                  health_expenditure_under_deductible  number_citizens  \
+Municipality
+'s-Gravenhage                            9.115807e+08           509206
+'s-Hertogenbosch                         2.697598e+08           151934
+Aa en Hunze                              4.696741e+07            25415
+Aalburg                                  2.189368e+07            12871
+Aalsmeer                                 4.864200e+07            31365
+
+                  expenditure_per_head
+Municipality
+'s-Gravenhage              1790.200148
+'s-Hertogenbosch           1775.506394
+Aa en Hunze                1848.019292
+Aalburg                    1701.008568
+Aalsmeer                   1550.837018
 :END:
 
 #+NAME: bravo-pip-march-batman
@@ -1364,93 +1034,25 @@ Aalsmeer           18.708612
 # Create a dataframe
 p_results = pd.DataFrame(dict(
     municipality = results.index,
-    hospital_care = results['hospital_care_per_head'],
-    hospital_care_index = results['cost_index']
+    expenditure = results['expenditure_per_head']
     ))
 
-p_results
+p_results.head()
 #+END_SRC
 
 #+RESULTS: bravo-pip-march-batman
 :RESULTS:
-hospital_care  hospital_care_index         municipality
-Municipality
-'s-Gravenhage          1260.242638            46.415919        's-Gravenhage
-'s-Hertogenbosch       1244.183527            44.096307     's-Hertogenbosch
-Aa en Hunze            1307.637986            53.261802          Aa en Hunze
-Aalburg                1165.917940            32.791461              Aalburg
-Aalsmeer               1068.419705            18.708612             Aalsmeer
-Aalten                 1238.528031            43.279415               Aalten
-Achtkarspelen          1193.610243            36.791396        Achtkarspelen
-Alblasserdam           1240.807021            43.608597         Alblasserdam
-Albrandswaard          1182.312587            35.159539        Albrandswaard
-Alkmaar                1154.310538            31.114864              Alkmaar
-Almelo                 1312.432058            53.954268               Almelo
-Almere                 1176.676071            34.345388               Almere
-Alphen aan den Rijn    1184.182702            35.429662  Alphen aan den Rijn
-Alphen-Chaam           1130.433778            27.666055         Alphen-Chaam
-Ameland                1072.883330            19.353347              Ameland
-Amersfoort             1134.213900            28.212063           Amersfoort
-Amstelveen             1211.863190            39.427890           Amstelveen
-Amsterdam              1091.989084            22.113022            Amsterdam
-Apeldoorn              1358.251995            60.572596            Apeldoorn
-Appingedam             1475.221016            77.467847           Appingedam
-Arnhem                 1195.350654            37.042784               Arnhem
-Assen                  1197.869087            37.406552                Assen
-Asten                  1226.436346            41.532867                Asten
-Baarle-Nassau          1324.808388            55.741931        Baarle-Nassau
-Baarn                  1245.571838            44.296838                Baarn
-Barendrecht            1170.153254            33.403219          Barendrecht
-Barneveld              1058.660473            17.298968            Barneveld
-Bedum                  1302.285006            52.488607                Bedum
-Beek                   1351.720079            59.629112                 Beek
-Beemster               1200.951783            37.851823             Beemster
-...                            ...                  ...                  ...
-Weststellingwerf       1366.331515            61.739619     Weststellingwerf
-Westvoorne             1315.028317            54.329277           Westvoorne
-Wierden                1137.220785            28.646384              Wierden
-Wijchen                1334.844092            57.191509              Wijchen
-Wijdemeren             1329.783259            56.460512           Wijdemeren
-Wijk bij Duurstede     1214.958808            39.875027   Wijk bij Duurstede
-Winsum                 1107.756796            24.390544               Winsum
-Winterswijk            1276.494752            48.763408          Winterswijk
-Woensdrecht            1384.649585            64.385519          Woensdrecht
-Woerden                1231.875027            42.318441              Woerden
-Wormerland             1318.951500            54.895950           Wormerland
-Woudenberg             1186.921024            35.825191           Woudenberg
-Woudrichem             1090.399489            21.883418           Woudrichem
-Zaanstad               1231.107914            42.207638             Zaanstad
-Zaltbommel             1256.953286            45.940798           Zaltbommel
-Zandvoort              1580.227020            92.635134            Zandvoort
-Zederik                1105.695657            24.092829              Zederik
-Zeewolde               1007.620640             9.926667             Zeewolde
-Zeist                  1250.873556            45.062629                Zeist
-Zevenaar               1362.772562            61.225556             Zevenaar
-Zoetermeer             1268.747761            47.644417           Zoetermeer
-Zoeterwoude            1181.011076            34.971546          Zoeterwoude
-Zuidhorn               1174.478602            34.027981             Zuidhorn
-Zuidplas               1218.800136            40.429877             Zuidplas
-Zundert                1155.341957            31.263844              Zundert
-Zutphen                1339.065240            57.801221              Zutphen
-Zwartewaterland        1133.942277            28.172830      Zwartewaterland
-Zwijndrecht            1325.995339            55.913377          Zwijndrecht
-Zwolle                 1158.649370            31.741574               Zwolle
-het Bildt              1266.736610            47.353922            het Bildt
-
-[390 rows x 3 columns]
 #+BEGIN_EXPORT HTML
 <div>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>hospital_care</th>
-      <th>hospital_care_index</th>
+      <th>expenditure</th>
       <th>municipality</th>
     </tr>
     <tr>
       <th>Municipality</th>
-      <th></th>
       <th></th>
       <th></th>
     </tr>
@@ -1458,776 +1060,40 @@ het Bildt              1266.736610            47.353922            het Bildt
   <tbody>
     <tr>
       <th>'s-Gravenhage</th>
-      <td>1260.242638</td>
-      <td>46.415919</td>
+      <td>1790.200148</td>
       <td>'s-Gravenhage</td>
     </tr>
     <tr>
       <th>'s-Hertogenbosch</th>
-      <td>1244.183527</td>
-      <td>44.096307</td>
+      <td>1775.506394</td>
       <td>'s-Hertogenbosch</td>
     </tr>
     <tr>
       <th>Aa en Hunze</th>
-      <td>1307.637986</td>
-      <td>53.261802</td>
+      <td>1848.019292</td>
       <td>Aa en Hunze</td>
     </tr>
     <tr>
       <th>Aalburg</th>
-      <td>1165.917940</td>
-      <td>32.791461</td>
+      <td>1701.008568</td>
       <td>Aalburg</td>
     </tr>
     <tr>
       <th>Aalsmeer</th>
-      <td>1068.419705</td>
-      <td>18.708612</td>
+      <td>1550.837018</td>
       <td>Aalsmeer</td>
     </tr>
-    <tr>
-      <th>Aalten</th>
-      <td>1238.528031</td>
-      <td>43.279415</td>
-      <td>Aalten</td>
-    </tr>
-    <tr>
-      <th>Achtkarspelen</th>
-      <td>1193.610243</td>
-      <td>36.791396</td>
-      <td>Achtkarspelen</td>
-    </tr>
-    <tr>
-      <th>Alblasserdam</th>
-      <td>1240.807021</td>
-      <td>43.608597</td>
-      <td>Alblasserdam</td>
-    </tr>
-    <tr>
-      <th>Albrandswaard</th>
-      <td>1182.312587</td>
-      <td>35.159539</td>
-      <td>Albrandswaard</td>
-    </tr>
-    <tr>
-      <th>Alkmaar</th>
-      <td>1154.310538</td>
-      <td>31.114864</td>
-      <td>Alkmaar</td>
-    </tr>
-    <tr>
-      <th>Almelo</th>
-      <td>1312.432058</td>
-      <td>53.954268</td>
-      <td>Almelo</td>
-    </tr>
-    <tr>
-      <th>Almere</th>
-      <td>1176.676071</td>
-      <td>34.345388</td>
-      <td>Almere</td>
-    </tr>
-    <tr>
-      <th>Alphen aan den Rijn</th>
-      <td>1184.182702</td>
-      <td>35.429662</td>
-      <td>Alphen aan den Rijn</td>
-    </tr>
-    <tr>
-      <th>Alphen-Chaam</th>
-      <td>1130.433778</td>
-      <td>27.666055</td>
-      <td>Alphen-Chaam</td>
-    </tr>
-    <tr>
-      <th>Ameland</th>
-      <td>1072.883330</td>
-      <td>19.353347</td>
-      <td>Ameland</td>
-    </tr>
-    <tr>
-      <th>Amersfoort</th>
-      <td>1134.213900</td>
-      <td>28.212063</td>
-      <td>Amersfoort</td>
-    </tr>
-    <tr>
-      <th>Amstelveen</th>
-      <td>1211.863190</td>
-      <td>39.427890</td>
-      <td>Amstelveen</td>
-    </tr>
-    <tr>
-      <th>Amsterdam</th>
-      <td>1091.989084</td>
-      <td>22.113022</td>
-      <td>Amsterdam</td>
-    </tr>
-    <tr>
-      <th>Apeldoorn</th>
-      <td>1358.251995</td>
-      <td>60.572596</td>
-      <td>Apeldoorn</td>
-    </tr>
-    <tr>
-      <th>Appingedam</th>
-      <td>1475.221016</td>
-      <td>77.467847</td>
-      <td>Appingedam</td>
-    </tr>
-    <tr>
-      <th>Arnhem</th>
-      <td>1195.350654</td>
-      <td>37.042784</td>
-      <td>Arnhem</td>
-    </tr>
-    <tr>
-      <th>Assen</th>
-      <td>1197.869087</td>
-      <td>37.406552</td>
-      <td>Assen</td>
-    </tr>
-    <tr>
-      <th>Asten</th>
-      <td>1226.436346</td>
-      <td>41.532867</td>
-      <td>Asten</td>
-    </tr>
-    <tr>
-      <th>Baarle-Nassau</th>
-      <td>1324.808388</td>
-      <td>55.741931</td>
-      <td>Baarle-Nassau</td>
-    </tr>
-    <tr>
-      <th>Baarn</th>
-      <td>1245.571838</td>
-      <td>44.296838</td>
-      <td>Baarn</td>
-    </tr>
-    <tr>
-      <th>Barendrecht</th>
-      <td>1170.153254</td>
-      <td>33.403219</td>
-      <td>Barendrecht</td>
-    </tr>
-    <tr>
-      <th>Barneveld</th>
-      <td>1058.660473</td>
-      <td>17.298968</td>
-      <td>Barneveld</td>
-    </tr>
-    <tr>
-      <th>Bedum</th>
-      <td>1302.285006</td>
-      <td>52.488607</td>
-      <td>Bedum</td>
-    </tr>
-    <tr>
-      <th>Beek</th>
-      <td>1351.720079</td>
-      <td>59.629112</td>
-      <td>Beek</td>
-    </tr>
-    <tr>
-      <th>Beemster</th>
-      <td>1200.951783</td>
-      <td>37.851823</td>
-      <td>Beemster</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>Weststellingwerf</th>
-      <td>1366.331515</td>
-      <td>61.739619</td>
-      <td>Weststellingwerf</td>
-    </tr>
-    <tr>
-      <th>Westvoorne</th>
-      <td>1315.028317</td>
-      <td>54.329277</td>
-      <td>Westvoorne</td>
-    </tr>
-    <tr>
-      <th>Wierden</th>
-      <td>1137.220785</td>
-      <td>28.646384</td>
-      <td>Wierden</td>
-    </tr>
-    <tr>
-      <th>Wijchen</th>
-      <td>1334.844092</td>
-      <td>57.191509</td>
-      <td>Wijchen</td>
-    </tr>
-    <tr>
-      <th>Wijdemeren</th>
-      <td>1329.783259</td>
-      <td>56.460512</td>
-      <td>Wijdemeren</td>
-    </tr>
-    <tr>
-      <th>Wijk bij Duurstede</th>
-      <td>1214.958808</td>
-      <td>39.875027</td>
-      <td>Wijk bij Duurstede</td>
-    </tr>
-    <tr>
-      <th>Winsum</th>
-      <td>1107.756796</td>
-      <td>24.390544</td>
-      <td>Winsum</td>
-    </tr>
-    <tr>
-      <th>Winterswijk</th>
-      <td>1276.494752</td>
-      <td>48.763408</td>
-      <td>Winterswijk</td>
-    </tr>
-    <tr>
-      <th>Woensdrecht</th>
-      <td>1384.649585</td>
-      <td>64.385519</td>
-      <td>Woensdrecht</td>
-    </tr>
-    <tr>
-      <th>Woerden</th>
-      <td>1231.875027</td>
-      <td>42.318441</td>
-      <td>Woerden</td>
-    </tr>
-    <tr>
-      <th>Wormerland</th>
-      <td>1318.951500</td>
-      <td>54.895950</td>
-      <td>Wormerland</td>
-    </tr>
-    <tr>
-      <th>Woudenberg</th>
-      <td>1186.921024</td>
-      <td>35.825191</td>
-      <td>Woudenberg</td>
-    </tr>
-    <tr>
-      <th>Woudrichem</th>
-      <td>1090.399489</td>
-      <td>21.883418</td>
-      <td>Woudrichem</td>
-    </tr>
-    <tr>
-      <th>Zaanstad</th>
-      <td>1231.107914</td>
-      <td>42.207638</td>
-      <td>Zaanstad</td>
-    </tr>
-    <tr>
-      <th>Zaltbommel</th>
-      <td>1256.953286</td>
-      <td>45.940798</td>
-      <td>Zaltbommel</td>
-    </tr>
-    <tr>
-      <th>Zandvoort</th>
-      <td>1580.227020</td>
-      <td>92.635134</td>
-      <td>Zandvoort</td>
-    </tr>
-    <tr>
-      <th>Zederik</th>
-      <td>1105.695657</td>
-      <td>24.092829</td>
-      <td>Zederik</td>
-    </tr>
-    <tr>
-      <th>Zeewolde</th>
-      <td>1007.620640</td>
-      <td>9.926667</td>
-      <td>Zeewolde</td>
-    </tr>
-    <tr>
-      <th>Zeist</th>
-      <td>1250.873556</td>
-      <td>45.062629</td>
-      <td>Zeist</td>
-    </tr>
-    <tr>
-      <th>Zevenaar</th>
-      <td>1362.772562</td>
-      <td>61.225556</td>
-      <td>Zevenaar</td>
-    </tr>
-    <tr>
-      <th>Zoetermeer</th>
-      <td>1268.747761</td>
-      <td>47.644417</td>
-      <td>Zoetermeer</td>
-    </tr>
-    <tr>
-      <th>Zoeterwoude</th>
-      <td>1181.011076</td>
-      <td>34.971546</td>
-      <td>Zoeterwoude</td>
-    </tr>
-    <tr>
-      <th>Zuidhorn</th>
-      <td>1174.478602</td>
-      <td>34.027981</td>
-      <td>Zuidhorn</td>
-    </tr>
-    <tr>
-      <th>Zuidplas</th>
-      <td>1218.800136</td>
-      <td>40.429877</td>
-      <td>Zuidplas</td>
-    </tr>
-    <tr>
-      <th>Zundert</th>
-      <td>1155.341957</td>
-      <td>31.263844</td>
-      <td>Zundert</td>
-    </tr>
-    <tr>
-      <th>Zutphen</th>
-      <td>1339.065240</td>
-      <td>57.801221</td>
-      <td>Zutphen</td>
-    </tr>
-    <tr>
-      <th>Zwartewaterland</th>
-      <td>1133.942277</td>
-      <td>28.172830</td>
-      <td>Zwartewaterland</td>
-    </tr>
-    <tr>
-      <th>Zwijndrecht</th>
-      <td>1325.995339</td>
-      <td>55.913377</td>
-      <td>Zwijndrecht</td>
-    </tr>
-    <tr>
-      <th>Zwolle</th>
-      <td>1158.649370</td>
-      <td>31.741574</td>
-      <td>Zwolle</td>
-    </tr>
-    <tr>
-      <th>het Bildt</th>
-      <td>1266.736610</td>
-      <td>47.353922</td>
-      <td>het Bildt</td>
-    </tr>
   </tbody>
 </table>
-<p>390 rows × 3 columns</p>
 </div>
 #+END_EXPORT
-:END:
-
-
-#+NAME: angel-harry-five-river
-#+BEGIN_SRC ipython :session :results output drawer
-p_results
-#+END_SRC
-
-#+RESULTS: angel-harry-five-river
-:RESULTS:
-hospital_care_per_head         municipality
-municipality
-AA EN HUNZE                     1307.637986          AA EN HUNZE
-AALBURG                         1165.917940              AALBURG
-AALSMEER                        1068.419705             AALSMEER
-AALTEN                          1238.528031               AALTEN
-ACHTKARSPELEN                   1193.610243        ACHTKARSPELEN
-ALBLASSERDAM                    1240.807021         ALBLASSERDAM
-ALBRANDSWAARD                   1182.312587        ALBRANDSWAARD
-ALKMAAR                         1154.310538              ALKMAAR
-ALMELO                          1312.432058               ALMELO
-ALMERE                          1176.676071               ALMERE
-ALPHEN AAN DEN RIJN             1184.182702  ALPHEN AAN DEN RIJN
-ALPHEN-CHAAM                    1130.433778         ALPHEN-CHAAM
-AMELAND                         1072.883330              AMELAND
-AMERSFOORT                      1134.213900           AMERSFOORT
-AMSTELVEEN                      1211.863190           AMSTELVEEN
-AMSTERDAM                       1091.989084            AMSTERDAM
-APELDOORN                       1358.251995            APELDOORN
-APPINGEDAM                      1475.221016           APPINGEDAM
-ARNHEM                          1195.350654               ARNHEM
-ASSEN                           1197.869087                ASSEN
-ASTEN                           1226.436346                ASTEN
-BAARLE-NASSAU                   1324.808388        BAARLE-NASSAU
-BAARN                           1245.571838                BAARN
-BARENDRECHT                     1170.153254          BARENDRECHT
-BARNEVELD                       1058.660473            BARNEVELD
-BEDUM                           1302.285006                BEDUM
-BEEK                            1351.720079                 BEEK
-BEEMSTER                        1200.951783             BEEMSTER
-BEESEL                          1370.313639               BEESEL
-BELLINGWEDDE                    1631.215378         BELLINGWEDDE
-...                                     ...                  ...
-WESTLAND                        1171.520793             WESTLAND
-WESTSTELLINGWERF                1366.331515     WESTSTELLINGWERF
-WESTVOORNE                      1315.028317           WESTVOORNE
-WIERDEN                         1137.220785              WIERDEN
-WIJCHEN                         1334.844092              WIJCHEN
-WIJDEMEREN                      1329.783259           WIJDEMEREN
-WIJK BIJ DUURSTEDE              1214.958808   WIJK BIJ DUURSTEDE
-WINSUM                          1107.756796               WINSUM
-WINTERSWIJK                     1276.494752          WINTERSWIJK
-WOENSDRECHT                     1384.649585          WOENSDRECHT
-WOERDEN                         1231.875027              WOERDEN
-WORMERLAND                      1318.951500           WORMERLAND
-WOUDENBERG                      1186.921024           WOUDENBERG
-WOUDRICHEM                      1090.399489           WOUDRICHEM
-ZAANSTAD                        1231.107914             ZAANSTAD
-ZALTBOMMEL                      1256.953286           ZALTBOMMEL
-ZANDVOORT                       1580.227020            ZANDVOORT
-ZEDERIK                         1105.695657              ZEDERIK
-ZEEWOLDE                        1007.620640             ZEEWOLDE
-ZEIST                           1250.873556                ZEIST
-ZEVENAAR                        1362.772562             ZEVENAAR
-ZOETERMEER                      1268.747761           ZOETERMEER
-ZOETERWOUDE                     1181.011076          ZOETERWOUDE
-ZUIDHORN                        1174.478602             ZUIDHORN
-ZUIDPLAS                        1218.800136             ZUIDPLAS
-ZUNDERT                         1155.341957              ZUNDERT
-ZUTPHEN                         1339.065240              ZUTPHEN
-ZWARTEWATERLAND                 1133.942277      ZWARTEWATERLAND
-ZWIJNDRECHT                     1325.995339          ZWIJNDRECHT
-ZWOLLE                          1158.649370               ZWOLLE
-
-[390 rows x 2 columns]
-#+BEGIN_EXPORT HTML
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>hospital_care_per_head</th>
-      <th>municipality</th>
-    </tr>
-    <tr>
-      <th>municipality</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>AA EN HUNZE</th>
-      <td>1307.637986</td>
-      <td>AA EN HUNZE</td>
-    </tr>
-    <tr>
-      <th>AALBURG</th>
-      <td>1165.917940</td>
-      <td>AALBURG</td>
-    </tr>
-    <tr>
-      <th>AALSMEER</th>
-      <td>1068.419705</td>
-      <td>AALSMEER</td>
-    </tr>
-    <tr>
-      <th>AALTEN</th>
-      <td>1238.528031</td>
-      <td>AALTEN</td>
-    </tr>
-    <tr>
-      <th>ACHTKARSPELEN</th>
-      <td>1193.610243</td>
-      <td>ACHTKARSPELEN</td>
-    </tr>
-    <tr>
-      <th>ALBLASSERDAM</th>
-      <td>1240.807021</td>
-      <td>ALBLASSERDAM</td>
-    </tr>
-    <tr>
-      <th>ALBRANDSWAARD</th>
-      <td>1182.312587</td>
-      <td>ALBRANDSWAARD</td>
-    </tr>
-    <tr>
-      <th>ALKMAAR</th>
-      <td>1154.310538</td>
-      <td>ALKMAAR</td>
-    </tr>
-    <tr>
-      <th>ALMELO</th>
-      <td>1312.432058</td>
-      <td>ALMELO</td>
-    </tr>
-    <tr>
-      <th>ALMERE</th>
-      <td>1176.676071</td>
-      <td>ALMERE</td>
-    </tr>
-    <tr>
-      <th>ALPHEN AAN DEN RIJN</th>
-      <td>1184.182702</td>
-      <td>ALPHEN AAN DEN RIJN</td>
-    </tr>
-    <tr>
-      <th>ALPHEN-CHAAM</th>
-      <td>1130.433778</td>
-      <td>ALPHEN-CHAAM</td>
-    </tr>
-    <tr>
-      <th>AMELAND</th>
-      <td>1072.883330</td>
-      <td>AMELAND</td>
-    </tr>
-    <tr>
-      <th>AMERSFOORT</th>
-      <td>1134.213900</td>
-      <td>AMERSFOORT</td>
-    </tr>
-    <tr>
-      <th>AMSTELVEEN</th>
-      <td>1211.863190</td>
-      <td>AMSTELVEEN</td>
-    </tr>
-    <tr>
-      <th>AMSTERDAM</th>
-      <td>1091.989084</td>
-      <td>AMSTERDAM</td>
-    </tr>
-    <tr>
-      <th>APELDOORN</th>
-      <td>1358.251995</td>
-      <td>APELDOORN</td>
-    </tr>
-    <tr>
-      <th>APPINGEDAM</th>
-      <td>1475.221016</td>
-      <td>APPINGEDAM</td>
-    </tr>
-    <tr>
-      <th>ARNHEM</th>
-      <td>1195.350654</td>
-      <td>ARNHEM</td>
-    </tr>
-    <tr>
-      <th>ASSEN</th>
-      <td>1197.869087</td>
-      <td>ASSEN</td>
-    </tr>
-    <tr>
-      <th>ASTEN</th>
-      <td>1226.436346</td>
-      <td>ASTEN</td>
-    </tr>
-    <tr>
-      <th>BAARLE-NASSAU</th>
-      <td>1324.808388</td>
-      <td>BAARLE-NASSAU</td>
-    </tr>
-    <tr>
-      <th>BAARN</th>
-      <td>1245.571838</td>
-      <td>BAARN</td>
-    </tr>
-    <tr>
-      <th>BARENDRECHT</th>
-      <td>1170.153254</td>
-      <td>BARENDRECHT</td>
-    </tr>
-    <tr>
-      <th>BARNEVELD</th>
-      <td>1058.660473</td>
-      <td>BARNEVELD</td>
-    </tr>
-    <tr>
-      <th>BEDUM</th>
-      <td>1302.285006</td>
-      <td>BEDUM</td>
-    </tr>
-    <tr>
-      <th>BEEK</th>
-      <td>1351.720079</td>
-      <td>BEEK</td>
-    </tr>
-    <tr>
-      <th>BEEMSTER</th>
-      <td>1200.951783</td>
-      <td>BEEMSTER</td>
-    </tr>
-    <tr>
-      <th>BEESEL</th>
-      <td>1370.313639</td>
-      <td>BEESEL</td>
-    </tr>
-    <tr>
-      <th>BELLINGWEDDE</th>
-      <td>1631.215378</td>
-      <td>BELLINGWEDDE</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>WESTLAND</th>
-      <td>1171.520793</td>
-      <td>WESTLAND</td>
-    </tr>
-    <tr>
-      <th>WESTSTELLINGWERF</th>
-      <td>1366.331515</td>
-      <td>WESTSTELLINGWERF</td>
-    </tr>
-    <tr>
-      <th>WESTVOORNE</th>
-      <td>1315.028317</td>
-      <td>WESTVOORNE</td>
-    </tr>
-    <tr>
-      <th>WIERDEN</th>
-      <td>1137.220785</td>
-      <td>WIERDEN</td>
-    </tr>
-    <tr>
-      <th>WIJCHEN</th>
-      <td>1334.844092</td>
-      <td>WIJCHEN</td>
-    </tr>
-    <tr>
-      <th>WIJDEMEREN</th>
-      <td>1329.783259</td>
-      <td>WIJDEMEREN</td>
-    </tr>
-    <tr>
-      <th>WIJK BIJ DUURSTEDE</th>
-      <td>1214.958808</td>
-      <td>WIJK BIJ DUURSTEDE</td>
-    </tr>
-    <tr>
-      <th>WINSUM</th>
-      <td>1107.756796</td>
-      <td>WINSUM</td>
-    </tr>
-    <tr>
-      <th>WINTERSWIJK</th>
-      <td>1276.494752</td>
-      <td>WINTERSWIJK</td>
-    </tr>
-    <tr>
-      <th>WOENSDRECHT</th>
-      <td>1384.649585</td>
-      <td>WOENSDRECHT</td>
-    </tr>
-    <tr>
-      <th>WOERDEN</th>
-      <td>1231.875027</td>
-      <td>WOERDEN</td>
-    </tr>
-    <tr>
-      <th>WORMERLAND</th>
-      <td>1318.951500</td>
-      <td>WORMERLAND</td>
-    </tr>
-    <tr>
-      <th>WOUDENBERG</th>
-      <td>1186.921024</td>
-      <td>WOUDENBERG</td>
-    </tr>
-    <tr>
-      <th>WOUDRICHEM</th>
-      <td>1090.399489</td>
-      <td>WOUDRICHEM</td>
-    </tr>
-    <tr>
-      <th>ZAANSTAD</th>
-      <td>1231.107914</td>
-      <td>ZAANSTAD</td>
-    </tr>
-    <tr>
-      <th>ZALTBOMMEL</th>
-      <td>1256.953286</td>
-      <td>ZALTBOMMEL</td>
-    </tr>
-    <tr>
-      <th>ZANDVOORT</th>
-      <td>1580.227020</td>
-      <td>ZANDVOORT</td>
-    </tr>
-    <tr>
-      <th>ZEDERIK</th>
-      <td>1105.695657</td>
-      <td>ZEDERIK</td>
-    </tr>
-    <tr>
-      <th>ZEEWOLDE</th>
-      <td>1007.620640</td>
-      <td>ZEEWOLDE</td>
-    </tr>
-    <tr>
-      <th>ZEIST</th>
-      <td>1250.873556</td>
-      <td>ZEIST</td>
-    </tr>
-    <tr>
-      <th>ZEVENAAR</th>
-      <td>1362.772562</td>
-      <td>ZEVENAAR</td>
-    </tr>
-    <tr>
-      <th>ZOETERMEER</th>
-      <td>1268.747761</td>
-      <td>ZOETERMEER</td>
-    </tr>
-    <tr>
-      <th>ZOETERWOUDE</th>
-      <td>1181.011076</td>
-      <td>ZOETERWOUDE</td>
-    </tr>
-    <tr>
-      <th>ZUIDHORN</th>
-      <td>1174.478602</td>
-      <td>ZUIDHORN</td>
-    </tr>
-    <tr>
-      <th>ZUIDPLAS</th>
-      <td>1218.800136</td>
-      <td>ZUIDPLAS</td>
-    </tr>
-    <tr>
-      <th>ZUNDERT</th>
-      <td>1155.341957</td>
-      <td>ZUNDERT</td>
-    </tr>
-    <tr>
-      <th>ZUTPHEN</th>
-      <td>1339.065240</td>
-      <td>ZUTPHEN</td>
-    </tr>
-    <tr>
-      <th>ZWARTEWATERLAND</th>
-      <td>1133.942277</td>
-      <td>ZWARTEWATERLAND</td>
-    </tr>
-    <tr>
-      <th>ZWIJNDRECHT</th>
-      <td>1325.995339</td>
-      <td>ZWIJNDRECHT</td>
-    </tr>
-    <tr>
-      <th>ZWOLLE</th>
-      <td>1158.649370</td>
-      <td>ZWOLLE</td>
-    </tr>
-  </tbody>
-</table>
-<p>390 rows × 2 columns</p>
-</div>
-#+END_EXPORT
+                  expenditure      municipality
+Municipality
+'s-Gravenhage     1790.200148     's-Gravenhage
+'s-Hertogenbosch  1775.506394  's-Hertogenbosch
+Aa en Hunze       1848.019292       Aa en Hunze
+Aalburg           1701.008568           Aalburg
+Aalsmeer          1550.837018          Aalsmeer
 :END:
 
 #+NAME: muppet-lamp-william-minnesota
@@ -2249,7 +1115,7 @@ ref_map.choropleth(
     # We will use the percentage dataframe for the choropleth mapping
     data=p_results,
     # Municipality will be used for the mapping key and p_valid for its value
-    columns=['municipality', 'hospital_care'],
+    columns=['municipality', 'expenditure'],
     # Use GM_NAAM (short for municipality name) as keys for colormapping
     key_on='feature.properties.GM_NAAM',
     # We are going to use a color map from yellow to green
@@ -2259,7 +1125,7 @@ ref_map.choropleth(
     # This gives the lines around the municipality shapes some opacity so that they don't stand out too much
     line_opacity=0.2,
     # The legend
-    legend_name='costs per head')
+    legend_name='health care expenditure per head')
 
 ref_map.save('health_expenditure.html')              # This will save the map in a HTML format
 
@@ -2268,7 +1134,6 @@ display(IFrame('health_expenditure.html', 800,800))  # This displays the map in 
 
 #+RESULTS: muppet-lamp-william-minnesota
 :RESULTS:
-<IPython.lib.display.IFrame at 0x1113cf2b0>
 #+BEGIN_EXPORT HTML
 
         <iframe
@@ -2280,6 +1145,579 @@ display(IFrame('health_expenditure.html', 800,800))  # This displays the map in 
         ></iframe>
 
 #+END_EXPORT
+<IPython.lib.display.IFrame at 0x10ff2d160>
 :END:
 
-[[./health_expenditure.html]]
+* Health care expenditure and age
+
+The municipality data set above does not give the health care expenditure per age; only per age group (like 0-4 year olds). So we load another data set that does feature health care expenditure per age.
+
+** read in the data
+
+Again, we use data from [[http://www.vektis.nl/index.php/vektis-open-data][Vektis]]. We import the data, which is a 'csv' file with ";" as separator between columns. We also import some libraries.
+
+Then we look at the columns (variables) in the data.
+
+
+#+NAME: blossom-batman-uniform-princess
+#+BEGIN_SRC ipython :session :results value
+import numpy as np
+import matplotlib as plt
+df_postal_code = pd.read_csv('Vektis_Open_Databestand_Zorgverzekeringswet_2014_-_postcode3.csv', sep = ';')
+df_postal_code.dtypes
+#+END_SRC
+
+
+
+This looks very much like the data set above, so we want to do the same steps to get the data into the shape we want. In fact, if you go to the website [[http://www.vektis.nl/index.php/vektis-open-data][Vektis]] there are similar data sets for other years. Copy and paste the steps above and then apply these steps to the new data sets is asking for trouble:
+
++ you are likely to make mistakes with copy/paste
++ if you figure out that you want to change one of your commands, you have to change all the pasted versions as well
+
+One solution in python is to define a function that does all these steps for you and apply this function to all the data sets that you want to work with.
+
+#+NAME: kitten-kilo-one-july
+#+BEGIN_SRC ipython :session :results output drawer
+def get_data_into_shape(df):
+    df['health_expenditure_under_deductible'] = df[cost_categories_under_deductible].sum(axis=1)
+    df = df.rename_axis({
+        'GESLACHT':'sex',
+        'LEEFTIJDSKLASSE':'age',
+        'GEMEENTENAAM':'MUNICIPALITY',
+        'AANTAL_BSN':'number_citizens',
+        'KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG':'hospital_care',
+        'KOSTEN_FARMACIE':'pharmaceuticals',
+        'KOSTEN_TWEEDELIJNS_GGZ':'mental_care',
+        'KOSTEN_HUISARTS_INSCHRIJFTARIEF':'GP_capitation',
+        'KOSTEN_HUISARTS_CONSULT':'GP_fee_for_service',
+        'KOSTEN_HUISARTS_OVERIG':'GP_other',
+        'KOSTEN_MONDZORG':'dental care',
+        'KOSTEN_PARAMEDISCHE_ZORG_FYSIOTHERAPIE':'physiotherapy',
+        'KOSTEN_KRAAMZORG':'maternity_care',
+        'KOSTEN_VERLOSKUNDIGE_ZORG':'obstetrics'
+    }, axis='columns')
+    df.drop(['AANTAL_VERZEKERDEJAREN',
+             'KOSTEN_HULPMIDDELEN',
+             'KOSTEN_PARAMEDISCHE_ZORG_OVERIG',
+             'KOSTEN_ZIEKENVERVOER_ZITTEND',
+             'KOSTEN_ZIEKENVERVOER_LIGGEND',
+             'KOSTEN_GRENSOVERSCHRIJDENDE_ZORG',
+             'KOSTEN_GERIATRISCHE_REVALIDATIEZORG',
+             'KOSTEN_OVERIG',
+             'KOSTEN_GENERALISTISCHE_BASIS_GGZ',
+             'KOSTEN_EERSTELIJNS_ONDERSTEUNING'],inplace=True,axis=1)
+    df.drop(df.index[[0]], inplace=True)
+    df['sex'] = df['sex'].astype('category')
+    df['age'] = df['age'].astype('category')
+    return df
+
+#+END_SRC
+
+
+
+#+NAME: autumn-spaghetti-april-jupiter
+#+BEGIN_SRC ipython :session :results output drawer
+df_postal_code = get_data_into_shape(df_postal_code)
+#+END_SRC
+
+#+NAME: delaware-beryllium-north-three
+#+BEGIN_SRC ipython :session :results output drawer
+df_postal_code.head()
+#+END_SRC
+
+#+RESULTS: delaware-beryllium-north-three
+:RESULTS:
+#+BEGIN_EXPORT HTML
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sex</th>
+      <th>age</th>
+      <th>POSTCODE_3</th>
+      <th>number_citizens</th>
+      <th>hospital_care</th>
+      <th>pharmaceuticals</th>
+      <th>mental_care</th>
+      <th>GP_capitation</th>
+      <th>GP_fee_for_service</th>
+      <th>GP_other</th>
+      <th>dental care</th>
+      <th>physiotherapy</th>
+      <th>maternity_care</th>
+      <th>obstetrics</th>
+      <th>health_expenditure_under_deductible</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>M</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>366</td>
+      <td>1372209.26</td>
+      <td>31191.20</td>
+      <td>285.98</td>
+      <td>5548.60</td>
+      <td>5540.05</td>
+      <td>11525.93</td>
+      <td>681.02</td>
+      <td>12150.91</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1425823.15</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>M</td>
+      <td>0</td>
+      <td>101.0</td>
+      <td>590</td>
+      <td>1682944.17</td>
+      <td>25898.73</td>
+      <td>20774.91</td>
+      <td>9816.63</td>
+      <td>10130.12</td>
+      <td>20532.03</td>
+      <td>0.00</td>
+      <td>17777.00</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1753560.87</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>M</td>
+      <td>0</td>
+      <td>102.0</td>
+      <td>295</td>
+      <td>1553933.53</td>
+      <td>29514.18</td>
+      <td>7970.01</td>
+      <td>5317.49</td>
+      <td>6576.70</td>
+      <td>17426.30</td>
+      <td>21.29</td>
+      <td>20459.17</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1617184.58</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>M</td>
+      <td>0</td>
+      <td>103.0</td>
+      <td>288</td>
+      <td>827427.31</td>
+      <td>19263.79</td>
+      <td>941.40</td>
+      <td>5014.97</td>
+      <td>5708.41</td>
+      <td>14168.90</td>
+      <td>0.00</td>
+      <td>9098.71</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>865867.07</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>M</td>
+      <td>0</td>
+      <td>105.0</td>
+      <td>998</td>
+      <td>2965316.12</td>
+      <td>61610.42</td>
+      <td>4780.48</td>
+      <td>16842.06</td>
+      <td>19676.01</td>
+      <td>43794.06</td>
+      <td>166.98</td>
+      <td>42332.18</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>3118357.71</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+#+END_EXPORT
+  sex age  POSTCODE_3  number_citizens  hospital_care  pharmaceuticals  \
+1   M   0         0.0              366     1372209.26         31191.20
+2   M   0       101.0              590     1682944.17         25898.73
+3   M   0       102.0              295     1553933.53         29514.18
+4   M   0       103.0              288      827427.31         19263.79
+5   M   0       105.0              998     2965316.12         61610.42
+
+   mental_care  GP_capitation  GP_fee_for_service  GP_other  dental care  \
+1       285.98        5548.60             5540.05  11525.93       681.02
+2     20774.91        9816.63            10130.12  20532.03         0.00
+3      7970.01        5317.49             6576.70  17426.30        21.29
+4       941.40        5014.97             5708.41  14168.90         0.00
+5      4780.48       16842.06            19676.01  43794.06       166.98
+
+   physiotherapy  maternity_care  obstetrics  \
+1       12150.91             0.0         0.0
+2       17777.00             0.0         0.0
+3       20459.17             0.0         0.0
+4        9098.71             0.0         0.0
+5       42332.18             0.0         0.0
+
+   health_expenditure_under_deductible
+1                           1425823.15
+2                           1753560.87
+3                           1617184.58
+4                            865867.07
+5                           3118357.71
+:END:
+
+
+
+The first three columns are 'sex', 'age' and 'postal code' (3 digit). These 3 variables combined determine a unique observation. We think of these observations as if they are from an individual (but an observation is an average, like the average over 18 year old males in postal code 102).
+
+
+Note that the first postal code is '000' which python thinks of as '0.0'. The
+[[http://www.vektis.nl/images/open_data/Bijsluiter_bij_de_Vektis_Open_Databestanden_Zorgverzekeringswet_2011_-_2014.pdf][data description]] explains that postal code '000' is used to aggregate people who
+live in a postal code with so few people that the privacy of their data is no
+longer guaranteed. As we want to think of `sex`, `age` and `postal code` as an observation, we drop the first row (labelled as `0`) of the dataframe.
+
+#+NAME: one-queen-arizona-venus
+#+BEGIN_SRC ipython :session :results value
+df_postal_code.drop(df_postal_code.index[[0]], inplace=True)
+df_postal_code.head()
+#+END_SRC
+
+#+RESULTS: one-queen-arizona-venus
+:RESULTS:
+  sex age  POSTCODE_3  number_citizens  hospital_care  pharmaceuticals  \
+2   M   0       101.0              590     1682944.17         25898.73
+3   M   0       102.0              295     1553933.53         29514.18
+4   M   0       103.0              288      827427.31         19263.79
+5   M   0       105.0              998     2965316.12         61610.42
+6   M   0       106.0             1056     3716382.22         87140.60
+
+   mental_care  GP_capitation  GP_fee_for_service  GP_other  dental care  \
+2     20774.91        9816.63            10130.12  20532.03         0.00
+3      7970.01        5317.49             6576.70  17426.30        21.29
+4       941.40        5014.97             5708.41  14168.90         0.00
+5      4780.48       16842.06            19676.01  43794.06       166.98
+6     25006.18       19517.84            24045.35  65572.64       114.05
+
+   physiotherapy  maternity_care  obstetrics  \
+2       17777.00             0.0         0.0
+3       20459.17             0.0         0.0
+4        9098.71             0.0         0.0
+5       42332.18             0.0         0.0
+6       28299.76             0.0         0.0
+
+   health_expenditure_under_deductible
+2                           1753560.87
+3                           1617184.58
+4                            865867.07
+5                           3118357.71
+6                           3885368.16
+:END:
+
+The end of the dataframe is given by the following.
+
+#+NAME: finch-oven-thirteen-nine
+#+begin_src ipython :session :results value
+df_postal_code.tail(10)
+#+end_src
+
+#+RESULTS: finch-oven-thirteen-nine
+:RESULTS:
+       sex  age  POSTCODE_3  number_citizens  hospital_care  pharmaceuticals  \
+136463   V  90+       988.0               10       19698.83          4011.31
+136464   V  90+       990.0              151      257046.54         99187.66
+136465   V  90+       991.0               51       95990.43         52682.34
+136466   V  90+       993.0              170      278000.11        124809.41
+136467   V  90+       994.0               38       28454.41         36590.90
+136468   V  90+       995.0               88      200183.72         64315.53
+136469   V  90+       996.0               44       46723.13         39419.64
+136470   V  90+       997.0               38       98954.45         34308.68
+136471   V  90+       998.0              116      168802.54        116907.93
+136472   V  90+       999.0               38      109842.07         40607.06
+
+        mental_care  GP_capitation  GP_fee_for_service  GP_other  dental care  \
+136463         0.00         894.25              567.45   1283.11         0.00
+136464     37614.24       11880.75            20144.21  24522.70      1619.74
+136465      1102.77        4854.50            14575.32  15550.40       801.65
+136466     12652.77       12646.44            13305.75  19040.63      2495.54
+136467      2251.30        3652.03             5742.81  16966.62       143.16
+136468      3691.37        6438.60            11593.30  15929.91      2729.32
+136469      2833.17        4011.35             5459.40  15185.71       979.06
+136470      4480.09        3347.05             5395.18   7061.51       897.98
+136471     13830.16       10424.40            13527.80  28548.80      1577.91
+136472      3273.62        3704.75             4197.46   6763.69        60.97
+
+        physiotherapy  maternity_care  obstetrics  \
+136463            0.0             0.0         0.0
+136464        12000.6             0.0         0.0
+136465          462.0             0.0         0.0
+136466         1675.0             0.0         0.0
+136467         1409.2             0.0         0.0
+136468         4352.1             0.0         0.0
+136469         6537.2             0.0         0.0
+136470         9201.0             0.0         0.0
+136471         1875.6             0.0         0.0
+136472          290.0             0.0         0.0
+
+        health_expenditure_under_deductible
+136463                             33079.01
+136464                            790837.02
+136465                            207319.25
+136466                            535215.22
+136467                            106569.94
+136468                            378170.95
+136469                            156304.71
+136470                            193232.92
+136471                            455608.75
+136472                            198874.20
+:END:
+
+As we saw above, the datatype of `age` was `object`, although we would expect `integer`. Now we see that there is this category `90+`, which is not an integer. We will drop this age category as it is quite special. Before we do this, let's count how many people we have in our dataset.
+
+#+NAME: comet-sodium-sink-kansas
+#+BEGIN_SRC ipython :session :results output drawer
+df_postal_code['number_citizens'].sum()
+#+END_SRC
+
+#+RESULTS: comet-sodium-sink-kansas
+:RESULTS:
+16885677
+:END:
+
+That is, almost 17 million people, which is about right.
+
+Let's drop the '90+' category and turn `age` into an integer variable.
+
+#+NAME: nevada-nevada-alpha-lithium
+#+BEGIN_SRC ipython :session :results value
+df_postal_code = df_postal_code[(df_postal_code['age'] != '90+')]
+df_postal_code['age'] = df_postal_code['age'].astype(int)
+#+END_SRC
+
+#+RESULTS: nevada-nevada-alpha-lithium
+:RESULTS:
+:END:
+
+Let's summarize the variables that are numeric (integer or float). For each of these variables we have 135,063 observations (that is, combinations of `sex`, `age` and `postal code`). The mean for number of citizens is 124. With $135,063*124$ we are close to 17 million again.
+
+#+NAME: mexico-minnesota-carbon-single
+#+BEGIN_SRC ipython :session :results value
+df_postal_code.describe()
+#+END_SRC
+
+#+RESULTS: mexico-minnesota-carbon-single
+:RESULTS:
+                 age     POSTCODE_3  number_citizens  hospital_care  \
+count  135063.000000  135063.000000    135063.000000   1.350630e+05
+mean       43.753959     541.250002       123.950327   1.534887e+05
+std        25.535582     258.016742       129.491359   1.965840e+05
+min         0.000000       0.000000        10.000000  -2.300980e+04
+25%        22.000000     318.000000        40.000000   3.055294e+04
+50%        44.000000     539.000000        82.000000   8.262627e+04
+75%        66.000000     763.000000       161.000000   2.006986e+05
+max        89.000000     999.000000      2228.000000   5.263426e+06
+
+       pharmaceuticals    mental_care  GP_capitation  GP_fee_for_service  \
+count     1.350630e+05  135063.000000  135063.000000       135063.000000
+mean      3.146225e+04   23296.150212    7693.165768         4528.021995
+std       4.483099e+04   45078.454602    7676.781993         5060.276133
+min      -2.857890e+03  -29164.050000       0.000000            0.000000
+25%       5.034130e+03     299.260000    2585.970000         1351.340000
+50%       1.547225e+04    5702.020000    5244.990000         2900.080000
+75%       4.037718e+04   24546.195000   10140.510000         5899.600000
+max       1.546412e+06  885045.050000  155453.330000       194903.830000
+
+            GP_other    dental care  physiotherapy  maternity_care  \
+count  135063.000000  135063.000000  135063.000000   135063.000000
+mean     5938.297319    5438.213219    3287.127334     2201.230080
+std      6329.471736   10190.600213    4659.495994    10426.252898
+min         0.000000    -458.190000    -106.800000    -1898.420000
+25%      1934.255000     150.075000     143.745000        0.000000
+50%      4002.870000    1746.990000    1617.300000        0.000000
+75%      7691.255000    6293.135000    4463.975000        0.000000
+max    276119.620000  254585.130000  106169.130000   399960.460000
+
+          obstetrics  health_expenditure_under_deductible
+count  135063.000000                         1.350630e+05
+mean     1612.545851                         2.192913e+05
+std      7853.598487                         2.719250e+05
+min         0.000000                         0.000000e+00
+25%         0.000000                         4.791477e+04
+50%         0.000000                         1.234374e+05
+75%         0.000000                         2.872767e+05
+max    321751.460000                         9.012553e+06
+:END:
+
+#+NAME: bakerloo-lemon-edward-mike
+#+BEGIN_SRC ipython :session
+df_postal_code.info()
+#+END_SRC
+
+
+Now let's define the costs per head. For each observation, we divide the total health care costs (under the deductible) for a combination of `sex`, `age` and `postal code` by the number of people in this combination of `sex`, `age` and `postal code`. This gives the health costs per head.
+
+#+NAME: may-three-carpet-texas
+#+BEGIN_SRC ipython :session :results output drawer
+df_postal_code['health_costs_per_head'] = df_postal_code['health_expenditure_under_deductible']/df_postal_code['number_citizens']
+#+END_SRC
+
+So for, say, 18 year old males, we have a distribution of costs per head over the different `postal codes`. For each combination of age and sex, we can look at the average expenditure. With ~pandas~ this is easy to do. We use ~groupby~, specify the dimensions over which we want to group, the variable we are interested in and give the function to aggregate (mean, in this case).
+
+#+NAME: edward-minnesota-social-equal
+#+BEGIN_SRC ipython :session :results output drawer
+costs_per_sex_age = df_postal_code.groupby(['sex','age'])['health_costs_per_head'].mean()
+#+END_SRC
+
+
+Then we can plot this distribution of health care expenditure per head with age for males and females.
+
+#+NAME: london-nuts-mirror-carbon
+#+BEGIN_SRC ipython :session
+import matplotlib.pyplot as plt
+plt.style.use('seaborn')
+fig = plt.figure()
+ax = costs_per_sex_age['M'].plot()
+ax = costs_per_sex_age['V'].plot()
+ax.set_xlabel('age')
+ax.set_ylabel('costs per head')
+ax.set_title('average costs per age and sex')
+ax.legend(['male','female'])
+fig.savefig("males.png")
+#+END_SRC
+
+
+[[./males.png]]
+
+
+Suppose you are interested in the effect of the deductible on health care expenditure. Why would the following graph help for this?
+
+
+#+NAME: grey-october-xray-red
+#+BEGIN_SRC ipython :session :results output drawer
+plt.style.use('seaborn')
+plt.clf()
+age_range = [14,15,16,17,19,20,21,22]
+
+plt.plot(age_range,costs_per_sex_age['M'][age_range], marker='.', label = 'male')
+plt.plot(age_range,costs_per_sex_age['V'][age_range], marker='.', label = 'female')
+plt.xlabel('age')
+plt.ylabel('health care costs')
+plt.legend()
+fig.savefig('fig14to22.png')
+
+#+END_SRC
+
+[[./fig14to22.png]]
+
+
+Instead of ~matplotlib~ to plot, we can also use ~plotly~. With ~plotly~ you can make interactive graphs.
+
+
+
+#+NAME: whiskey-south-stream-speaker
+#+BEGIN_SRC ipython :session :results output drawer
+def ecdf(data):
+    x = np.sort(data)
+    y = np.arange(1.0, len(x)+1.0) / len(x)
+    return x, y
+#+END_SRC
+
+
+#+NAME: south-oklahoma-mirror-beryllium
+#+BEGIN_SRC ipython :session :results output drawer
+df_postal_code.health_costs_per_head[(df_postal_code['age'] == 17)]
+#+END_SRC
+
+#+NAME: seventeen-four-ceiling-hotel
+#+BEGIN_SRC ipython :session :results output drawer
+x_16, y_16 = ecdf(df_postal_code.health_costs_per_head[(df_postal_code['age'] == 16)])
+x_17, y_17 = ecdf(df_postal_code.health_costs_per_head[(df_postal_code['age'] == 17)])
+x_19, y_19 = ecdf(df_postal_code.health_costs_per_head[(df_postal_code['age'] == 19)])
+x_20, y_20 = ecdf(df_postal_code.health_costs_per_head[(df_postal_code['age'] == 20)])
+
+
+#+END_SRC
+
+
+
+#+NAME: colorado-utah-ink-virginia
+#+BEGIN_SRC ipython :session :results output drawer
+import plotly.plotly as py
+from plotly.graph_objs import *
+import plotly.tools as tls
+#+END_SRC
+
+
+#+NAME: artist-mockingbird-florida-hot
+#+BEGIN_SRC ipython :session :results output drawer
+age16 = Scatter(
+    x=x_16,
+    y=y_16,
+    mode='markers+lines',
+    name = 'age 16'
+)
+age17 = Scatter(
+    x=x_17,
+    y=y_17,
+    mode='markers+lines',
+    name = 'age 17'
+)
+age19 = Scatter(
+    x=x_19,
+    y=y_19,
+    mode='markers+lines',
+    name = 'age 19'
+)
+age20 = Scatter(
+    x=x_20,
+    y=y_20,
+    mode='markers+lines',
+    name = 'age 20'
+)
+
+
+
+
+
+
+layout = Layout(
+    title='Health care expend. distribution functions',
+    xaxis=XAxis(
+        range=[0,3000],
+        title='expenditure per head',
+        titlefont=Font(
+            family='Courier New, monospace',
+            size=18,
+            color='#7f7f7f'
+        )
+    ),
+    yaxis=YAxis(
+        title='cum. distribution function',
+        titlefont=Font(
+            family='Courier New, monospace',
+            size=18,
+            color='#7f7f7f'
+        )
+    )
+)
+
+data = Data([age16,age17,age19,age20])
+fig = Figure(data=data, layout=layout)
+py.plot(fig, filename='Distribution functions of health care expenditure per head')
+tls.embed("https://plot.ly/~janboone/301")
+#+END_SRC
+
+#+RESULTS: artist-mockingbird-florida-hot
+:RESULTS:
+#+BEGIN_EXPORT HTML
+<iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://plot.ly/~janboone/301.embed" height="525" width="100%"></iframe>
+#+END_EXPORT
+<plotly.tools.PlotlyDisplay object>
+:END:
