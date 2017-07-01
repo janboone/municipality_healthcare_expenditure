@@ -2,6 +2,7 @@
 
 In this file we will work with health care data on the level of municipalities. We will plot how health care expenditure varies with age and with location. In the process you will see how libraries like pandas and matplotlib work.
 
+
 ** loading the data
 
 The following code block loads the data. We use data from [[http://www.vektis.nl/index.php/vektis-open-data][Vektis]]. We import the data, which is a 'csv' file with ";" as separator between columns. We also import the pandas library.
@@ -9,7 +10,7 @@ The following code block loads the data. We use data from [[http://www.vektis.nl
 Then we inspect the first ten rows of our data set.
 
 #+NAME: kitten-purple-cardinal-quebec
-#+BEGIN_SRC ipython :session :results output drawer :ob-ipython-results text/plain
+#+BEGIN_SRC ipython :session :results output drawer
 
 # First lets clear all previous python imports and variables by resetting the python kernel.
 %reset -f
@@ -133,6 +134,281 @@ GESLACHT LEEFTIJDSKLASSE   GEMEENTENAAM  AANTAL_BSN  AANTAL_VERZEKERDEJAREN  \
 9         682.51
 
 [10 rows x 24 columns]
+#+BEGIN_EXPORT HTML
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GESLACHT</th>
+      <th>LEEFTIJDSKLASSE</th>
+      <th>GEMEENTENAAM</th>
+      <th>AANTAL_BSN</th>
+      <th>AANTAL_VERZEKERDEJAREN</th>
+      <th>KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG</th>
+      <th>KOSTEN_FARMACIE</th>
+      <th>KOSTEN_TWEEDELIJNS_GGZ</th>
+      <th>KOSTEN_HUISARTS_INSCHRIJFTARIEF</th>
+      <th>KOSTEN_HUISARTS_CONSULT</th>
+      <th>...</th>
+      <th>KOSTEN_PARAMEDISCHE_ZORG_OVERIG</th>
+      <th>KOSTEN_ZIEKENVERVOER_ZITTEND</th>
+      <th>KOSTEN_ZIEKENVERVOER_LIGGEND</th>
+      <th>KOSTEN_KRAAMZORG</th>
+      <th>KOSTEN_VERLOSKUNDIGE_ZORG</th>
+      <th>KOSTEN_GENERALISTISCHE_BASIS_GGZ</th>
+      <th>KOSTEN_GRENSOVERSCHRIJDENDE_ZORG</th>
+      <th>KOSTEN_EERSTELIJNS_ONDERSTEUNING</th>
+      <th>KOSTEN_GERIATRISCHE_REVALIDATIEZORG</th>
+      <th>KOSTEN_OVERIG</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>298383</td>
+      <td>185664.92</td>
+      <td>48661669.94</td>
+      <td>9219422.33</td>
+      <td>7475481.90</td>
+      <td>4092492.35</td>
+      <td>1388439.07</td>
+      <td>...</td>
+      <td>290539.66</td>
+      <td>210313.33</td>
+      <td>1398151.05</td>
+      <td>1286545.5</td>
+      <td>1072906.37</td>
+      <td>490222.49</td>
+      <td>21946526.34</td>
+      <td>523.35</td>
+      <td>351533.29</td>
+      <td>849751.44</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>AA EN HUNZE</td>
+      <td>507</td>
+      <td>468.83</td>
+      <td>473370.77</td>
+      <td>43305.49</td>
+      <td>14056.81</td>
+      <td>26239.56</td>
+      <td>12829.29</td>
+      <td>...</td>
+      <td>13783.67</td>
+      <td>638.08</td>
+      <td>5004.86</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>2571.36</td>
+      <td>31.05</td>
+      <td>0.00</td>
+      <td>186.03</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>AALBURG</td>
+      <td>428</td>
+      <td>387.28</td>
+      <td>340442.37</td>
+      <td>23395.86</td>
+      <td>5555.83</td>
+      <td>21673.15</td>
+      <td>9417.98</td>
+      <td>...</td>
+      <td>15297.60</td>
+      <td>315.06</td>
+      <td>6155.09</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>186.08</td>
+      <td>5.40</td>
+      <td>0.00</td>
+      <td>135.30</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>AALSMEER</td>
+      <td>876</td>
+      <td>790.65</td>
+      <td>932841.57</td>
+      <td>54597.52</td>
+      <td>34355.66</td>
+      <td>43971.27</td>
+      <td>22413.37</td>
+      <td>...</td>
+      <td>14105.95</td>
+      <td>0.00</td>
+      <td>20465.44</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>157.44</td>
+      <td>1743.72</td>
+      <td>12.60</td>
+      <td>0.00</td>
+      <td>13285.23</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>AALTEN</td>
+      <td>667</td>
+      <td>600.00</td>
+      <td>515879.78</td>
+      <td>43516.71</td>
+      <td>2404.19</td>
+      <td>33749.10</td>
+      <td>18472.64</td>
+      <td>...</td>
+      <td>31816.27</td>
+      <td>1173.82</td>
+      <td>6282.28</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>1422.67</td>
+      <td>62.75</td>
+      <td>3.60</td>
+      <td>0.00</td>
+      <td>107.40</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>ACHTKARSPELEN</td>
+      <td>810</td>
+      <td>737.03</td>
+      <td>766456.80</td>
+      <td>88084.16</td>
+      <td>6681.81</td>
+      <td>41477.79</td>
+      <td>19157.34</td>
+      <td>...</td>
+      <td>30454.49</td>
+      <td>204.30</td>
+      <td>17011.84</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>206.11</td>
+      <td>955.80</td>
+      <td>0.00</td>
+      <td>453.66</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>ALBLASSERDAM</td>
+      <td>637</td>
+      <td>561.21</td>
+      <td>1252440.29</td>
+      <td>140225.60</td>
+      <td>9715.96</td>
+      <td>30705.39</td>
+      <td>15936.39</td>
+      <td>...</td>
+      <td>19202.75</td>
+      <td>0.00</td>
+      <td>11421.05</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>662.75</td>
+      <td>11.25</td>
+      <td>0.00</td>
+      <td>165.60</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>ALBRANDSWAARD</td>
+      <td>735</td>
+      <td>663.22</td>
+      <td>927635.48</td>
+      <td>114174.07</td>
+      <td>2043.52</td>
+      <td>37028.38</td>
+      <td>21611.09</td>
+      <td>...</td>
+      <td>30449.94</td>
+      <td>0.00</td>
+      <td>13027.62</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>1422.76</td>
+      <td>7.20</td>
+      <td>0.00</td>
+      <td>368.37</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>ALKMAAR</td>
+      <td>2967</td>
+      <td>2660.93</td>
+      <td>4005510.06</td>
+      <td>258936.51</td>
+      <td>22599.87</td>
+      <td>147227.49</td>
+      <td>71141.10</td>
+      <td>...</td>
+      <td>67205.26</td>
+      <td>4086.51</td>
+      <td>70806.48</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>168.55</td>
+      <td>7153.37</td>
+      <td>36.90</td>
+      <td>0.00</td>
+      <td>2707.21</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>M</td>
+      <td>0 t/m  4 jaar</td>
+      <td>ALMELO</td>
+      <td>1906</td>
+      <td>1714.63</td>
+      <td>3518922.31</td>
+      <td>254976.19</td>
+      <td>87437.11</td>
+      <td>96757.71</td>
+      <td>51693.62</td>
+      <td>...</td>
+      <td>81595.14</td>
+      <td>7742.31</td>
+      <td>32328.75</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>3777.82</td>
+      <td>2492.23</td>
+      <td>27.45</td>
+      <td>0.00</td>
+      <td>682.51</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 24 columns</p>
+</div>
+#+END_EXPORT
 :END:
 
 We are going to be interested in total health care costs under the deductible. Hence, we specify the categories that fall under the deductible in the Netherlands in 2014.
@@ -171,32 +447,7 @@ df_gemeente.dtypes
 
 #+RESULTS: charlie-jig-red-texas
 :RESULTS:
-sex                                     object
-age                                     object
-MUNICIPALITY                            object
-number_citizens                          int64
-AANTAL_VERZEKERDEJAREN                 float64
-hospital_care                          float64
-pharmaceuticals                        float64
-mental_care                            float64
-GP_capitation                          float64
-GP_fee_for_service                     float64
-GP_other                               float64
-KOSTEN_HULPMIDDELEN                    float64
-dental care                            float64
-physiotherapy                          float64
-KOSTEN_PARAMEDISCHE_ZORG_OVERIG        float64
-KOSTEN_ZIEKENVERVOER_ZITTEND           float64
-KOSTEN_ZIEKENVERVOER_LIGGEND           float64
-maternity_care                         float64
-obstetrics                             float64
-KOSTEN_GENERALISTISCHE_BASIS_GGZ       float64
-KOSTEN_GRENSOVERSCHRIJDENDE_ZORG       float64
-KOSTEN_EERSTELIJNS_ONDERSTEUNING       float64
-KOSTEN_GERIATRISCHE_REVALIDATIEZORG    float64
-KOSTEN_OVERIG                          float64
-health_expenditure_under_deductible    float64
-dtype: object
+[[async-queued: charlie-jig-red-texas output]]
 :END:
 
 #+NAME: kitten-quebec-hawaii-william
