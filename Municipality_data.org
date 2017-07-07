@@ -521,6 +521,33 @@ df_gemeente.head()
 
 #+RESULTS: three-quebec-video-yankee
 :RESULTS:
+sex             age MUNICIPALITY  number_citizens  hospital_care  \
+0  NaN             NaN          NaN           298383    48661669.94   
+1    M   0 t/m  4 jaar  AA EN HUNZE              507      473370.77   
+2    M   0 t/m  4 jaar      AALBURG              428      340442.37   
+3    M   0 t/m  4 jaar     AALSMEER              876      932841.57   
+4    M   0 t/m  4 jaar       AALTEN              667      515879.78   
+
+   pharmaceuticals  mental_care  GP_capitation  GP_fee_for_service  \
+0       9219422.33   7475481.90     4092492.35          1388439.07   
+1         43305.49     14056.81       26239.56            12829.29   
+2         23395.86      5555.83       21673.15             9417.98   
+3         54597.52     34355.66       43971.27            22413.37   
+4         43516.71      2404.19       33749.10            18472.64   
+
+     GP_other  dental care  physiotherapy  maternity_care  obstetrics  \
+0  3041904.41   1249229.61      418648.30       1286545.5  1072906.37   
+1    36034.65      9311.14       15968.80             0.0        0.00   
+2    20159.19      7213.81        6135.05             0.0        0.00   
+3    61629.32     19042.00       20086.43             0.0        0.00   
+4    46720.61     12909.41       20762.75             0.0        0.00   
+
+   health_expenditure_under_deductible  
+0                          86677435.03  
+1                            576750.31  
+2                            406856.55  
+3                           1093297.37  
+4                            652523.86  
 #+BEGIN_EXPORT HTML
 <div>
 <table border="1" class="dataframe">
@@ -639,33 +666,6 @@ df_gemeente.head()
 </table>
 </div>
 #+END_EXPORT
-   sex             age MUNICIPALITY  number_citizens  hospital_care  \
-0  NaN             NaN          NaN           298383    48661669.94
-1    M   0 t/m  4 jaar  AA EN HUNZE              507      473370.77
-2    M   0 t/m  4 jaar      AALBURG              428      340442.37
-3    M   0 t/m  4 jaar     AALSMEER              876      932841.57
-4    M   0 t/m  4 jaar       AALTEN              667      515879.78
-
-   pharmaceuticals  mental_care  GP_capitation  GP_fee_for_service  \
-0       9219422.33   7475481.90     4092492.35          1388439.07
-1         43305.49     14056.81       26239.56            12829.29
-2         23395.86      5555.83       21673.15             9417.98
-3         54597.52     34355.66       43971.27            22413.37
-4         43516.71      2404.19       33749.10            18472.64
-
-     GP_other  dental care  physiotherapy  maternity_care  obstetrics  \
-0  3041904.41   1249229.61      418648.30       1286545.5  1072906.37
-1    36034.65      9311.14       15968.80             0.0        0.00
-2    20159.19      7213.81        6135.05             0.0        0.00
-3    61629.32     19042.00       20086.43             0.0        0.00
-4    46720.61     12909.41       20762.75             0.0        0.00
-
-   health_expenditure_under_deductible
-0                          86677435.03
-1                            576750.31
-2                            406856.55
-3                           1093297.37
-4                            652523.86
 :END:
 
 We are not interested in the first line, so we drop it. Indeed, our data set now starts with the first municipality 'AA EN HUNZE'.
@@ -679,32 +679,32 @@ df_gemeente.head()
 #+RESULTS: seven-mango-cat-angel
 :RESULTS:
   sex             age   MUNICIPALITY  number_citizens  hospital_care  \
-1   M   0 t/m  4 jaar    AA EN HUNZE              507      473370.77
-2   M   0 t/m  4 jaar        AALBURG              428      340442.37
-3   M   0 t/m  4 jaar       AALSMEER              876      932841.57
-4   M   0 t/m  4 jaar         AALTEN              667      515879.78
-5   M   0 t/m  4 jaar  ACHTKARSPELEN              810      766456.80
+1   M   0 t/m  4 jaar    AA EN HUNZE              507      473370.77   
+2   M   0 t/m  4 jaar        AALBURG              428      340442.37   
+3   M   0 t/m  4 jaar       AALSMEER              876      932841.57   
+4   M   0 t/m  4 jaar         AALTEN              667      515879.78   
+5   M   0 t/m  4 jaar  ACHTKARSPELEN              810      766456.80   
 
    pharmaceuticals  mental_care  GP_capitation  GP_fee_for_service  GP_other  \
-1         43305.49     14056.81       26239.56            12829.29  36034.65
-2         23395.86      5555.83       21673.15             9417.98  20159.19
-3         54597.52     34355.66       43971.27            22413.37  61629.32
-4         43516.71      2404.19       33749.10            18472.64  46720.61
-5         88084.16      6681.81       41477.79            19157.34  53633.01
+1         43305.49     14056.81       26239.56            12829.29  36034.65   
+2         23395.86      5555.83       21673.15             9417.98  20159.19   
+3         54597.52     34355.66       43971.27            22413.37  61629.32   
+4         43516.71      2404.19       33749.10            18472.64  46720.61   
+5         88084.16      6681.81       41477.79            19157.34  53633.01   
 
    dental care  physiotherapy  maternity_care  obstetrics  \
-1      9311.14       15968.80             0.0         0.0
-2      7213.81        6135.05             0.0         0.0
-3     19042.00       20086.43             0.0         0.0
-4     12909.41       20762.75             0.0         0.0
-5     16695.10       23423.96             0.0         0.0
+1      9311.14       15968.80             0.0         0.0   
+2      7213.81        6135.05             0.0         0.0   
+3     19042.00       20086.43             0.0         0.0   
+4     12909.41       20762.75             0.0         0.0   
+5     16695.10       23423.96             0.0         0.0   
 
-   health_expenditure_under_deductible
-1                            576750.31
-2                            406856.55
-3                           1093297.37
-4                            652523.86
-5                            954494.16
+   health_expenditure_under_deductible  
+1                            576750.31  
+2                            406856.55  
+3                           1093297.37  
+4                            652523.86  
+5                            954494.16  
 :END:
 
 
@@ -768,6 +768,137 @@ health_expenditure_under_deductible    14808 non-null float64
 dtypes: category(2), float64(11), int64(1), object(1)
 memory usage: 1.6+ MB
 :END:
+
+We can select rows from a dataframe using ~loc~. Below, we consider the municipality Breda and people between 10 and 14 years old.
+
+#+NAME: network-oxygen-one-pizza
+#+BEGIN_SRC ipython :session
+df_gemeente.loc[(df_gemeente.MUNICIPALITY == 'BREDA') & (df_gemeente['age'] == '10 t/m 14 jaar')]
+#+END_SRC
+
+#+RESULTS: network-oxygen-one-pizza
+:RESULTS:
+sex             age MUNICIPALITY  number_citizens  hospital_care  \
+832    M  10 t/m 14 jaar        BREDA             5206     2215947.11   
+8234   V  10 t/m 14 jaar        BREDA             4915     1425550.97   
+
+      pharmaceuticals  mental_care  GP_capitation  GP_fee_for_service  \
+832         381799.92    920439.00      301494.04             88705.2   
+8234        255232.99    564944.21      284269.76             91482.6   
+
+       GP_other  dental care  physiotherapy  maternity_care  obstetrics  \
+832   142402.72    677836.15      187429.87             0.0         0.0   
+8234  134486.26    620303.59      202916.68             0.0         0.0   
+
+      health_expenditure_under_deductible  
+832                            3756487.05  
+8234                           2795294.25  
+#+BEGIN_EXPORT HTML
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sex</th>
+      <th>age</th>
+      <th>MUNICIPALITY</th>
+      <th>number_citizens</th>
+      <th>hospital_care</th>
+      <th>pharmaceuticals</th>
+      <th>mental_care</th>
+      <th>GP_capitation</th>
+      <th>GP_fee_for_service</th>
+      <th>GP_other</th>
+      <th>dental care</th>
+      <th>physiotherapy</th>
+      <th>maternity_care</th>
+      <th>obstetrics</th>
+      <th>health_expenditure_under_deductible</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>832</th>
+      <td>M</td>
+      <td>10 t/m 14 jaar</td>
+      <td>BREDA</td>
+      <td>5206</td>
+      <td>2215947.11</td>
+      <td>381799.92</td>
+      <td>920439.00</td>
+      <td>301494.04</td>
+      <td>88705.2</td>
+      <td>142402.72</td>
+      <td>677836.15</td>
+      <td>187429.87</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>3756487.05</td>
+    </tr>
+    <tr>
+      <th>8234</th>
+      <td>V</td>
+      <td>10 t/m 14 jaar</td>
+      <td>BREDA</td>
+      <td>4915</td>
+      <td>1425550.97</td>
+      <td>255232.99</td>
+      <td>564944.21</td>
+      <td>284269.76</td>
+      <td>91482.6</td>
+      <td>134486.26</td>
+      <td>620303.59</td>
+      <td>202916.68</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>2795294.25</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+#+END_EXPORT
+:END:
+
+If we are interested in one variable, e.g. ~number_citizens~, we can select this as well.
+
+#+BEGIN_SRC ipython :session
+df_gemeente.loc[(df_gemeente.MUNICIPALITY == 'BREDA') & (df_gemeente['age'] == '10 t/m 14 jaar')]['number_citizens']
+#+END_SRC
+
+
+---------------
+
+*Exercise*
+
+Calculate how many citizens live in Breda between the age of 10 and 14.
+
+--------------
+
+We can also give lists of row values that we are interested in:
+
+#+NAME: ten-nineteen-kitten-oranges
+#+BEGIN_SRC ipython :session
+df_gemeente.loc[(df_gemeente.MUNICIPALITY.isin(['BREDA', 'TILBURG'])) & (df_gemeente['age'] == '10 t/m 14 jaar')]['number_citizens']
+#+END_SRC
+
+#+RESULTS: ten-nineteen-kitten-oranges
+:RESULTS:
+832     5206
+1098    5817
+8234    4915
+8500    5651
+Name: number_citizens, dtype: int64
+:END:
+
+
+----------------
+
+*Exercise*
+
+Calculate total health care expenditures under the deductible for people living in Amsterdam between the ages of 10 and 19 years old.
+
+---------------
+
 
 Now that we have the data ready, we are going to plot health care expenditures on the map of the Netherlands.
 
@@ -1152,6 +1283,16 @@ display(IFrame('health_expenditure.html', 800,800))  # This displays the map in 
 <IPython.lib.display.IFrame at 0x10ff2d160>
 :END:
 
+-----------------
+
+*Exercise*
+
+Plot number of citizens per municipality using color scheme 'OrRd'.
+
+----------------
+
+
+
 * Health care expenditure and age
 
 The municipality data set above does not give the health care expenditure per age; only per age group (like 0-4 year olds). So we load another data set that does feature health care expenditure per age.
@@ -1170,6 +1311,35 @@ import matplotlib as plt
 df_postal_code = pd.read_csv('Vektis_Open_Databestand_Zorgverzekeringswet_2014_-_postcode3.csv', sep = ';')
 df_postal_code.dtypes
 #+END_SRC
+
+#+RESULTS: blossom-batman-uniform-princess
+:RESULTS:
+GESLACHT                                   object
+LEEFTIJDSKLASSE                            object
+POSTCODE_3                                float64
+AANTAL_BSN                                  int64
+AANTAL_VERZEKERDEJAREN                    float64
+KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG       float64
+KOSTEN_FARMACIE                           float64
+KOSTEN_TWEEDELIJNS_GGZ                    float64
+KOSTEN_HUISARTS_INSCHRIJFTARIEF           float64
+KOSTEN_HUISARTS_CONSULT                   float64
+KOSTEN_HUISARTS_OVERIG                    float64
+KOSTEN_HULPMIDDELEN                       float64
+KOSTEN_MONDZORG                           float64
+KOSTEN_PARAMEDISCHE_ZORG_FYSIOTHERAPIE    float64
+KOSTEN_PARAMEDISCHE_ZORG_OVERIG           float64
+KOSTEN_ZIEKENVERVOER_ZITTEND              float64
+KOSTEN_ZIEKENVERVOER_LIGGEND              float64
+KOSTEN_KRAAMZORG                          float64
+KOSTEN_VERLOSKUNDIGE_ZORG                 float64
+KOSTEN_GENERALISTISCHE_BASIS_GGZ          float64
+KOSTEN_GRENSOVERSCHRIJDENDE_ZORG          float64
+KOSTEN_EERSTELIJNS_ONDERSTEUNING          float64
+KOSTEN_GERIATRISCHE_REVALIDATIEZORG       float64
+KOSTEN_OVERIG                             float64
+dtype: object
+:END:
 
 
 
@@ -1231,6 +1401,33 @@ df_postal_code.head()
 
 #+RESULTS: delaware-beryllium-north-three
 :RESULTS:
+sex age  POSTCODE_3  number_citizens  hospital_care  pharmaceuticals  \
+1   M   0         0.0              366     1372209.26         31191.20   
+2   M   0       101.0              590     1682944.17         25898.73   
+3   M   0       102.0              295     1553933.53         29514.18   
+4   M   0       103.0              288      827427.31         19263.79   
+5   M   0       105.0              998     2965316.12         61610.42   
+
+   mental_care  GP_capitation  GP_fee_for_service  GP_other  dental care  \
+1       285.98        5548.60             5540.05  11525.93       681.02   
+2     20774.91        9816.63            10130.12  20532.03         0.00   
+3      7970.01        5317.49             6576.70  17426.30        21.29   
+4       941.40        5014.97             5708.41  14168.90         0.00   
+5      4780.48       16842.06            19676.01  43794.06       166.98   
+
+   physiotherapy  maternity_care  obstetrics  \
+1       12150.91             0.0         0.0   
+2       17777.00             0.0         0.0   
+3       20459.17             0.0         0.0   
+4        9098.71             0.0         0.0   
+5       42332.18             0.0         0.0   
+
+   health_expenditure_under_deductible  
+1                           1425823.15  
+2                           1753560.87  
+3                           1617184.58  
+4                            865867.07  
+5                           3118357.71  
 #+BEGIN_EXPORT HTML
 <div>
 <table border="1" class="dataframe">
@@ -1349,33 +1546,6 @@ df_postal_code.head()
 </table>
 </div>
 #+END_EXPORT
-  sex age  POSTCODE_3  number_citizens  hospital_care  pharmaceuticals  \
-1   M   0         0.0              366     1372209.26         31191.20
-2   M   0       101.0              590     1682944.17         25898.73
-3   M   0       102.0              295     1553933.53         29514.18
-4   M   0       103.0              288      827427.31         19263.79
-5   M   0       105.0              998     2965316.12         61610.42
-
-   mental_care  GP_capitation  GP_fee_for_service  GP_other  dental care  \
-1       285.98        5548.60             5540.05  11525.93       681.02
-2     20774.91        9816.63            10130.12  20532.03         0.00
-3      7970.01        5317.49             6576.70  17426.30        21.29
-4       941.40        5014.97             5708.41  14168.90         0.00
-5      4780.48       16842.06            19676.01  43794.06       166.98
-
-   physiotherapy  maternity_care  obstetrics  \
-1       12150.91             0.0         0.0
-2       17777.00             0.0         0.0
-3       20459.17             0.0         0.0
-4        9098.71             0.0         0.0
-5       42332.18             0.0         0.0
-
-   health_expenditure_under_deductible
-1                           1425823.15
-2                           1753560.87
-3                           1617184.58
-4                            865867.07
-5                           3118357.71
 :END:
 
 
@@ -1397,32 +1567,32 @@ df_postal_code.head()
 #+RESULTS: one-queen-arizona-venus
 :RESULTS:
   sex age  POSTCODE_3  number_citizens  hospital_care  pharmaceuticals  \
-2   M   0       101.0              590     1682944.17         25898.73
-3   M   0       102.0              295     1553933.53         29514.18
-4   M   0       103.0              288      827427.31         19263.79
-5   M   0       105.0              998     2965316.12         61610.42
-6   M   0       106.0             1056     3716382.22         87140.60
+2   M   0       101.0              590     1682944.17         25898.73   
+3   M   0       102.0              295     1553933.53         29514.18   
+4   M   0       103.0              288      827427.31         19263.79   
+5   M   0       105.0              998     2965316.12         61610.42   
+6   M   0       106.0             1056     3716382.22         87140.60   
 
    mental_care  GP_capitation  GP_fee_for_service  GP_other  dental care  \
-2     20774.91        9816.63            10130.12  20532.03         0.00
-3      7970.01        5317.49             6576.70  17426.30        21.29
-4       941.40        5014.97             5708.41  14168.90         0.00
-5      4780.48       16842.06            19676.01  43794.06       166.98
-6     25006.18       19517.84            24045.35  65572.64       114.05
+2     20774.91        9816.63            10130.12  20532.03         0.00   
+3      7970.01        5317.49             6576.70  17426.30        21.29   
+4       941.40        5014.97             5708.41  14168.90         0.00   
+5      4780.48       16842.06            19676.01  43794.06       166.98   
+6     25006.18       19517.84            24045.35  65572.64       114.05   
 
    physiotherapy  maternity_care  obstetrics  \
-2       17777.00             0.0         0.0
-3       20459.17             0.0         0.0
-4        9098.71             0.0         0.0
-5       42332.18             0.0         0.0
-6       28299.76             0.0         0.0
+2       17777.00             0.0         0.0   
+3       20459.17             0.0         0.0   
+4        9098.71             0.0         0.0   
+5       42332.18             0.0         0.0   
+6       28299.76             0.0         0.0   
 
-   health_expenditure_under_deductible
-2                           1753560.87
-3                           1617184.58
-4                            865867.07
-5                           3118357.71
-6                           3885368.16
+   health_expenditure_under_deductible  
+2                           1753560.87  
+3                           1617184.58  
+4                            865867.07  
+5                           3118357.71  
+6                           3885368.16  
 :END:
 
 The end of the dataframe is given by the following.
@@ -1435,52 +1605,52 @@ df_postal_code.tail(10)
 #+RESULTS: finch-oven-thirteen-nine
 :RESULTS:
        sex  age  POSTCODE_3  number_citizens  hospital_care  pharmaceuticals  \
-136463   V  90+       988.0               10       19698.83          4011.31
-136464   V  90+       990.0              151      257046.54         99187.66
-136465   V  90+       991.0               51       95990.43         52682.34
-136466   V  90+       993.0              170      278000.11        124809.41
-136467   V  90+       994.0               38       28454.41         36590.90
-136468   V  90+       995.0               88      200183.72         64315.53
-136469   V  90+       996.0               44       46723.13         39419.64
-136470   V  90+       997.0               38       98954.45         34308.68
-136471   V  90+       998.0              116      168802.54        116907.93
-136472   V  90+       999.0               38      109842.07         40607.06
+136463   V  90+       988.0               10       19698.83          4011.31   
+136464   V  90+       990.0              151      257046.54         99187.66   
+136465   V  90+       991.0               51       95990.43         52682.34   
+136466   V  90+       993.0              170      278000.11        124809.41   
+136467   V  90+       994.0               38       28454.41         36590.90   
+136468   V  90+       995.0               88      200183.72         64315.53   
+136469   V  90+       996.0               44       46723.13         39419.64   
+136470   V  90+       997.0               38       98954.45         34308.68   
+136471   V  90+       998.0              116      168802.54        116907.93   
+136472   V  90+       999.0               38      109842.07         40607.06   
 
         mental_care  GP_capitation  GP_fee_for_service  GP_other  dental care  \
-136463         0.00         894.25              567.45   1283.11         0.00
-136464     37614.24       11880.75            20144.21  24522.70      1619.74
-136465      1102.77        4854.50            14575.32  15550.40       801.65
-136466     12652.77       12646.44            13305.75  19040.63      2495.54
-136467      2251.30        3652.03             5742.81  16966.62       143.16
-136468      3691.37        6438.60            11593.30  15929.91      2729.32
-136469      2833.17        4011.35             5459.40  15185.71       979.06
-136470      4480.09        3347.05             5395.18   7061.51       897.98
-136471     13830.16       10424.40            13527.80  28548.80      1577.91
-136472      3273.62        3704.75             4197.46   6763.69        60.97
+136463         0.00         894.25              567.45   1283.11         0.00   
+136464     37614.24       11880.75            20144.21  24522.70      1619.74   
+136465      1102.77        4854.50            14575.32  15550.40       801.65   
+136466     12652.77       12646.44            13305.75  19040.63      2495.54   
+136467      2251.30        3652.03             5742.81  16966.62       143.16   
+136468      3691.37        6438.60            11593.30  15929.91      2729.32   
+136469      2833.17        4011.35             5459.40  15185.71       979.06   
+136470      4480.09        3347.05             5395.18   7061.51       897.98   
+136471     13830.16       10424.40            13527.80  28548.80      1577.91   
+136472      3273.62        3704.75             4197.46   6763.69        60.97   
 
         physiotherapy  maternity_care  obstetrics  \
-136463            0.0             0.0         0.0
-136464        12000.6             0.0         0.0
-136465          462.0             0.0         0.0
-136466         1675.0             0.0         0.0
-136467         1409.2             0.0         0.0
-136468         4352.1             0.0         0.0
-136469         6537.2             0.0         0.0
-136470         9201.0             0.0         0.0
-136471         1875.6             0.0         0.0
-136472          290.0             0.0         0.0
+136463            0.0             0.0         0.0   
+136464        12000.6             0.0         0.0   
+136465          462.0             0.0         0.0   
+136466         1675.0             0.0         0.0   
+136467         1409.2             0.0         0.0   
+136468         4352.1             0.0         0.0   
+136469         6537.2             0.0         0.0   
+136470         9201.0             0.0         0.0   
+136471         1875.6             0.0         0.0   
+136472          290.0             0.0         0.0   
 
-        health_expenditure_under_deductible
-136463                             33079.01
-136464                            790837.02
-136465                            207319.25
-136466                            535215.22
-136467                            106569.94
-136468                            378170.95
-136469                            156304.71
-136470                            193232.92
-136471                            455608.75
-136472                            198874.20
+        health_expenditure_under_deductible  
+136463                             33079.01  
+136464                            790837.02  
+136465                            207319.25  
+136466                            535215.22  
+136467                            106569.94  
+136468                            378170.95  
+136469                            156304.71  
+136470                            193232.92  
+136471                            455608.75  
+136472                            198874.20  
 :END:
 
 As we saw above, the datatype of ~age~ was ~object~, although we would expect ~integer~. Now we see that there is this category ~90+~, which is not an integer. We will drop this age category as it is quite special. Before we do this, let's count how many people we have in our dataset.
@@ -1519,50 +1689,75 @@ df_postal_code.describe()
 #+RESULTS: mexico-minnesota-carbon-single
 :RESULTS:
                  age     POSTCODE_3  number_citizens  hospital_care  \
-count  135063.000000  135063.000000    135063.000000   1.350630e+05
-mean       43.753959     541.250002       123.950327   1.534887e+05
-std        25.535582     258.016742       129.491359   1.965840e+05
-min         0.000000       0.000000        10.000000  -2.300980e+04
-25%        22.000000     318.000000        40.000000   3.055294e+04
-50%        44.000000     539.000000        82.000000   8.262627e+04
-75%        66.000000     763.000000       161.000000   2.006986e+05
-max        89.000000     999.000000      2228.000000   5.263426e+06
+count  135063.000000  135063.000000    135063.000000   1.350630e+05   
+mean       43.753959     541.250002       123.950327   1.534887e+05   
+std        25.535582     258.016742       129.491359   1.965840e+05   
+min         0.000000       0.000000        10.000000  -2.300980e+04   
+25%        22.000000     318.000000        40.000000   3.055294e+04   
+50%        44.000000     539.000000        82.000000   8.262627e+04   
+75%        66.000000     763.000000       161.000000   2.006986e+05   
+max        89.000000     999.000000      2228.000000   5.263426e+06   
 
        pharmaceuticals    mental_care  GP_capitation  GP_fee_for_service  \
-count     1.350630e+05  135063.000000  135063.000000       135063.000000
-mean      3.146225e+04   23296.150212    7693.165768         4528.021995
-std       4.483099e+04   45078.454602    7676.781993         5060.276133
-min      -2.857890e+03  -29164.050000       0.000000            0.000000
-25%       5.034130e+03     299.260000    2585.970000         1351.340000
-50%       1.547225e+04    5702.020000    5244.990000         2900.080000
-75%       4.037718e+04   24546.195000   10140.510000         5899.600000
-max       1.546412e+06  885045.050000  155453.330000       194903.830000
+count     1.350630e+05  135063.000000  135063.000000       135063.000000   
+mean      3.146225e+04   23296.150212    7693.165768         4528.021995   
+std       4.483099e+04   45078.454602    7676.781993         5060.276133   
+min      -2.857890e+03  -29164.050000       0.000000            0.000000   
+25%       5.034130e+03     299.260000    2585.970000         1351.340000   
+50%       1.547225e+04    5702.020000    5244.990000         2900.080000   
+75%       4.037718e+04   24546.195000   10140.510000         5899.600000   
+max       1.546412e+06  885045.050000  155453.330000       194903.830000   
 
             GP_other    dental care  physiotherapy  maternity_care  \
-count  135063.000000  135063.000000  135063.000000   135063.000000
-mean     5938.297319    5438.213219    3287.127334     2201.230080
-std      6329.471736   10190.600213    4659.495994    10426.252898
-min         0.000000    -458.190000    -106.800000    -1898.420000
-25%      1934.255000     150.075000     143.745000        0.000000
-50%      4002.870000    1746.990000    1617.300000        0.000000
-75%      7691.255000    6293.135000    4463.975000        0.000000
-max    276119.620000  254585.130000  106169.130000   399960.460000
+count  135063.000000  135063.000000  135063.000000   135063.000000   
+mean     5938.297319    5438.213219    3287.127334     2201.230080   
+std      6329.471736   10190.600213    4659.495994    10426.252898   
+min         0.000000    -458.190000    -106.800000    -1898.420000   
+25%      1934.255000     150.075000     143.745000        0.000000   
+50%      4002.870000    1746.990000    1617.300000        0.000000   
+75%      7691.255000    6293.135000    4463.975000        0.000000   
+max    276119.620000  254585.130000  106169.130000   399960.460000   
 
-          obstetrics  health_expenditure_under_deductible
-count  135063.000000                         1.350630e+05
-mean     1612.545851                         2.192913e+05
-std      7853.598487                         2.719250e+05
-min         0.000000                         0.000000e+00
-25%         0.000000                         4.791477e+04
-50%         0.000000                         1.234374e+05
-75%         0.000000                         2.872767e+05
-max    321751.460000                         9.012553e+06
+          obstetrics  health_expenditure_under_deductible  
+count  135063.000000                         1.350630e+05  
+mean     1612.545851                         2.192913e+05  
+std      7853.598487                         2.719250e+05  
+min         0.000000                         0.000000e+00  
+25%         0.000000                         4.791477e+04  
+50%         0.000000                         1.234374e+05  
+75%         0.000000                         2.872767e+05  
+max    321751.460000                         9.012553e+06  
 :END:
 
 #+NAME: bakerloo-lemon-edward-mike
 #+BEGIN_SRC ipython :session
 df_postal_code.info()
 #+END_SRC
+
+#+RESULTS: bakerloo-lemon-edward-mike
+:RESULTS:
+<class 'pandas.core.frame.DataFrame'>
+Int64Index: 135063 entries, 2 to 135741
+Data columns (total 15 columns):
+sex                                    135063 non-null category
+age                                    135063 non-null int64
+POSTCODE_3                             135063 non-null float64
+number_citizens                        135063 non-null int64
+hospital_care                          135063 non-null float64
+pharmaceuticals                        135063 non-null float64
+mental_care                            135063 non-null float64
+GP_capitation                          135063 non-null float64
+GP_fee_for_service                     135063 non-null float64
+GP_other                               135063 non-null float64
+dental care                            135063 non-null float64
+physiotherapy                          135063 non-null float64
+maternity_care                         135063 non-null float64
+obstetrics                             135063 non-null float64
+health_expenditure_under_deductible    135063 non-null float64
+dtypes: category(1), float64(12), int64(2)
+memory usage: 15.6 MB
+:END:
+
 
 
 Now let's define the costs per head. For each observation, we divide the total health care costs (under the deductible) for a combination of ~sex~, ~age~ and ~postal code~ by the number of people in this combination of ~sex~, ~age~ and ~postal code~. This gives the health costs per head.
@@ -1600,6 +1795,51 @@ fig.savefig("males.png")
 
 
 [[./males.png]]
+
+
+-----------------
+
+*Exercise*
+
+Finish the following code block to show how total obstetrics vary with 'age' and 'sex' (what would you guess...). 
+
+#+NAME: winter-papa-single-delaware
+#+BEGIN_SRC ipython :session
+obstetrics_per_sex_age = df_postal_code.groupby(['sex','age'])['obstetrics'].sum()
+
+....
+
+fig.savefig("obstetrics.png")
+#+END_SRC
+
+
+---------------
+
+We can plot a histogram of the distribution of hospital care expenditure across postal code areas.
+
+#+NAME: cola-sink-leopard-nebraska
+#+BEGIN_SRC ipython :session
+hospital_care_expenditure = df_postal_code.groupby(['age','POSTCODE_3'])['hospital_care'].sum()
+
+plt.clf()
+plt.hist(hospital_care_expenditure[7],normed = True, bins = 100)
+plt.show()
+#+END_SRC
+
+
+------------
+
+*Exercise*
+
+In which fraction of postal code areas does hospital expenditures on 50 year olds exceed 50000 euro? Finish the following code block to find out.
+
+
+#+NAME: juliet-sweet-item-vermont
+#+BEGIN_SRC ipython :session
+sum()/len()
+#+END_SRC
+
+------------------
 
 
 Suppose you are interested in the effect of the deductible on health care expenditure. Why would the following graph help for this?
@@ -1648,6 +1888,7 @@ x_20, y_20 = ecdf(df_postal_code.health_costs_per_head[(df_postal_code['age'] ==
 
 
 #+END_SRC
+
 
 We import plotly.
 

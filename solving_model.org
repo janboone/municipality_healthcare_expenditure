@@ -1,0 +1,203 @@
+#+TITLE: Solving models
+#+AUTHOR: Jan Boone
+
+
+In this notebook, we will solve a simple duopoly model using python. This illustrates how to optimize in python and how to solve equations. We do this both symbolically and numerically.
+
+The set up is the following standard Cournot model.
+
+we work with a linear demand curve $p_i(q_i,q_j)=1-a q_i - b q_j$ and costs $c_i(q)=c_i q$, where $q_i$ denotes firm $i$'s output on the market.
+
+Firm $i$'s profit is written as $\pi(q_i,q_j)=(1-a q_i-b q_j)q_i-c_i q_i$ for $j \neq i$. The way we usually solve this analytically is as follows.
+
+The two first order conditions for firms 1 and 2 can be written as:
+
+$$
+1-2a q_1-b q_2-c_1 = 0
+$$
+
+and
+
+$$
+1-2 a q_2-b q_1-c_2 = 0
+$$
+
+Then we can solve these two equations in the unknowns $q_1,q_2$. However, we usually take a step in between and define the reaction functions. That is, we solve the optimal $q_i$ as a function of $q_j$:
+
+$$
+q_i = \frac{1}{2a}(1-c_i-b q_j)
+$$
+
+Or defining $i$'s reaction function as 
+
+$$
+R_i(q_j) = \frac{1}{2a}(1-c_i-b q_j)
+$$
+
+We have an equilibrium if $q_1 = R_1(q_2)$ and $q_2 = R_2(q_1)$. Or in matrix notation, the equilibrium is given by $q_1,q_2$ such that
+
+$$
+\begin{pmatrix} q_1\\ q_2\end{pmatrix} = \begin{pmatrix} R_1(q_2)\\ R_2(q_1)\end{pmatrix}
+$$
+
+If both firms have the same costs $c_1=c_2$, there is a symmetric equilibrium given by $q=R(q)$.
+
+To calculate the equilibrium, we need to find a so called fixed point of the vector function $R(q)$. This can be seen as follows.
+
+Define the function (or mapping) $q \rightarrow R(q)$ with $q \in \Re^2$ and 
+
+$$
+R(q) = \begin{pmatrix} R_1(q_2)\\ R_2(q_1)\end{pmatrix}
+$$
+
+A fixed point of this function is defined as a vector $q$ such that $q=R(q)$. In words, $q_1$ is the optimal reaction to $q_2$ and $q_2$ is the optimal reaction to $q_1$. That is, the vector $q$ is a Nash equilibrium. Each firm $i$ chooses its optimal output level $q_i$, given the choice by the other firm $q_j$.
+
+
+* solve model symbolically
+
+One way to solve such a duopoly model in python is to use the ~sympy~ library which allows us to do symbolic math. We import this library.
+
+#+NAME: finch-neptune-two-kentucky
+#+BEGIN_SRC ipython :session
+from sympy import *
+#+END_SRC
+
+We define variables that we want to use as symbols.
+
+#+NAME: vegan-bulldog-berlin-robin
+#+BEGIN_SRC ipython :session
+q1, q2 = symbols('q1 q2')
+a,b = symbols('a b')
+c1, c2 = symbols('c1 c2')
+
+#+END_SRC
+
+We define the (inverse) demand function and the cost function. Although, these look like "normal" python functions, python actually "understands" these functions as symbolic functions. The reason is that they are defined using the symbols that we just defined.
+
+#+NAME: leopard-minnesota-hamper-crazy
+#+BEGIN_SRC ipython :session
+def p(q1,q2):
+    return 1-a* q1 - b* q2
+
+def cost(q,c):
+    return c*q
+
+#+END_SRC
+
+With these functions, we can define the profit function of a firm with cost level $c$ that produces output $q_1$ while its competitor produces $q_2$.
+
+Once the profit function is defined, we derive the first order conditions. That is we differentiate the profit of firm $i$ with respect to the output level of firm $i$, $q_i$.
+
+#+NAME: jig-low-bacon-ack
+#+BEGIN_SRC ipython :session
+def profit(q1,q2,c):
+    return p(q1,q2)*q1 - cost(q1,c)
+
+foc1 = diff(profit(q1,q2,c1),q1)
+foc2 = diff(profit(q2,q1,c2),q2)
+
+#+END_SRC
+
+
+-----------------
+
+*Exercise*
+
+Use the function ~diff~ to show that profits of firm $i$ are concave in $q_i$.
+
+----------------
+
+
+In equilibrium the first order conditions for both firms should equal 0. Hence, we can solve the system of equation ~foc1, foc2~ with respect to $q_1,q_2$.
+
+#+NAME: lion-low-oxygen-magnesium
+#+BEGIN_SRC ipython :session :results output drawer
+solve([foc1, foc2], [q1, q2])
+#+END_SRC
+
+#+RESULTS: lion-low-oxygen-magnesium
+:RESULTS:
+{q1: (-2*a*(c1 - 1) + b*(c2 - 1))/(4*a**2 - b**2),
+ q2: (-2*a*(c2 - 1) + b*(c1 - 1))/(4*a**2 - b**2)}
+:END:
+
+---------------
+
+*Exercice*
+
+Define a different demand and/or cost function and calculate the equilibrium again. Note that for some demand and cost functions, an analytical solution is no longer available.
+
+-------------
+
+
+* solve model numerically
+
+Sometimes you are not interested in the analytical solution, but just want to know how the equilibrium varies with a parameter. We will make a graph where the equilibrium output levels vary with one of the firm's cost level. We start by importing some libraries.
+
+#+NAME: white-skylark-violet-autumn
+#+BEGIN_SRC ipython :session
+# First lets clear all previous python imports and variables by resetting the python kernel.
+%reset -f
+
+from scipy import optimize,arange
+from numpy import array
+import matplotlib.pyplot as plt
+%matplotlib inline
+#+END_SRC
+
+We define the inverse demand and cost functions as above. But now $q1,q2,c$ are normal python variables and not symbols.
+
+#+NAME: jig-mango-high-fanta
+#+BEGIN_SRC ipython :session
+def p(q1,q2):
+    return 1-a*q1-b*q2
+
+def costs(q,c):
+    return c*q
+
+def profits(demand_function,cost_function,c,q1,q2):
+    return demand_function(q1,q2)*q1-costs(q1,c)
+
+#+END_SRC
+
+Note that the function ~profits~ above takes the functions ~demand_function~ and ~cost_function~ as arguments, besides the variables ~c,q1,q2~.
+
+-----------
+
+*Exercice*
+
+Try to take the derivative of $costs(q,c)$ with respect to $q$ using ~diff~. 
+
+-----------
+
+As we are doing a numerical analysis here, we need to choose values for the demand parameters $a,b$.
+
+#+NAME: vegan-enemy-ten-ten
+#+BEGIN_SRC ipython :session
+a = 1
+b = 1
+#+END_SRC
+
+Each firm maximizes its profits. ???continue here???
+
+
+#+NAME: romeo-snake-neptune-burger
+#+BEGIN_SRC ipython :session
+def reaction(q2,c1):
+    q1 =  optimize.fminbound(lambda x: -profits(p,costs,c1,x,q2),0,1,full_output=1)
+    return q1[0]
+
+def fixed_point(q,c):
+    return [q[0]-reaction(q[1],c[0]),q[1]-reaction(q[0],c[1])]
+
+initial_guess = [0,0]
+
+optimize.fsolve(lambda q: fixed_point(q,[0,0]), initial_guess)
+
+#+END_SRC
+
+#+RESULTS: romeo-snake-neptune-burger
+:RESULTS:
+array([ 0.33333333,  0.33333333])
+:END:
+
