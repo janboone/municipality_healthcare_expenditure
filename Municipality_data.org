@@ -7,6 +7,12 @@ In this notebook we use publicly available health care data to illustrate the us
 
 We start with health care data on the level of municipalities. We will plot how health care expenditure varies with location.
 
+Some institutional background:
++ in the Netherlands health insurance is mandatory
++ people aged 18 or older face a deductible of 365 euros in 2014; no deductible for people below 18
++ the deductible applies to a number of cost categories in the "basic packages"; see below
++ people can --voluntarily-- increase their deductible with 100, 200, 300, 400 or 500 euro; but our data has no information on this
+
 
 ** loading the data
 
@@ -421,7 +427,7 @@ Further, we want to do this analysis in English. So we relabel the relevant colu
 
 We specify a list of columns (cost categories) across which we want to add costs. As the costs are total costs (not costs per head) we can indeed add these numbers. We leave out mental health care as it features its own financial incentives.
 
-We specify the name of a new variable ~health_expenditure_under_deductible~ which is calculated on the list of columns specified and then the function that needs to be applied --~sum~ in this case. Finally, we specify that the function needs to be applied row-wise: ~axis=1~.
+We specify the name of a new variable ~health_expenditure_under_deductible~ which is calculated on the list of columns specified and then the function that needs to be applied -- ~sum~ in this case. Finally, we specify that the function needs to be applied row-wise: ~axis=1~.
 
 Then we give a dictionary with "old" variable names (in Dutch) and the "new" names in English for the variables where we want to use the English names.
 
@@ -945,11 +951,9 @@ We are going to plot expenditure under the deductible per head for each municipa
 2. we add --for each municipality-- the number of people across age groups;
 3. we divide --for each municipality-- the expenditures by the number of people.
 
-With pandas this is straightforward to do using `groupby`. We do the `groupby` on the municipality. For each municipality there are different age groups and we need to aggregate over these age groups. We specify the variables that we want to know at the municipality level. In this case `hospital_care` and `number_citizens`. Finally, we specify how the function with which to aggregate. Here we use the 'built-in' function `sum()`. Other functions we can use include `mean`, `min`, `max` etc. You can also specify your own function and apply this using `agg()`.
+With pandas this is straightforward to do using ~groupby~. We do the ~groupby~ on the municipality. For each municipality there are different age groups and we need to aggregate over these age groups. We specify the variables that we want to know at the municipality level. In this case ~health_expenditure_under_deductible~ and ~number_citizens~. Finally, we specify the function with which to aggregate. Here we use the 'built-in' function ~sum()~. Other functions we can use include ~mean~, ~min~, ~max~ etc. You can also specify your own function and apply this using ~agg()~.
 
 Then hospital care per head can be defined as the total expenditure per municipality divided by the total number of citizens per municipality.
-
-We can do other transformations of the data, such as the `cost_index` below which is normalized to lie between 0 and 100.
 
 #+NAME: thirteen-november-angel-delaware
 #+BEGIN_SRC ipython :session :results output drawer
@@ -1112,9 +1116,9 @@ ref_map = folium.Map(
 ref_map.choropleth(
     # This is the path to the geojson file that contains all the municipality shapes and locations
     geo_path=geo_path,
-    # We will use the percentage dataframe for the choropleth mapping
+    # We will use the p_results dataframe for the choropleth mapping
     data=p_results,
-    # Municipality will be used for the mapping key and p_valid for its value
+    # municipality will be used for the mapping key and expenditure for its value
     columns=['municipality', 'expenditure'],
     # Use GM_NAAM (short for municipality name) as keys for colormapping
     key_on='feature.properties.GM_NAAM',
@@ -1382,7 +1386,7 @@ The first three columns are 'sex', 'age' and 'postal code' (3 digit). These 3 va
 Note that the first postal code is '000' which python thinks of as '0.0'. The
 [[http://www.vektis.nl/images/open_data/Bijsluiter_bij_de_Vektis_Open_Databestanden_Zorgverzekeringswet_2011_-_2014.pdf][data description]] explains that postal code '000' is used to aggregate people who
 live in a postal code with so few people that the privacy of their data is no
-longer guaranteed. As we want to think of `sex`, `age` and `postal code` as an observation, we drop the first row (labelled as `0`) of the dataframe.
+longer guaranteed. As we want to think of ~sex~, ~age~ and ~postal code~ as an observation, we drop the first row (labelled as ~0~) of the dataframe.
 
 #+NAME: one-queen-arizona-venus
 #+BEGIN_SRC ipython :session :results value
@@ -1479,7 +1483,7 @@ df_postal_code.tail(10)
 136472                            198874.20
 :END:
 
-As we saw above, the datatype of `age` was `object`, although we would expect `integer`. Now we see that there is this category `90+`, which is not an integer. We will drop this age category as it is quite special. Before we do this, let's count how many people we have in our dataset.
+As we saw above, the datatype of ~age~ was ~object~, although we would expect ~integer~. Now we see that there is this category ~90+~, which is not an integer. We will drop this age category as it is quite special. Before we do this, let's count how many people we have in our dataset.
 
 #+NAME: comet-sodium-sink-kansas
 #+BEGIN_SRC ipython :session :results output drawer
@@ -1493,7 +1497,7 @@ df_postal_code['number_citizens'].sum()
 
 That is, almost 17 million people, which is about right.
 
-Let's drop the '90+' category and turn `age` into an integer variable.
+Let's drop the '90+' category and turn ~age~ into an integer variable.
 
 #+NAME: nevada-nevada-alpha-lithium
 #+BEGIN_SRC ipython :session :results value
@@ -1505,7 +1509,7 @@ df_postal_code['age'] = df_postal_code['age'].astype(int)
 :RESULTS:
 :END:
 
-Let's summarize the variables that are numeric (integer or float). For each of these variables we have 135,063 observations (that is, combinations of `sex`, `age` and `postal code`). The mean for number of citizens is 124. With $135,063*124$ we are close to 17 million again.
+Let's summarize the variables that are numeric (integer or float). For each of these variables we have 135,063 observations (that is, combinations of ~sex~, ~age~ and ~postal code~). The mean for number of citizens is 124. With $135,063*124$ we are close to 17 million again.
 
 #+NAME: mexico-minnesota-carbon-single
 #+BEGIN_SRC ipython :session :results value
@@ -1561,20 +1565,22 @@ df_postal_code.info()
 #+END_SRC
 
 
-Now let's define the costs per head. For each observation, we divide the total health care costs (under the deductible) for a combination of `sex`, `age` and `postal code` by the number of people in this combination of `sex`, `age` and `postal code`. This gives the health costs per head.
+Now let's define the costs per head. For each observation, we divide the total health care costs (under the deductible) for a combination of ~sex~, ~age~ and ~postal code~ by the number of people in this combination of ~sex~, ~age~ and ~postal code~. This gives the health costs per head.
 
 #+NAME: may-three-carpet-texas
 #+BEGIN_SRC ipython :session :results output drawer
 df_postal_code['health_costs_per_head'] = df_postal_code['health_expenditure_under_deductible']/df_postal_code['number_citizens']
 #+END_SRC
 
-So for, say, 18 year old males, we have a distribution of costs per head over the different `postal codes`. For each combination of age and sex, we can look at the average expenditure. With ~pandas~ this is easy to do. We use ~groupby~, specify the dimensions over which we want to group, the variable we are interested in and give the function to aggregate (mean, in this case).
+So for, say, 18 year old males, we have a distribution of costs per head over the different ~postal codes~. For each combination of age and sex, we can look at the average expenditure. With ~pandas~ this is easy to do. We use ~groupby~, specify the dimensions over which we want to group, the variable we are interested in and give the function to aggregate (mean, in this case).
 
 #+NAME: edward-minnesota-social-equal
 #+BEGIN_SRC ipython :session :results output drawer
 costs_per_sex_age = df_postal_code.groupby(['sex','age'])['health_costs_per_head'].mean()
 #+END_SRC
 
+
+** matplotlib
 
 Then we can plot this distribution of health care expenditure per head with age for males and females.
 
@@ -1617,9 +1623,11 @@ fig.savefig('fig14to22.png')
 [[./fig14to22.png]]
 
 
-Instead of ~matplotlib~ to plot, we can also use ~plotly~. With ~plotly~ you can make interactive graphs.
+** plotly
 
+Instead of ~matplotlib~ to plot, we can also use ~plotly~. With ~plotly~ you can make interactive graphs. The graph runs on plotly's servers and can for instance be included in presentations.
 
+We are going to plot the cumulative distribution functions of health care expenditure for different age groups. We first define the cumulative distribution function ~ecdf~.
 
 #+NAME: whiskey-south-stream-speaker
 #+BEGIN_SRC ipython :session :results output drawer
@@ -1629,11 +1637,7 @@ def ecdf(data):
     return x, y
 #+END_SRC
 
-
-#+NAME: south-oklahoma-mirror-beryllium
-#+BEGIN_SRC ipython :session :results output drawer
-df_postal_code.health_costs_per_head[(df_postal_code['age'] == 17)]
-#+END_SRC
+Then we define the $x$ and $y$ coordinates of the functions we want to plot: the ~ecdf~ of health care expenditures for ages 16, 17, 19 and 20.
 
 #+NAME: seventeen-four-ceiling-hotel
 #+BEGIN_SRC ipython :session :results output drawer
@@ -1645,7 +1649,7 @@ x_20, y_20 = ecdf(df_postal_code.health_costs_per_head[(df_postal_code['age'] ==
 
 #+END_SRC
 
-
+We import plotly.
 
 #+NAME: colorado-utah-ink-virginia
 #+BEGIN_SRC ipython :session :results output drawer
@@ -1654,6 +1658,7 @@ from plotly.graph_objs import *
 import plotly.tools as tls
 #+END_SRC
 
+Finally, we define the graph itself. We specify the "Scatter's" and the layout. The web address can be used if you want to include this graph in a presentation.
 
 #+NAME: artist-mockingbird-florida-hot
 #+BEGIN_SRC ipython :session :results output drawer
@@ -1681,11 +1686,6 @@ age20 = Scatter(
     mode='markers+lines',
     name = 'age 20'
 )
-
-
-
-
-
 
 layout = Layout(
     title='Health care expend. distribution functions',
