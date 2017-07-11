@@ -145,7 +145,7 @@ import matplotlib.pyplot as plt
 %matplotlib inline
 #+END_SRC
 
-We define the inverse demand and cost functions as above. But now $q1,q2,c$ are normal python variables and not symbols.
+We define the (inverse) demand and cost functions as above. But now $q1,q2,c$ are normal python variables and not symbols.
 
 #+NAME: jig-mango-high-fanta
 #+BEGIN_SRC ipython :session
@@ -166,7 +166,7 @@ Note that the function ~profits~ above takes the functions ~demand_function~ and
 
 *Exercice*
 
-Try to take the derivative of $costs(q,c)$ with respect to $q$ using ~diff~. 
+Try to take the derivative of $costs(q,c)$ with respect to $q$ using ~diff~ (that is, after importing ~sympy~).
 
 -----------
 
