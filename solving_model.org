@@ -2,13 +2,13 @@
 #+AUTHOR: Jan Boone
 
 
-In this notebook, we will solve a simple duopoly model using python. This illustrates how to optimize in python and how to solve equations. We do this both symbolically and numerically.
+In this notebook, we will solve a simple duopoly model using python. This illustrates how to optimize in python and how to solve equations. We do this both symbolically and numerically. There are a lot of mathematical functions in python, but for economists the two most important ones are: optimization (utility, profit etc. maximization) and fixed points (equilibrium). So we focus on these in this notebook.
 
-The set up is the following standard Cournot model.
+* Model
 
-we work with a linear demand curve $p_i(q_i,q_j)=1-a q_i - b q_j$ and costs $c_i(q)=c_i q$, where $q_i$ denotes firm $i$'s output on the market.
+The set up is the following standard Cournot model. We work with a linear demand curve $p_i(q_i,q_j)=1-a q_i - b q_j$ and costs $c_i(q)=c_i q$, where $q_i$ denotes firm $i$'s output on the market.
 
-Firm $i$'s profit is written as $\pi(q_i,q_j)=(1-a q_i-b q_j)q_i-c_i q_i$ for $j \neq i$. The way we usually solve this analytically is as follows.
+Firm $i$'s profit is written as $\pi(q_i,q_j)=(1-a q_i-b q_j)q_i-c_i q_i$ with $j \neq i$. The way we usually solve this analytically is as follows.
 
 The two first order conditions for firms 1 and 2 can be written as:
 
@@ -28,7 +28,7 @@ $$
 q_i = \frac{1}{2a}(1-c_i-b q_j)
 $$
 
-Or defining $i$'s reaction function as 
+Or, equivalently, we define $i$'s reaction function as 
 
 $$
 R_i(q_j) = \frac{1}{2a}(1-c_i-b q_j)
@@ -86,7 +86,7 @@ def cost(q,c):
 
 With these functions, we can define the profit function of a firm with cost level $c$ that produces output $q_1$ while its competitor produces $q_2$.
 
-Once the profit function is defined, we derive the first order conditions. That is we differentiate the profit of firm $i$ with respect to the output level of firm $i$, $q_i$.
+Once the profit function is defined, we derive the first order conditions. That is, we differentiate the profit of firm $i$ with respect to the output level of firm $i$, $q_i$.
 
 #+NAME: jig-low-bacon-ack
 #+BEGIN_SRC ipython :session
@@ -123,12 +123,40 @@ solve([foc1, foc2], [q1, q2])
 
 ---------------
 
-*Exercice*
+*Exercise*
 
 Define a different demand and/or cost function and calculate the equilibrium again. Note that for some demand and cost functions, an analytical solution is no longer available.
 
 -------------
 
+With ~sympy~ you can differentiate and integrate your favourite functions.
+
+#+NAME: two-lima-fish-sodium
+#+BEGIN_SRC ipython
+from sympy import *
+
+x = symbols('x')
+def f(x):
+    return x**2
+
+print(diff(f(x),x))
+print(integrate(f(x),x))
+
+#+END_SRC
+
+#+RESULTS: two-lima-fish-sodium
+:RESULTS:
+2*x
+x**3/3
+:END:
+
+--------------
+
+*Exercise*
+
+Find the derivative and integral of $e^x$ (use ~exp(x)~), $cos(x)$ and $ln(x)$.
+
+--------------
 
 * solve model numerically
 
@@ -178,7 +206,13 @@ a = 1
 b = 1
 #+END_SRC
 
-Each firm maximizes its profits. ???continue here???
+Each firm maximizes its profits. However, python does not feature maximization routines; there are only minimization routines. Hence, if we want to maximize profits, we need to minimize ~minus profits~. In the following code block, we minimize $-profits$ for firm 1 given an output level $q_2$ for the other firm. This is, in fact, firm 1's reaction function. From ~optimize~ we use the function ~fminbound~ to find the minimum of $-profits$. We specify the function ~profits~, with functions ~p~ and ~costs~ as defined above. The function call to ~reaction~ specifies ~q2~ and ~c1~. The only variable left to vary is $q_1$ which we denote by $x$ in the "lambda"-function. Further, we specify the interval where the optimal $q_1$ has to be found; $[0,1]$ in this case. Google to see what ~full_output~ does in this case.
+
+Then we define the function ~fixed_point~ which is the equivalent of $q-R(q)$ above. Note that the function ~reaction~ can be used for both firm 1 and firm 2; only the arguments differ for the firms, but the function itself is the same.
+
+The function ~fixed_point~ takes two (vector) arguments: a vector $q$ of output levels and $c$ of cost levels. With the indexing conventions in python, $q[0]$ is the first element of $q$ and hence a natural choice for $q_1$; similarly, $q[1]$ corresponds to $q_2$. The same logic applies to $c$.
+
+From ~optimize~ (which was imported above from ~scipy~), we use ~fsolve~ to find the $q$ where ~fixed_point(q,c)~ equals 0. We provide an initial guess for this vector $q$. We solve the model for the case where $c_1=c_2=0$ (with $a=b=1$ you should be able to dream the answer...)
 
 
 #+NAME: romeo-snake-neptune-burger
@@ -200,4 +234,51 @@ optimize.fsolve(lambda q: fixed_point(q,[0,0]), initial_guess)
 :RESULTS:
 array([ 0.33333333,  0.33333333])
 :END:
+
+----------------
+
+*Exercise*
+
+Solve the model for $c_1 = 0.1, c_2 = 0.2$.
+
+---------------
+
+
+Now that we have solved the model, we can plot the output level of firms' 1 and 2 as a function of $c_1$. 
+
+
+#+NAME: seventeen-low-pennsylvania-bravo
+#+BEGIN_SRC ipython :session
+range_c = arange(0,0.51,0.01)
+range_q = [optimize.fsolve(lambda q: fixed_point(q,[c,0]), [0,0]) for c in range_c]
+plt.style.use('seaborn')
+plt.clf()
+plt.plot(range_c,array(range_q)[:,0], label = '$q_1$')
+plt.plot(range_c,array(range_q)[:,1], label = '$q_2$')
+plt.xlabel('$c_1$')
+plt.ylabel('$q$')
+plt.legend()
+plt.savefig('Cournot.png')
+
+
+#+END_SRC
+
+#+RESULTS: seventeen-low-pennsylvania-bravo
+:RESULTS:
+[[file:ipython-inline-images/ob-ipython-9a71e7398fd8de0eb04f71d2cd14ee21.png]]
+<matplotlib.figure.Figure at 0x10efc8b00>
+:END:
+
+
+[[./Cournot.png]]
+
+
+
+----------------
+
+*Exercise*
+
+Copy the code above in a new cell and adjust it such that you can plot $q_1,q_2$ as a function of $b \in [0,a]$. First, do this for the symmetric case with $c_1=c_2=0$. Then make a new plot where $c_1 \neq c_2$.
+
+---------------
 

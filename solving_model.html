@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Solving models</title>
+<!-- 2017-07-14 Fri 13:18 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Org-mode">
+<meta name="author" content="Jan Boone">
+
+<link  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<style type="text/css">
+/* org mode styles on top of twbs */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-size: 18px;
+    margin-bottom: 105px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 101px;
+    background-color: #f5f5f5;
+}
+
+footer > div {
+    padding: 10px;
+}
+
+footer p {
+    margin: 0 0 5px;
+    text-align: center;
+    font-size: 16px;
+}
+
+#table-of-contents {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+blockquote p {
+    font-size: 18px;
+}
+
+pre {
+    font-size: 16px;
+}
+
+.footpara {
+    display: inline-block;
+}
+
+figcaption {
+  font-size: 16px;
+  color: #666;
+  font-style: italic;
+  padding-bottom: 15px;
+}
+
+/* from twbs docs */
+
+.bs-docs-sidebar.affix {
+    position: static;
+}
+@media (min-width: 768px) {
+    .bs-docs-sidebar {
+        padding-left: 20px;
+    }
+}
+
+/* All levels of nav */
+.bs-docs-sidebar .nav > li > a {
+    display: block;
+    padding: 4px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #999;
+}
+.bs-docs-sidebar .nav > li > a:hover,
+.bs-docs-sidebar .nav > li > a:focus {
+    padding-left: 19px;
+    color: #A1283B;
+    text-decoration: none;
+    background-color: transparent;
+    border-left: 1px solid #A1283B;
+}
+.bs-docs-sidebar .nav > .active > a,
+.bs-docs-sidebar .nav > .active:hover > a,
+.bs-docs-sidebar .nav > .active:focus > a {
+    padding-left: 18px;
+    font-weight: bold;
+    color: #A1283B;
+    background-color: transparent;
+    border-left: 2px solid #A1283B;
+}
+
+/* Nav: second level (shown on .active) */
+.bs-docs-sidebar .nav .nav {
+    display: none; /* Hide by default, but at >768px, show it */
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav > li > a:focus {
+    padding-left: 29px;
+}
+.bs-docs-sidebar .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav > .active:focus > a {
+    padding-left: 28px;
+    font-weight: 500;
+}
+
+/* Nav: third level (shown on .active) */
+.bs-docs-sidebar .nav .nav .nav {
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 40px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav .nav > li > a:focus {
+    padding-left: 39px;
+}
+.bs-docs-sidebar .nav .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav .nav > .active:focus > a {
+    padding-left: 38px;
+    font-weight: 500;
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: 992px) {
+    .bs-docs-sidebar .nav > .active > ul {
+        display: block;
+    }
+    /* Widen the fixed sidebar */
+    .bs-docs-sidebar.affix,
+    .bs-docs-sidebar.affix-bottom {
+        width: 213px;
+    }
+    .bs-docs-sidebar.affix {
+        position: fixed; /* Undo the static from mobile first approach */
+        top: 20px;
+    }
+    .bs-docs-sidebar.affix-bottom {
+        position: absolute; /* Undo the static from mobile first approach */
+    }
+    .bs-docs-sidebar.affix .bs-docs-sidenav,.bs-docs-sidebar.affix-bottom .bs-docs-sidenav {
+        margin-top: 0;
+        margin-bottom: 0
+    }
+}
+@media (min-width: 1200px) {
+    /* Widen the fixed sidebar again */
+    .bs-docs-sidebar.affix-bottom,
+    .bs-docs-sidebar.affix {
+        width: 263px;
+    }
+}
+</style>
+<script type="text/javascript">
+$(function() {
+    'use strict';
+
+    $('.bs-docs-sidebar li').first().addClass('active');
+
+    $(document.body).scrollspy({target: '.bs-docs-sidebar'});
+
+    $('.bs-docs-sidebar').affix();
+});
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  displayAlign: "center",
+  displayIndent: "2em",
+  messageStyle: "none",
+  "HTML-CSS": {
+    scale: 100,
+    styles: {
+      ".MathJax_Display": {
+        "font-size": "100%"
+      }
+    }
+  },
+  "SVG": {
+    scale: 100,
+    styles: {
+      ".MathJax_SVG_Display": {
+        "font-size": "100%",
+        "margin-left": "-2.281em"
+      }
+    }
+  }
+});
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<div id="content" class="container">
+<div class="row"><div class="col-md-9"><h1 class="title">Solving models</h1>
+<p>
+In this notebook, we will solve a simple duopoly model using python. This illustrates how to optimize in python and how to solve equations. We do this both symbolically and numerically. There are a lot of mathematical functions in python, but for economists the two most important ones are: optimization (utility, profit etc. maximization) and fixed points (equilibrium). So we focus on these in this notebook.
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Model</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The set up is the following standard Cournot model. We work with a linear demand curve \(p_i(q_i,q_j)=1-a q_i - b q_j\) and costs \(c_i(q)=c_i q\), where \(q_i\) denotes firm \(i\)'s output on the market.
+</p>
+
+<p>
+Firm \(i\)'s profit is written as \(\pi(q_i,q_j)=(1-a q_i-b q_j)q_i-c_i q_i\) with \(j \neq i\). The way we usually solve this analytically is as follows.
+</p>
+
+<p>
+The two first order conditions for firms 1 and 2 can be written as:
+</p>
+
+<p>
+\[
+1-2a q_1-b q_2-c_1 = 0
+\]
+</p>
+
+<p>
+and
+</p>
+
+<p>
+\[
+1-2 a q_2-b q_1-c_2 = 0
+\]
+</p>
+
+<p>
+Then we can solve these two equations in the unknowns \(q_1,q_2\). However, we usually take a step in between and define the reaction functions. That is, we solve the optimal \(q_i\) as a function of \(q_j\):
+</p>
+
+<p>
+\[
+q_i = \frac{1}{2a}(1-c_i-b q_j)
+\]
+</p>
+
+<p>
+Or, equivalently, we define \(i\)'s reaction function as 
+</p>
+
+<p>
+\[
+R_i(q_j) = \frac{1}{2a}(1-c_i-b q_j)
+\]
+</p>
+
+<p>
+We have an equilibrium if \(q_1 = R_1(q_2)\) and \(q_2 = R_2(q_1)\). Or in matrix notation, the equilibrium is given by \(q_1,q_2\) such that
+</p>
+
+<p>
+$$
+</p>
+\begin{pmatrix} q_1\\ q_2\end{pmatrix} = \begin{pmatrix} R_1(q_2)\\ R_2(q_1)\end{pmatrix}
+<p>
+$$
+</p>
+
+<p>
+If both firms have the same costs \(c_1=c_2\), there is a symmetric equilibrium given by \(q=R(q)\).
+</p>
+
+<p>
+To calculate the equilibrium, we need to find a so called fixed point of the vector function \(R(q)\). This can be seen as follows.
+</p>
+
+<p>
+Define the function (or mapping) \(q \rightarrow R(q)\) with \(q \in \Re^2\) and 
+</p>
+
+<p>
+\[
+R(q) = \begin{pmatrix} R_1(q_2)\\ R_2(q_1)\end{pmatrix}
+\]
+</p>
+
+<p>
+A fixed point of this function is defined as a vector \(q\) such that \(q=R(q)\). In words, \(q_1\) is the optimal reaction to \(q_2\) and \(q_2\) is the optimal reaction to \(q_1\). That is, the vector \(q\) is a Nash equilibrium. Each firm \(i\) chooses its optimal output level \(q_i\), given the choice by the other firm \(q_j\).
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> solve model symbolically</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+One way to solve such a duopoly model in python is to use the <code>sympy</code> library which allows us to do symbolic math. We import this library.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="finch-neptune-two-kentucky"><span style="color: #0000FF;">from</span> sympy <span style="color: #0000FF;">import</span> *
+</pre>
+</div>
+
+<p>
+We define variables that we want to use as symbols.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="vegan-bulldog-berlin-robin"><span style="color: #BA36A5;">q1</span>, <span style="color: #BA36A5;">q2</span> = symbols(<span style="color: #008000;">'q1 q2'</span>)
+<span style="color: #BA36A5;">a</span>,<span style="color: #BA36A5;">b</span> = symbols(<span style="color: #008000;">'a b'</span>)
+<span style="color: #BA36A5;">c1</span>, <span style="color: #BA36A5;">c2</span> = symbols(<span style="color: #008000;">'c1 c2'</span>)
+
+</pre>
+</div>
+
+<p>
+We define the (inverse) demand function and the cost function. Although, these look like "normal" python functions, python actually "understands" these functions as symbolic functions. The reason is that they are defined using the symbols that we just defined.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="leopard-minnesota-hamper-crazy"><span style="color: #0000FF;">def</span> <span style="color: #006699;">p</span>(q1,q2):
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #0000FF;">return</span> 1-a* q1 - b* q2
+
+<span style="color: #0000FF;">def</span> <span style="color: #006699;">cost</span>(q,c):
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #0000FF;">return</span> c*q
+
+</pre>
+</div>
+
+<p>
+With these functions, we can define the profit function of a firm with cost level \(c\) that produces output \(q_1\) while its competitor produces \(q_2\).
+</p>
+
+<p>
+Once the profit function is defined, we derive the first order conditions. That is, we differentiate the profit of firm \(i\) with respect to the output level of firm \(i\), \(q_i\).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="jig-low-bacon-ack"><span style="color: #0000FF;">def</span> <span style="color: #006699;">profit</span>(q1,q2,c):
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #0000FF;">return</span> p(q1,q2)*q1 - cost(q1,c)
+
+<span style="color: #BA36A5;">foc1</span> = diff(profit(q1,q2,c1),q1)
+<span style="color: #BA36A5;">foc2</span> = diff(profit(q2,q1,c2),q2)
+
+</pre>
+</div>
+
+
+<hr >
+
+<p>
+<b>Exercise</b>
+</p>
+
+<p>
+Use the function <code>diff</code> to show that profits of firm \(i\) are concave in \(q_i\).
+</p>
+
+<hr >
+
+
+<p>
+In equilibrium the first order conditions for both firms should equal 0. Hence, we can solve the system of equation <code>foc1, foc2</code> with respect to \(q_1,q_2\).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="lion-low-oxygen-magnesium">solve([foc1, foc2], [q1, q2])
+</pre>
+</div>
+
+<p>
+{q1: (-2*a*(c1 - 1) + b*(c2 - 1))/(4*a**2 - b**2),
+ q2: (-2*a*(c2 - 1) + b*(c1 - 1))/(4*a**2 - b**2)}
+</p>
+
+<hr >
+
+<p>
+<b>Exercise</b>
+</p>
+
+<p>
+Define a different demand and/or cost function and calculate the equilibrium again. Note that for some demand and cost functions, an analytical solution is no longer available.
+</p>
+
+<hr >
+
+<p>
+With <code>sympy</code> you can differentiate and integrate your favourite functions.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="two-lima-fish-sodium"><span style="color: #0000FF;">from</span> sympy <span style="color: #0000FF;">import</span> *
+
+<span style="color: #BA36A5;">x</span> = symbols(<span style="color: #008000;">'x'</span>)
+<span style="color: #0000FF;">def</span> <span style="color: #006699;">f</span>(x):
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #0000FF;">return</span> x**2
+
+<span style="color: #0000FF;">print</span>(diff(f(x),x))
+<span style="color: #0000FF;">print</span>(integrate(f(x),x))
+
+</pre>
+</div>
+
+<p>
+2*x
+x**3/3
+</p>
+
+<hr >
+
+<p>
+<b>Exercise</b>
+</p>
+
+<p>
+Find the derivative and integral of \(e^x\) (use <code>exp(x)</code>), \(cos(x)\) and \(ln(x)\).
+</p>
+
+<hr >
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> solve model numerically</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Sometimes you are not interested in the analytical solution, but just want to know how the equilibrium varies with a parameter. We will make a graph where the equilibrium output levels vary with one of the firm's cost level. We start by importing some libraries.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="white-skylark-violet-autumn"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">First lets clear all previous python imports and variables by resetting the python kernel.</span>
+%reset -f
+
+<span style="color: #0000FF;">from</span> scipy <span style="color: #0000FF;">import</span> optimize,arange
+<span style="color: #0000FF;">from</span> numpy <span style="color: #0000FF;">import</span> array
+<span style="color: #0000FF;">import</span> matplotlib.pyplot <span style="color: #0000FF;">as</span> plt
+%matplotlib inline
+</pre>
+</div>
+
+<p>
+We define the (inverse) demand and cost functions as above. But now \(q1,q2,c\) are normal python variables and not symbols.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="jig-mango-high-fanta"><span style="color: #0000FF;">def</span> <span style="color: #006699;">p</span>(q1,q2):
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #0000FF;">return</span> 1-a*q1-b*q2
+
+<span style="color: #0000FF;">def</span> <span style="color: #006699;">costs</span>(q,c):
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #0000FF;">return</span> c*q
+
+<span style="color: #0000FF;">def</span> <span style="color: #006699;">profits</span>(demand_function,cost_function,c,q1,q2):
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #0000FF;">return</span> demand_function(q1,q2)*q1-costs(q1,c)
+
+</pre>
+</div>
+
+<p>
+Note that the function <code>profits</code> above takes the functions <code>demand_function</code> and <code>cost_function</code> as arguments, besides the variables <code>c,q1,q2</code>.
+</p>
+
+<hr >
+
+<p>
+<b>Exercice</b>
+</p>
+
+<p>
+Try to take the derivative of \(costs(q,c)\) with respect to \(q\) using <code>diff</code> (that is, after importing <code>sympy</code>).
+</p>
+
+<hr >
+
+<p>
+As we are doing a numerical analysis here, we need to choose values for the demand parameters \(a,b\).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="vegan-enemy-ten-ten"><span style="color: #BA36A5;">a</span> = 1
+<span style="color: #BA36A5;">b</span> = 1
+</pre>
+</div>
+
+<p>
+Each firm maximizes its profits. However, python does not feature maximization routines; there are only minimization routines. Hence, if we want to maximize profits, we need to minimize <code>minus profits</code>. In the following code block, we minimize \(-profits\) for firm 1 given an output level \(q_2\) for the other firm. This is, in fact, firm 1's reaction function. From <code>optimize</code> we use the function <code>fminbound</code> to find the minimum of \(-profits\). We specify the function <code>profits</code>, with functions <code>p</code> and <code>costs</code> as defined above. The function call to <code>reaction</code> specifies <code>q2</code> and <code>c1</code>. The only variable left to vary is \(q_1\) which we denote by \(x\) in the "lambda"-function. Further, we specify the interval where the optimal \(q_1\) has to be found; \([0,1]\) in this case. Google to see what <code>full_output</code> does in this case.
+</p>
+
+<p>
+Then we define the function <code>fixed_point</code> which is the equivalent of \(q-R(q)\) above. Note that the function <code>reaction</code> can be used for both firm 1 and firm 2; only the arguments differ for the firms, but the function itself is the same.
+</p>
+
+<p>
+The function <code>fixed_point</code> takes two (vector) arguments: a vector \(q\) of output levels and \(c\) of cost levels. With the indexing conventions in python, \(q[0]\) is the first element of \(q\) and hence a natural choice for \(q_1\); similarly, \(q[1]\) corresponds to \(q_2\). The same logic applies to \(c\).
+</p>
+
+<p>
+From <code>optimize</code> (which was imported above from <code>scipy</code>), we use <code>fsolve</code> to find the \(q\) where <code>fixed_point(q,c)</code> equals 0. We provide an initial guess for this vector \(q\). We solve the model for the case where \(c_1=c_2=0\) (with \(a=b=1\) you should be able to dream the answer&#x2026;)
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="romeo-snake-neptune-burger"><span style="color: #0000FF;">def</span> <span style="color: #006699;">reaction</span>(q2,c1):
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #BA36A5;">q1</span> =  optimize.fminbound(<span style="color: #0000FF;">lambda</span> x: -profits(p,costs,c1,x,q2),0,1,full_output=1)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #0000FF;">return</span> q1[0]
+
+<span style="color: #0000FF;">def</span> <span style="color: #006699;">fixed_point</span>(q,c):
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #0000FF;">return</span> [q[0]-reaction(q[1],c[0]),q[1]-reaction(q[0],c[1])]
+
+<span style="color: #BA36A5;">initial_guess</span> = [0,0]
+
+optimize.fsolve(<span style="color: #0000FF;">lambda</span> q: fixed_point(q,[0,0]), initial_guess)
+
+</pre>
+</div>
+
+<p>
+array([ 0.33333333,  0.33333333])
+</p>
+
+<hr >
+
+<p>
+<b>Exercise</b>
+</p>
+
+<p>
+Solve the model for \(c_1 = 0.1, c_2 = 0.2\).
+</p>
+
+<hr >
+
+
+<p>
+Now that we have solved the model, we can plot the output level of firms' 1 and 2 as a function of \(c_1\). 
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="seventeen-low-pennsylvania-bravo"><span style="color: #BA36A5;">range_c</span> = arange(0,0.51,0.01)
+<span style="color: #BA36A5;">range_q</span> = [optimize.fsolve(<span style="color: #0000FF;">lambda</span> q: fixed_point(q,[c,0]), [0,0]) <span style="color: #0000FF;">for</span> c <span style="color: #0000FF;">in</span> range_c]
+plt.style.use(<span style="color: #008000;">'seaborn'</span>)
+plt.clf()
+plt.plot(range_c,array(range_q)[:,0], label = <span style="color: #008000;">'$q_1$'</span>)
+plt.plot(range_c,array(range_q)[:,1], label = <span style="color: #008000;">'$q_2$'</span>)
+plt.xlabel(<span style="color: #008000;">'$c_1$'</span>)
+plt.ylabel(<span style="color: #008000;">'$q$'</span>)
+plt.legend()
+plt.savefig(<span style="color: #008000;">'Cournot.png'</span>)
+
+
+</pre>
+</div>
+
+<p>
+<img src="ipython-inline-images/ob-ipython-9a71e7398fd8de0eb04f71d2cd14ee21.png" class="img-responsive" alt="ob-ipython-9a71e7398fd8de0eb04f71d2cd14ee21.png">
+&lt;matplotlib.figure.Figure at 0x10efc8b00&gt;
+</p>
+
+
+
+<figure>
+<p><img src="./Cournot.png" class="img-responsive" alt="Cournot.png">
+</p>
+</figure>
+
+
+
+<hr >
+
+<p>
+<b>Exercise</b>
+</p>
+
+<p>
+Copy the code above in a new cell and adjust it such that you can plot \(q_1,q_2\) as a function of \(b \in [0,a]\). First, do this for the symmetric case with \(c_1=c_2=0\). Then make a new plot where \(c_1 \neq c_2\).
+</p>
+
+<hr >
+</div>
+</div>
+</div><div class="col-md-3"><nav id="table-of-contents">
+<div id="text-table-of-contents" class="bs-docs-sidebar">
+<ul class="nav">
+<li><a href="#sec-1">1. Model</a></li>
+<li><a href="#sec-2">2. solve model symbolically</a></li>
+<li><a href="#sec-3">3. solve model numerically</a></li>
+</ul>
+</div>
+</nav>
+</div></div></div>
+<footer id="postamble" class="">
+<div><p class="author">Author: Jan Boone</p>
+<p class="date">Created: 2017-07-14 Fri 13:18</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.0.50 (<a href="http://orgmode.org">Org-mode</a> 9.0.9)</p>
+</div>
+</footer>
+</body>
+</html>
