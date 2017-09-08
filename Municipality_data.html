@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <title>Plotting health data with python</title>
-<!-- 2017-07-01 Sat 16:44 -->
+<!-- 2017-09-08 Fri 15:48 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="generator" content="Org-mode">
@@ -229,6 +229,20 @@ In this notebook we use publicly available health care data to illustrate the us
 <p>
 We start with health care data on the level of municipalities. We will plot how health care expenditure varies with location.
 </p>
+
+<p>
+Some institutional background:
+</p>
+<ul class="org-ul">
+<li>in the Netherlands health insurance is mandatory
+</li>
+<li>people aged 18 or older face a deductible of 365 euros in 2014; no deductible for people below 18
+</li>
+<li>the deductible applies to a number of cost categories in the "basic packages"; see below
+</li>
+<li>people can &#x2013;voluntarily&#x2013; increase their deductible with 100, 200, 300, 400 or 500 euro; but our data has no information on this
+</li>
+</ul>
 </div>
 
 
@@ -243,9 +257,10 @@ The following code block loads the data. We use data from <a href="http://www.ve
 Then we inspect the first ten rows of our data set.
 </p>
 
+
 <div class="org-src-container">
 
-<pre class="src src-ipython" id="kitten-purple-cardinal-quebec"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">First lets clear all previous python imports and variables by resetting the python kernel.</span>
+<pre class="src src-ipython"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">First lets clear all previous python imports and variables by resetting the python kernel.</span>
 %reset -f
 
 
@@ -257,6 +272,136 @@ df_gemeente.head(10)
 </pre>
 </div>
 
+
+<p>
+GESLACHT LEEFTIJDSKLASSE   GEMEENTENAAM  AANTAL_BSN  AANTAL_VERZEKERDEJAREN  \
+0      NaN             NaN            NaN      298383               185664.92   
+1        M   0 t/m  4 jaar    AA EN HUNZE         507                  468.83   
+2        M   0 t/m  4 jaar        AALBURG         428                  387.28   
+3        M   0 t/m  4 jaar       AALSMEER         876                  790.65   
+4        M   0 t/m  4 jaar         AALTEN         667                  600.00   
+5        M   0 t/m  4 jaar  ACHTKARSPELEN         810                  737.03   
+6        M   0 t/m  4 jaar   ALBLASSERDAM         637                  561.21   
+7        M   0 t/m  4 jaar  ALBRANDSWAARD         735                  663.22   
+8        M   0 t/m  4 jaar        ALKMAAR        2967                 2660.93   
+9        M   0 t/m  4 jaar         ALMELO        1906                 1714.63   
+</p>
+
+<p>
+   KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG  KOSTEN_FARMACIE  \
+0                          48661669.94       9219422.33   
+1                            473370.77         43305.49   
+2                            340442.37         23395.86   
+3                            932841.57         54597.52   
+4                            515879.78         43516.71   
+5                            766456.80         88084.16   
+6                           1252440.29        140225.60   
+7                            927635.48        114174.07   
+8                           4005510.06        258936.51   
+9                           3518922.31        254976.19   
+</p>
+
+<p>
+   KOSTEN_TWEEDELIJNS_GGZ  KOSTEN_HUISARTS_INSCHRIJFTARIEF  \
+0              7475481.90                       4092492.35   
+1                14056.81                         26239.56   
+2                 5555.83                         21673.15   
+3                34355.66                         43971.27   
+4                 2404.19                         33749.10   
+5                 6681.81                         41477.79   
+6                 9715.96                         30705.39   
+7                 2043.52                         37028.38   
+8                22599.87                        147227.49   
+9                87437.11                         96757.71   
+</p>
+
+<p>
+   KOSTEN_HUISARTS_CONSULT      &#x2026;        KOSTEN_PARAMEDISCHE_ZORG_OVERIG  \
+0               1388439.07      &#x2026;                              290539.66   
+1                 12829.29      &#x2026;                               13783.67   
+2                  9417.98      &#x2026;                               15297.60   
+3                 22413.37      &#x2026;                               14105.95   
+4                 18472.64      &#x2026;                               31816.27   
+5                 19157.34      &#x2026;                               30454.49   
+6                 15936.39      &#x2026;                               19202.75   
+7                 21611.09      &#x2026;                               30449.94   
+8                 71141.10      &#x2026;                               67205.26   
+9                 51693.62      &#x2026;                               81595.14   
+</p>
+
+<p>
+   KOSTEN_ZIEKENVERVOER_ZITTEND  KOSTEN_ZIEKENVERVOER_LIGGEND  \
+0                     210313.33                    1398151.05   
+1                        638.08                       5004.86   
+2                        315.06                       6155.09   
+3                          0.00                      20465.44   
+4                       1173.82                       6282.28   
+5                        204.30                      17011.84   
+6                          0.00                      11421.05   
+7                          0.00                      13027.62   
+8                       4086.51                      70806.48   
+9                       7742.31                      32328.75   
+</p>
+
+<p>
+   KOSTEN_KRAAMZORG  KOSTEN_VERLOSKUNDIGE_ZORG  \
+0         1286545.5                 1072906.37   
+1               0.0                       0.00   
+2               0.0                       0.00   
+3               0.0                       0.00   
+4               0.0                       0.00   
+5               0.0                       0.00   
+6               0.0                       0.00   
+7               0.0                       0.00   
+8               0.0                       0.00   
+9               0.0                       0.00   
+</p>
+
+<p>
+   KOSTEN_GENERALISTISCHE_BASIS_GGZ  KOSTEN_GRENSOVERSCHRIJDENDE_ZORG  \
+0                         490222.49                       21946526.34   
+1                              0.00                           2571.36   
+2                              0.00                            186.08   
+3                            157.44                           1743.72   
+4                           1422.67                             62.75   
+5                              0.00                            206.11   
+6                              0.00                            662.75   
+7                              0.00                           1422.76   
+8                            168.55                           7153.37   
+9                           3777.82                           2492.23   
+</p>
+
+<p>
+   KOSTEN_EERSTELIJNS_ONDERSTEUNING  KOSTEN_GERIATRISCHE_REVALIDATIEZORG  \
+0                            523.35                            351533.29   
+1                             31.05                                 0.00   
+2                              5.40                                 0.00   
+3                             12.60                                 0.00   
+4                              3.60                                 0.00   
+5                            955.80                                 0.00   
+6                             11.25                                 0.00   
+7                              7.20                                 0.00   
+8                             36.90                                 0.00   
+9                             27.45                                 0.00   
+</p>
+
+<p>
+   KOSTEN_OVERIG  
+0      849751.44  
+1         186.03  
+2         135.30  
+3       13285.23  
+4         107.40  
+5         453.66  
+6         165.60  
+7         368.37  
+8        2707.21  
+9         682.51  
+</p>
+
+<p>
+[10 rows x 24 columns]
+</p>
 <div>
 <table border="1" class="dataframe">
   <thead>
@@ -530,135 +675,6 @@ df_gemeente.head(10)
 </table>
 <p>10 rows × 24 columns</p>
 </div>
-<p>
-  GESLACHT LEEFTIJDSKLASSE   GEMEENTENAAM  AANTAL_BSN  AANTAL_VERZEKERDEJAREN  \
-0      NaN             NaN            NaN      298383               185664.92
-1        M   0 t/m  4 jaar    AA EN HUNZE         507                  468.83
-2        M   0 t/m  4 jaar        AALBURG         428                  387.28
-3        M   0 t/m  4 jaar       AALSMEER         876                  790.65
-4        M   0 t/m  4 jaar         AALTEN         667                  600.00
-5        M   0 t/m  4 jaar  ACHTKARSPELEN         810                  737.03
-6        M   0 t/m  4 jaar   ALBLASSERDAM         637                  561.21
-7        M   0 t/m  4 jaar  ALBRANDSWAARD         735                  663.22
-8        M   0 t/m  4 jaar        ALKMAAR        2967                 2660.93
-9        M   0 t/m  4 jaar         ALMELO        1906                 1714.63
-</p>
-
-<p>
-   KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG  KOSTEN_FARMACIE  \
-0                          48661669.94       9219422.33
-1                            473370.77         43305.49
-2                            340442.37         23395.86
-3                            932841.57         54597.52
-4                            515879.78         43516.71
-5                            766456.80         88084.16
-6                           1252440.29        140225.60
-7                            927635.48        114174.07
-8                           4005510.06        258936.51
-9                           3518922.31        254976.19
-</p>
-
-<p>
-   KOSTEN_TWEEDELIJNS_GGZ  KOSTEN_HUISARTS_INSCHRIJFTARIEF  \
-0              7475481.90                       4092492.35
-1                14056.81                         26239.56
-2                 5555.83                         21673.15
-3                34355.66                         43971.27
-4                 2404.19                         33749.10
-5                 6681.81                         41477.79
-6                 9715.96                         30705.39
-7                 2043.52                         37028.38
-8                22599.87                        147227.49
-9                87437.11                         96757.71
-</p>
-
-<p>
-   KOSTEN_HUISARTS_CONSULT      &#x2026;        KOSTEN_PARAMEDISCHE_ZORG_OVERIG  \
-0               1388439.07      &#x2026;                              290539.66
-1                 12829.29      &#x2026;                               13783.67
-2                  9417.98      &#x2026;                               15297.60
-3                 22413.37      &#x2026;                               14105.95
-4                 18472.64      &#x2026;                               31816.27
-5                 19157.34      &#x2026;                               30454.49
-6                 15936.39      &#x2026;                               19202.75
-7                 21611.09      &#x2026;                               30449.94
-8                 71141.10      &#x2026;                               67205.26
-9                 51693.62      &#x2026;                               81595.14
-</p>
-
-<p>
-   KOSTEN_ZIEKENVERVOER_ZITTEND  KOSTEN_ZIEKENVERVOER_LIGGEND  \
-0                     210313.33                    1398151.05
-1                        638.08                       5004.86
-2                        315.06                       6155.09
-3                          0.00                      20465.44
-4                       1173.82                       6282.28
-5                        204.30                      17011.84
-6                          0.00                      11421.05
-7                          0.00                      13027.62
-8                       4086.51                      70806.48
-9                       7742.31                      32328.75
-</p>
-
-<p>
-   KOSTEN_KRAAMZORG  KOSTEN_VERLOSKUNDIGE_ZORG  \
-0         1286545.5                 1072906.37
-1               0.0                       0.00
-2               0.0                       0.00
-3               0.0                       0.00
-4               0.0                       0.00
-5               0.0                       0.00
-6               0.0                       0.00
-7               0.0                       0.00
-8               0.0                       0.00
-9               0.0                       0.00
-</p>
-
-<p>
-   KOSTEN_GENERALISTISCHE_BASIS_GGZ  KOSTEN_GRENSOVERSCHRIJDENDE_ZORG  \
-0                         490222.49                       21946526.34
-1                              0.00                           2571.36
-2                              0.00                            186.08
-3                            157.44                           1743.72
-4                           1422.67                             62.75
-5                              0.00                            206.11
-6                              0.00                            662.75
-7                              0.00                           1422.76
-8                            168.55                           7153.37
-9                           3777.82                           2492.23
-</p>
-
-<p>
-   KOSTEN_EERSTELIJNS_ONDERSTEUNING  KOSTEN_GERIATRISCHE_REVALIDATIEZORG  \
-0                            523.35                            351533.29
-1                             31.05                                 0.00
-2                              5.40                                 0.00
-3                             12.60                                 0.00
-4                              3.60                                 0.00
-5                            955.80                                 0.00
-6                             11.25                                 0.00
-7                              7.20                                 0.00
-8                             36.90                                 0.00
-9                             27.45                                 0.00
-</p>
-
-<p>
-   KOSTEN_OVERIG
-0      849751.44
-1         186.03
-2         135.30
-3       13285.23
-4         107.40
-5         453.66
-6         165.60
-7         368.37
-8        2707.21
-9         682.51
-</p>
-
-<p>
-[10 rows x 24 columns]
-</p>
 
 <p>
 We are going to be interested in total health care costs under the deductible. Hence, we specify the categories that fall under the deductible in the Netherlands in 2014.
@@ -670,7 +686,7 @@ We specify a list of columns (cost categories) across which we want to add costs
 </p>
 
 <p>
-We specify the name of a new variable <code>health_expenditure_under_deductible</code> which is calculated on the list of columns specified and then the function that needs to be applied &#x2013;~sum~ in this case. Finally, we specify that the function needs to be applied row-wise: <code>axis=1</code>.
+We specify the name of a new variable <code>health_expenditure_under_deductible</code> which is calculated on the list of columns specified and then the function that needs to be applied &#x2013; <code>sum</code> in this case. Finally, we specify that the function needs to be applied row-wise: <code>axis=1</code>.
 </p>
 
 <p>
@@ -679,7 +695,7 @@ Then we give a dictionary with "old" variable names (in Dutch) and the "new" nam
 
 <div class="org-src-container">
 
-<pre class="src src-ipython" id="charlie-jig-red-texas"><span style="color: #BA36A5;">cost_categories_under_deductible</span> = [<span style="color: #008000;">'KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG'</span>, <span style="color: #008000;">'KOSTEN_MONDZORG'</span>, <span style="color: #008000;">'KOSTEN_FARMACIE'</span>, <span style="color: #008000;">'KOSTEN_HULPMIDDELEN'</span>, <span style="color: #008000;">'KOSTEN_PARAMEDISCHE_ZORG_FYSIOTHERAPIE'</span>, <span style="color: #008000;">'KOSTEN_PARAMEDISCHE_ZORG_OVERIG'</span>, <span style="color: #008000;">'KOSTEN_ZIEKENVERVOER_ZITTEND'</span>, <span style="color: #008000;">'KOSTEN_ZIEKENVERVOER_LIGGEND'</span>, <span style="color: #008000;">'KOSTEN_GRENSOVERSCHRIJDENDE_ZORG'</span>, <span style="color: #008000;">'KOSTEN_GERIATRISCHE_REVALIDATIEZORG'</span>, <span style="color: #008000;">'KOSTEN_OVERIG'</span>]
+<pre class="src src-ipython"><span style="color: #BA36A5;">cost_categories_under_deductible</span> = [<span style="color: #008000;">'KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG'</span>, <span style="color: #008000;">'KOSTEN_MONDZORG'</span>, <span style="color: #008000;">'KOSTEN_FARMACIE'</span>, <span style="color: #008000;">'KOSTEN_HULPMIDDELEN'</span>, <span style="color: #008000;">'KOSTEN_PARAMEDISCHE_ZORG_FYSIOTHERAPIE'</span>, <span style="color: #008000;">'KOSTEN_PARAMEDISCHE_ZORG_OVERIG'</span>, <span style="color: #008000;">'KOSTEN_ZIEKENVERVOER_ZITTEND'</span>, <span style="color: #008000;">'KOSTEN_ZIEKENVERVOER_LIGGEND'</span>, <span style="color: #008000;">'KOSTEN_GRENSOVERSCHRIJDENDE_ZORG'</span>, <span style="color: #008000;">'KOSTEN_GERIATRISCHE_REVALIDATIEZORG'</span>, <span style="color: #008000;">'KOSTEN_OVERIG'</span>]
 <span style="color: #BA36A5;">df_gemeente</span>[<span style="color: #008000;">'health_expenditure_under_deductible'</span>] = df_gemeente[cost_categories_under_deductible].<span style="color: #006FE0;">sum</span>(axis=1)
 
 <span style="color: #BA36A5;">df_gemeente</span> = df_gemeente.rename_axis({
@@ -704,35 +720,6 @@ df_gemeente.dtypes
 </div>
 
 <p>
-sex                                     object
-age                                     object
-MUNICIPALITY                            object
-number_citizens                          int64
-AANTAL_VERZEKERDEJAREN                 float64
-hospital_care                          float64
-pharmaceuticals                        float64
-mental_care                            float64
-GP_capitation                          float64
-GP_fee_for_service                     float64
-GP_other                               float64
-KOSTEN_HULPMIDDELEN                    float64
-dental care                            float64
-physiotherapy                          float64
-KOSTEN_PARAMEDISCHE_ZORG_OVERIG        float64
-KOSTEN_ZIEKENVERVOER_ZITTEND           float64
-KOSTEN_ZIEKENVERVOER_LIGGEND           float64
-maternity_care                         float64
-obstetrics                             float64
-KOSTEN_GENERALISTISCHE_BASIS_GGZ       float64
-KOSTEN_GRENSOVERSCHRIJDENDE_ZORG       float64
-KOSTEN_EERSTELIJNS_ONDERSTEUNING       float64
-KOSTEN_GERIATRISCHE_REVALIDATIEZORG    float64
-KOSTEN_OVERIG                          float64
-health_expenditure_under_deductible    float64
-dtype: object
-</p>
-
-<p>
 We drop the columns that we no longer need.
 </p>
 
@@ -752,13 +739,6 @@ df_gemeente.columns
 </pre>
 </div>
 
-<p>
-Index(['sex', 'age', 'MUNICIPALITY', 'number_citizens', 'hospital_care',
-       'pharmaceuticals', 'mental_care', 'GP_capitation', 'GP_fee_for_service',
-       'GP_other', 'dental care', 'physiotherapy', 'maternity_care',
-       'obstetrics', 'health_expenditure_under_deductible'],
-      dtype='object')
-</p>
 
 <p>
 Let's look again at the first couple of lines of our data set. The <code>head</code> method presents the first 5 line as default.
@@ -766,161 +746,9 @@ Let's look again at the first couple of lines of our data set. The <code>head</c
 
 <div class="org-src-container">
 
-<pre class="src src-ipython" id="three-quebec-video-yankee">df_gemeente.head()
+<pre class="src src-ipython">df_gemeente.head()
 </pre>
 </div>
-
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>sex</th>
-      <th>age</th>
-      <th>MUNICIPALITY</th>
-      <th>number_citizens</th>
-      <th>hospital_care</th>
-      <th>pharmaceuticals</th>
-      <th>mental_care</th>
-      <th>GP_capitation</th>
-      <th>GP_fee_for_service</th>
-      <th>GP_other</th>
-      <th>dental care</th>
-      <th>physiotherapy</th>
-      <th>maternity_care</th>
-      <th>obstetrics</th>
-      <th>health_expenditure_under_deductible</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>298383</td>
-      <td>48661669.94</td>
-      <td>9219422.33</td>
-      <td>7475481.90</td>
-      <td>4092492.35</td>
-      <td>1388439.07</td>
-      <td>3041904.41</td>
-      <td>1249229.61</td>
-      <td>418648.30</td>
-      <td>1286545.5</td>
-      <td>1072906.37</td>
-      <td>86677435.03</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>M</td>
-      <td>0 t/m  4 jaar</td>
-      <td>AA EN HUNZE</td>
-      <td>507</td>
-      <td>473370.77</td>
-      <td>43305.49</td>
-      <td>14056.81</td>
-      <td>26239.56</td>
-      <td>12829.29</td>
-      <td>36034.65</td>
-      <td>9311.14</td>
-      <td>15968.80</td>
-      <td>0.0</td>
-      <td>0.00</td>
-      <td>576750.31</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>M</td>
-      <td>0 t/m  4 jaar</td>
-      <td>AALBURG</td>
-      <td>428</td>
-      <td>340442.37</td>
-      <td>23395.86</td>
-      <td>5555.83</td>
-      <td>21673.15</td>
-      <td>9417.98</td>
-      <td>20159.19</td>
-      <td>7213.81</td>
-      <td>6135.05</td>
-      <td>0.0</td>
-      <td>0.00</td>
-      <td>406856.55</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>M</td>
-      <td>0 t/m  4 jaar</td>
-      <td>AALSMEER</td>
-      <td>876</td>
-      <td>932841.57</td>
-      <td>54597.52</td>
-      <td>34355.66</td>
-      <td>43971.27</td>
-      <td>22413.37</td>
-      <td>61629.32</td>
-      <td>19042.00</td>
-      <td>20086.43</td>
-      <td>0.0</td>
-      <td>0.00</td>
-      <td>1093297.37</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>M</td>
-      <td>0 t/m  4 jaar</td>
-      <td>AALTEN</td>
-      <td>667</td>
-      <td>515879.78</td>
-      <td>43516.71</td>
-      <td>2404.19</td>
-      <td>33749.10</td>
-      <td>18472.64</td>
-      <td>46720.61</td>
-      <td>12909.41</td>
-      <td>20762.75</td>
-      <td>0.0</td>
-      <td>0.00</td>
-      <td>652523.86</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-<p>
-   sex             age MUNICIPALITY  number_citizens  hospital_care  \
-0  NaN             NaN          NaN           298383    48661669.94
-1    M   0 t/m  4 jaar  AA EN HUNZE              507      473370.77
-2    M   0 t/m  4 jaar      AALBURG              428      340442.37
-3    M   0 t/m  4 jaar     AALSMEER              876      932841.57
-4    M   0 t/m  4 jaar       AALTEN              667      515879.78
-</p>
-
-<p>
-   pharmaceuticals  mental_care  GP_capitation  GP_fee_for_service  \
-0       9219422.33   7475481.90     4092492.35          1388439.07
-1         43305.49     14056.81       26239.56            12829.29
-2         23395.86      5555.83       21673.15             9417.98
-3         54597.52     34355.66       43971.27            22413.37
-4         43516.71      2404.19       33749.10            18472.64
-</p>
-
-<p>
-     GP_other  dental care  physiotherapy  maternity_care  obstetrics  \
-0  3041904.41   1249229.61      418648.30       1286545.5  1072906.37
-1    36034.65      9311.14       15968.80             0.0        0.00
-2    20159.19      7213.81        6135.05             0.0        0.00
-3    61629.32     19042.00       20086.43             0.0        0.00
-4    46720.61     12909.41       20762.75             0.0        0.00
-</p>
-
-<p>
-   health_expenditure_under_deductible
-0                          86677435.03
-1                            576750.31
-2                            406856.55
-3                           1093297.37
-4                            652523.86
-</p>
 
 <p>
 We are not interested in the first line, so we drop it. Indeed, our data set now starts with the first municipality 'AA EN HUNZE'.
@@ -928,45 +756,45 @@ We are not interested in the first line, so we drop it. Indeed, our data set now
 
 <div class="org-src-container">
 
-<pre class="src src-ipython" id="seven-mango-cat-angel">df_gemeente.drop(df_gemeente.index[[0]], inplace=<span style="color: #D0372D;">True</span>)
+<pre class="src src-ipython">df_gemeente.drop(df_gemeente.index[[0]], inplace=<span style="color: #D0372D;">True</span>)
 df_gemeente.head()
 </pre>
 </div>
 
 <p>
   sex             age   MUNICIPALITY  number_citizens  hospital_care  \
-1   M   0 t/m  4 jaar    AA EN HUNZE              507      473370.77
-2   M   0 t/m  4 jaar        AALBURG              428      340442.37
-3   M   0 t/m  4 jaar       AALSMEER              876      932841.57
-4   M   0 t/m  4 jaar         AALTEN              667      515879.78
-5   M   0 t/m  4 jaar  ACHTKARSPELEN              810      766456.80
+1   M   0 t/m  4 jaar    AA EN HUNZE              507      473370.77   
+2   M   0 t/m  4 jaar        AALBURG              428      340442.37   
+3   M   0 t/m  4 jaar       AALSMEER              876      932841.57   
+4   M   0 t/m  4 jaar         AALTEN              667      515879.78   
+5   M   0 t/m  4 jaar  ACHTKARSPELEN              810      766456.80   
 </p>
 
 <p>
    pharmaceuticals  mental_care  GP_capitation  GP_fee_for_service  GP_other  \
-1         43305.49     14056.81       26239.56            12829.29  36034.65
-2         23395.86      5555.83       21673.15             9417.98  20159.19
-3         54597.52     34355.66       43971.27            22413.37  61629.32
-4         43516.71      2404.19       33749.10            18472.64  46720.61
-5         88084.16      6681.81       41477.79            19157.34  53633.01
+1         43305.49     14056.81       26239.56            12829.29  36034.65   
+2         23395.86      5555.83       21673.15             9417.98  20159.19   
+3         54597.52     34355.66       43971.27            22413.37  61629.32   
+4         43516.71      2404.19       33749.10            18472.64  46720.61   
+5         88084.16      6681.81       41477.79            19157.34  53633.01   
 </p>
 
 <p>
    dental care  physiotherapy  maternity_care  obstetrics  \
-1      9311.14       15968.80             0.0         0.0
-2      7213.81        6135.05             0.0         0.0
-3     19042.00       20086.43             0.0         0.0
-4     12909.41       20762.75             0.0         0.0
-5     16695.10       23423.96             0.0         0.0
+1      9311.14       15968.80             0.0         0.0   
+2      7213.81        6135.05             0.0         0.0   
+3     19042.00       20086.43             0.0         0.0   
+4     12909.41       20762.75             0.0         0.0   
+5     16695.10       23423.96             0.0         0.0   
 </p>
 
 <p>
-   health_expenditure_under_deductible
-1                            576750.31
-2                            406856.55
-3                           1093297.37
-4                            652523.86
-5                            954494.16
+   health_expenditure_under_deductible  
+1                            576750.31  
+2                            406856.55  
+3                           1093297.37  
+4                            652523.86  
+5                            954494.16  
 </p>
 
 
@@ -977,7 +805,7 @@ Now let's consider data types.
 
 <div class="org-src-container">
 
-<pre class="src src-ipython" id="west-ohio-sodium-sodium">df_gemeente.dtypes
+<pre class="src src-ipython">df_gemeente.dtypes
 </pre>
 </div>
 
@@ -1006,7 +834,7 @@ The first three variables are seen as "object", that is, strings. This is fine f
 
 <div class="org-src-container">
 
-<pre class="src src-ipython" id="crazy-leopard-yankee-failed"><span style="color: #BA36A5;">df_gemeente</span>[<span style="color: #008000;">'sex'</span>] = df_gemeente[<span style="color: #008000;">'sex'</span>].astype(<span style="color: #008000;">'category'</span>)
+<pre class="src src-ipython"><span style="color: #BA36A5;">df_gemeente</span>[<span style="color: #008000;">'sex'</span>] = df_gemeente[<span style="color: #008000;">'sex'</span>].astype(<span style="color: #008000;">'category'</span>)
 <span style="color: #BA36A5;">df_gemeente</span>[<span style="color: #008000;">'age'</span>] = df_gemeente[<span style="color: #008000;">'age'</span>].astype(<span style="color: #008000;">'category'</span>)
 df_gemeente.info()
 </pre>
@@ -1036,6 +864,157 @@ memory usage: 1.6+ MB
 </p>
 
 <p>
+We can select rows from a dataframe using <code>loc</code>. Below, we consider the municipality Breda and people between 10 and 14 years old.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython">df_gemeente.loc[(df_gemeente.MUNICIPALITY == <span style="color: #008000;">'BREDA'</span>) &amp; (df_gemeente[<span style="color: #008000;">'age'</span>] == <span style="color: #008000;">'10 t/m 14 jaar'</span>)]
+</pre>
+</div>
+
+<p>
+sex             age MUNICIPALITY  number_citizens  hospital_care  \
+832    M  10 t/m 14 jaar        BREDA             5206     2215947.11   
+8234   V  10 t/m 14 jaar        BREDA             4915     1425550.97   
+</p>
+
+<p>
+      pharmaceuticals  mental_care  GP_capitation  GP_fee_for_service  \
+832         381799.92    920439.00      301494.04             88705.2   
+8234        255232.99    564944.21      284269.76             91482.6   
+</p>
+
+<p>
+       GP_other  dental care  physiotherapy  maternity_care  obstetrics  \
+832   142402.72    677836.15      187429.87             0.0         0.0   
+8234  134486.26    620303.59      202916.68             0.0         0.0   
+</p>
+
+<p>
+      health_expenditure_under_deductible  
+832                            3756487.05  
+8234                           2795294.25  
+</p>
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sex</th>
+      <th>age</th>
+      <th>MUNICIPALITY</th>
+      <th>number_citizens</th>
+      <th>hospital_care</th>
+      <th>pharmaceuticals</th>
+      <th>mental_care</th>
+      <th>GP_capitation</th>
+      <th>GP_fee_for_service</th>
+      <th>GP_other</th>
+      <th>dental care</th>
+      <th>physiotherapy</th>
+      <th>maternity_care</th>
+      <th>obstetrics</th>
+      <th>health_expenditure_under_deductible</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>832</th>
+      <td>M</td>
+      <td>10 t/m 14 jaar</td>
+      <td>BREDA</td>
+      <td>5206</td>
+      <td>2215947.11</td>
+      <td>381799.92</td>
+      <td>920439.00</td>
+      <td>301494.04</td>
+      <td>88705.2</td>
+      <td>142402.72</td>
+      <td>677836.15</td>
+      <td>187429.87</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>3756487.05</td>
+    </tr>
+    <tr>
+      <th>8234</th>
+      <td>V</td>
+      <td>10 t/m 14 jaar</td>
+      <td>BREDA</td>
+      <td>4915</td>
+      <td>1425550.97</td>
+      <td>255232.99</td>
+      <td>564944.21</td>
+      <td>284269.76</td>
+      <td>91482.6</td>
+      <td>134486.26</td>
+      <td>620303.59</td>
+      <td>202916.68</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>2795294.25</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>
+If we are interested in one variable, e.g. <code>number_citizens</code>, we can select this as well.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython">df_gemeente.loc[(df_gemeente.MUNICIPALITY == <span style="color: #008000;">'BREDA'</span>) &amp; (df_gemeente[<span style="color: #008000;">'age'</span>] == <span style="color: #008000;">'10 t/m 14 jaar'</span>)][<span style="color: #008000;">'number_citizens'</span>]
+</pre>
+</div>
+
+
+<hr >
+
+<p>
+<b>Exercise</b>
+</p>
+
+<p>
+Calculate how many citizens live in Breda between the age of 10 and 14.
+</p>
+
+<hr >
+
+<p>
+We can also give lists of row values that we are interested in:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython">df_gemeente.loc[(df_gemeente.MUNICIPALITY.isin([<span style="color: #008000;">'BREDA'</span>, <span style="color: #008000;">'TILBURG'</span>])) &amp; (df_gemeente[<span style="color: #008000;">'age'</span>] == <span style="color: #008000;">'10 t/m 14 jaar'</span>)][<span style="color: #008000;">'number_citizens'</span>]
+</pre>
+</div>
+
+<p>
+832     5206
+1098    5817
+8234    4915
+8500    5651
+Name: number_citizens, dtype: int64
+</p>
+
+
+<hr >
+
+<p>
+<b>Exercise</b>
+</p>
+
+<p>
+Calculate total health care expenditures under the deductible for people living in Amsterdam between the ages of 10 and 19 years old.
+</p>
+
+<hr >
+
+
+<p>
 Now that we have the data ready, we are going to plot health care expenditures on the map of the Netherlands.
 </p>
 </div>
@@ -1058,7 +1037,7 @@ exist). We merge our data <code>df_gemeente</code> with the dataframe <code>Geme
 
 <div class="org-src-container">
 
-<pre class="src src-ipython" id="ack-louisiana-california-november"><span style="color: #BA36A5;">Gemeentes</span> = pd.read_excel(<span style="color: #008000;">'Gemeentes.xlsx'</span>)
+<pre class="src src-ipython"><span style="color: #BA36A5;">Gemeentes</span> = pd.read_excel(<span style="color: #008000;">'Gemeentes.xlsx'</span>)
 <span style="color: #BA36A5;">df_gemeente</span> = df_gemeente.dropna(subset=[<span style="color: #008000;">'MUNICIPALITY'</span>])
 <span style="color: #BA36A5;">df_gem_merged</span> = pd.merge(df_gemeente,Gemeentes,on=[<span style="color: #008000;">'MUNICIPALITY'</span>],how=<span style="color: #008000;">'left'</span>)
 df_gem_merged.head()
@@ -1236,15 +1215,11 @@ We are going to plot expenditure under the deductible per head for each municipa
 </ol>
 
 <p>
-With pandas this is straightforward to do using `groupby`. We do the `groupby` on the municipality. For each municipality there are different age groups and we need to aggregate over these age groups. We specify the variables that we want to know at the municipality level. In this case `hospital_care` and `number_citizens`. Finally, we specify how the function with which to aggregate. Here we use the 'built-in' function `sum()`. Other functions we can use include `mean`, `min`, `max` etc. You can also specify your own function and apply this using `agg()`.
+With pandas this is straightforward to do using <code>groupby</code>. We do the <code>groupby</code> on the municipality. For each municipality there are different age groups and we need to aggregate over these age groups. We specify the variables that we want to know at the municipality level. In this case <code>health_expenditure_under_deductible</code> and <code>number_citizens</code>. Finally, we specify the function with which to aggregate. Here we use the 'built-in' function <code>sum()</code>. Other functions we can use include <code>mean</code>, <code>min</code>, <code>max</code> etc. You can also specify your own function and apply this using <code>agg()</code>.
 </p>
 
 <p>
 Then hospital care per head can be defined as the total expenditure per municipality divided by the total number of citizens per municipality.
-</p>
-
-<p>
-We can do other transformations of the data, such as the `cost_index` below which is normalized to lie between 0 and 100.
 </p>
 
 <div class="org-src-container">
@@ -1329,9 +1304,9 @@ Aalsmeer                   1550.837018
 
 <pre class="src src-ipython" id="bravo-pip-march-batman"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Create a dataframe</span>
 <span style="color: #BA36A5;">p_results</span> = pd.DataFrame(<span style="color: #006FE0;">dict</span>(
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   municipality = results.index,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   expenditure = results[<span style="color: #008000;">'expenditure_per_head'</span>]
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   ))
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   municipality = results.index,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   expenditure = results[<span style="color: #008000;">'expenditure_per_head'</span>]
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   ))
 
 p_results.head()
 </pre>
@@ -1399,27 +1374,27 @@ Aalsmeer          1550.837018          Aalsmeer
 
 
 <span style="color: #BA36A5;">ref_map</span> = folium.Map(
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   location=[52.139177, 5.327108], <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This will center the view on the world map where the Netherlands is located</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   tiles=<span style="color: #008000;">'Mapbox Bright'</span>,          <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This creates a base map and in this case its the Mapbox Bright basemap</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   zoom_start=8)                   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This will zoom in on the center of view to get the Netherlands in full frame</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   location=[52.139177, 5.327108], <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This will center the view on the world map where the Netherlands is located</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   tiles=<span style="color: #008000;">'Mapbox Bright'</span>,          <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This creates a base map and in this case its the Mapbox Bright basemap</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   zoom_start=8)                   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This will zoom in on the center of view to get the Netherlands in full frame</span>
 
 ref_map.choropleth(
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This is the path to the geojson file that contains all the municipality shapes and locations</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   geo_path=geo_path,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">We will use the percentage dataframe for the choropleth mapping</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   data=p_results,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Municipality will be used for the mapping key and p_valid for its value</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   columns=[<span style="color: #008000;">'municipality'</span>, <span style="color: #008000;">'expenditure'</span>],
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Use GM_NAAM (short for municipality name) as keys for colormapping</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   key_on=<span style="color: #008000;">'feature.properties.GM_NAAM'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">We are going to use a color map from yellow to green</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   fill_color=<span style="color: #008000;">'YlGn'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This gives municipality shapes some opacity so that we can still see the background</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   fill_opacity=0.7,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This gives the lines around the municipality shapes some opacity so that they don't stand out too much</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   line_opacity=0.2,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">The legend</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   legend_name=<span style="color: #008000;">'health care expenditure per head'</span>)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This is the path to the geojson file that contains all the municipality shapes and locations</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   geo_path=geo_path,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">We will use the p_results dataframe for the choropleth mapping</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   data=p_results,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">municipality will be used for the mapping key and expenditure for its value</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   columns=[<span style="color: #008000;">'municipality'</span>, <span style="color: #008000;">'expenditure'</span>],
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Use GM_NAAM (short for municipality name) as keys for colormapping</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   key_on=<span style="color: #008000;">'feature.properties.GM_NAAM'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">We are going to use a color map from yellow to green</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   fill_color=<span style="color: #008000;">'YlGn'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This gives municipality shapes some opacity so that we can still see the background</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   fill_opacity=0.7,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This gives the lines around the municipality shapes some opacity so that they don't stand out too much</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   line_opacity=0.2,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">The legend</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   legend_name=<span style="color: #008000;">'health care expenditure per head'</span>)
 
 ref_map.save(<span style="color: #008000;">'health_expenditure.html'</span>)              <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">This will save the map in a HTML format</span>
 
@@ -1438,9 +1413,23 @@ display(IFrame(<span style="color: #008000;">'health_expenditure.html'</span>, 8
 <p>
 &lt;IPython.lib.display.IFrame at 0x10ff2d160&gt;
 </p>
+
+<hr >
+
+<p>
+<b>Exercise</b>
+</p>
+
+<p>
+Plot number of citizens per municipality using color scheme 'OrRd'.
+</p>
+
+<hr >
 </div>
 </div>
 </div>
+
+
 
 <div id="outline-container-sec-2" class="outline-2">
 <h2 id="sec-2"><span class="section-number-2">2</span> Health care expenditure and age</h2>
@@ -1465,11 +1454,44 @@ Then we look at the columns (variables) in the data.
 <div class="org-src-container">
 
 <pre class="src src-ipython" id="blossom-batman-uniform-princess"><span style="color: #0000FF;">import</span> numpy <span style="color: #0000FF;">as</span> np
+<span style="color: #0000FF;">import</span> pandas <span style="color: #0000FF;">as</span> pd
 <span style="color: #0000FF;">import</span> matplotlib <span style="color: #0000FF;">as</span> plt
 <span style="color: #BA36A5;">df_postal_code</span> = pd.read_csv(<span style="color: #008000;">'Vektis_Open_Databestand_Zorgverzekeringswet_2014_-_postcode3.csv'</span>, sep = <span style="color: #008000;">';'</span>)
 df_postal_code.dtypes
 </pre>
 </div>
+
+<p>
+
+</p>
+
+<p>
+GESLACHT                                   object
+LEEFTIJDSKLASSE                            object
+POSTCODE_3                                float64
+AANTAL_BSN                                  int64
+AANTAL_VERZEKERDEJAREN                    float64
+KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG       float64
+KOSTEN_FARMACIE                           float64
+KOSTEN_TWEEDELIJNS_GGZ                    float64
+KOSTEN_HUISARTS_INSCHRIJFTARIEF           float64
+KOSTEN_HUISARTS_CONSULT                   float64
+KOSTEN_HUISARTS_OVERIG                    float64
+KOSTEN_HULPMIDDELEN                       float64
+KOSTEN_MONDZORG                           float64
+KOSTEN_PARAMEDISCHE_ZORG_FYSIOTHERAPIE    float64
+KOSTEN_PARAMEDISCHE_ZORG_OVERIG           float64
+KOSTEN_ZIEKENVERVOER_ZITTEND              float64
+KOSTEN_ZIEKENVERVOER_LIGGEND              float64
+KOSTEN_KRAAMZORG                          float64
+KOSTEN_VERLOSKUNDIGE_ZORG                 float64
+KOSTEN_GENERALISTISCHE_BASIS_GGZ          float64
+KOSTEN_GRENSOVERSCHRIJDENDE_ZORG          float64
+KOSTEN_EERSTELIJNS_ONDERSTEUNING          float64
+KOSTEN_GERIATRISCHE_REVALIDATIEZORG       float64
+KOSTEN_OVERIG                             float64
+dtype: object
+</p>
 
 
 
@@ -1490,41 +1512,50 @@ One solution in python is to define a function that does all these steps for you
 
 <div class="org-src-container">
 
-<pre class="src src-ipython" id="kitten-kilo-one-july"><span style="color: #0000FF;">def</span> <span style="color: #006699;">get_data_into_shape</span>(df):
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #BA36A5;">df</span>[<span style="color: #008000;">'health_expenditure_under_deductible'</span>] = df[cost_categories_under_deductible].<span style="color: #006FE0;">sum</span>(axis=1)
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #BA36A5;">df</span> = df.rename_axis({
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'GESLACHT'</span>:<span style="color: #008000;">'sex'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'LEEFTIJDSKLASSE'</span>:<span style="color: #008000;">'age'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'GEMEENTENAAM'</span>:<span style="color: #008000;">'MUNICIPALITY'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'AANTAL_BSN'</span>:<span style="color: #008000;">'number_citizens'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG'</span>:<span style="color: #008000;">'hospital_care'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'KOSTEN_FARMACIE'</span>:<span style="color: #008000;">'pharmaceuticals'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'KOSTEN_TWEEDELIJNS_GGZ'</span>:<span style="color: #008000;">'mental_care'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'KOSTEN_HUISARTS_INSCHRIJFTARIEF'</span>:<span style="color: #008000;">'GP_capitation'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'KOSTEN_HUISARTS_CONSULT'</span>:<span style="color: #008000;">'GP_fee_for_service'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'KOSTEN_HUISARTS_OVERIG'</span>:<span style="color: #008000;">'GP_other'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'KOSTEN_MONDZORG'</span>:<span style="color: #008000;">'dental care'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'KOSTEN_PARAMEDISCHE_ZORG_FYSIOTHERAPIE'</span>:<span style="color: #008000;">'physiotherapy'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'KOSTEN_KRAAMZORG'</span>:<span style="color: #008000;">'maternity_care'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #008000;">'KOSTEN_VERLOSKUNDIGE_ZORG'</span>:<span style="color: #008000;">'obstetrics'</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   }, axis=<span style="color: #008000;">'columns'</span>)
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   df.drop([<span style="color: #008000;">'AANTAL_VERZEKERDEJAREN'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span><span style="color: #008000;">'KOSTEN_HULPMIDDELEN'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span><span style="color: #008000;">'KOSTEN_PARAMEDISCHE_ZORG_OVERIG'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span><span style="color: #008000;">'KOSTEN_ZIEKENVERVOER_ZITTEND'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span><span style="color: #008000;">'KOSTEN_ZIEKENVERVOER_LIGGEND'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span><span style="color: #008000;">'KOSTEN_GRENSOVERSCHRIJDENDE_ZORG'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span><span style="color: #008000;">'KOSTEN_GERIATRISCHE_REVALIDATIEZORG'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span><span style="color: #008000;">'KOSTEN_OVERIG'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span><span style="color: #008000;">'KOSTEN_GENERALISTISCHE_BASIS_GGZ'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span><span style="color: #008000;">'KOSTEN_EERSTELIJNS_ONDERSTEUNING'</span>],inplace=<span style="color: #D0372D;">True</span>,axis=1)
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   df.drop(df.index[[0]], inplace=<span style="color: #D0372D;">True</span>)
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #BA36A5;">df</span>[<span style="color: #008000;">'sex'</span>] = df[<span style="color: #008000;">'sex'</span>].astype(<span style="color: #008000;">'category'</span>)
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #BA36A5;">df</span>[<span style="color: #008000;">'age'</span>] = df[<span style="color: #008000;">'age'</span>].astype(<span style="color: #008000;">'category'</span>)
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #0000FF;">return</span> df
+<pre class="src src-ipython" id="kitten-kilo-one-july"><span style="color: #BA36A5;">cost_categories_under_deductible</span> = [<span style="color: #008000;">'KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG'</span>, <span style="color: #008000;">'KOSTEN_MONDZORG'</span>, <span style="color: #008000;">'KOSTEN_FARMACIE'</span>, <span style="color: #008000;">'KOSTEN_HULPMIDDELEN'</span>, <span style="color: #008000;">'KOSTEN_PARAMEDISCHE_ZORG_FYSIOTHERAPIE'</span>, <span style="color: #008000;">'KOSTEN_PARAMEDISCHE_ZORG_OVERIG'</span>, <span style="color: #008000;">'KOSTEN_ZIEKENVERVOER_ZITTEND'</span>, <span style="color: #008000;">'KOSTEN_ZIEKENVERVOER_LIGGEND'</span>, <span style="color: #008000;">'KOSTEN_GRENSOVERSCHRIJDENDE_ZORG'</span>, <span style="color: #008000;">'KOSTEN_GERIATRISCHE_REVALIDATIEZORG'</span>, <span style="color: #008000;">'KOSTEN_OVERIG'</span>]
+
+
+
+
+<span style="color: #0000FF;">def</span> <span style="color: #006699;">get_data_into_shape</span>(df):
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #BA36A5;">df</span>[<span style="color: #008000;">'health_expenditure_under_deductible'</span>] = df[cost_categories_under_deductible].<span style="color: #006FE0;">sum</span>(axis=1)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #BA36A5;">df</span> = df.rename_axis({
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'GESLACHT'</span>:<span style="color: #008000;">'sex'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'LEEFTIJDSKLASSE'</span>:<span style="color: #008000;">'age'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'GEMEENTENAAM'</span>:<span style="color: #008000;">'MUNICIPALITY'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'AANTAL_BSN'</span>:<span style="color: #008000;">'number_citizens'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG'</span>:<span style="color: #008000;">'hospital_care'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_FARMACIE'</span>:<span style="color: #008000;">'pharmaceuticals'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_TWEEDELIJNS_GGZ'</span>:<span style="color: #008000;">'mental_care'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_HUISARTS_INSCHRIJFTARIEF'</span>:<span style="color: #008000;">'GP_capitation'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_HUISARTS_CONSULT'</span>:<span style="color: #008000;">'GP_fee_for_service'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_HUISARTS_OVERIG'</span>:<span style="color: #008000;">'GP_other'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_MONDZORG'</span>:<span style="color: #008000;">'dental care'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_PARAMEDISCHE_ZORG_FYSIOTHERAPIE'</span>:<span style="color: #008000;">'physiotherapy'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_KRAAMZORG'</span>:<span style="color: #008000;">'maternity_care'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_VERLOSKUNDIGE_ZORG'</span>:<span style="color: #008000;">'obstetrics'</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   }, axis=<span style="color: #008000;">'columns'</span>)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   df.drop([<span style="color: #008000;">'AANTAL_VERZEKERDEJAREN'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_HULPMIDDELEN'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_PARAMEDISCHE_ZORG_OVERIG'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_ZIEKENVERVOER_ZITTEND'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_ZIEKENVERVOER_LIGGEND'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_GRENSOVERSCHRIJDENDE_ZORG'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_GERIATRISCHE_REVALIDATIEZORG'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_OVERIG'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_GENERALISTISCHE_BASIS_GGZ'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_EERSTELIJNS_ONDERSTEUNING'</span>],inplace=<span style="color: #D0372D;">True</span>,axis=1)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   df.drop(df.index[[0]], inplace=<span style="color: #D0372D;">True</span>)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #BA36A5;">df</span>[<span style="color: #008000;">'sex'</span>] = df[<span style="color: #008000;">'sex'</span>].astype(<span style="color: #008000;">'category'</span>)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #BA36A5;">df</span>[<span style="color: #008000;">'age'</span>] = df[<span style="color: #008000;">'age'</span>].astype(<span style="color: #008000;">'category'</span>)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #0000FF;">return</span> df
 
 </pre>
 </div>
+
+<p>
+
+</p>
 
 
 
@@ -1534,12 +1565,55 @@ One solution in python is to define a function that does all these steps for you
 </pre>
 </div>
 
+<p>
+
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-ipython" id="delaware-beryllium-north-three">df_postal_code.head()
 </pre>
 </div>
 
+<p>
+
+</p>
+
+<p>
+  sex age  POSTCODE_3  number_citizens  hospital_care  pharmaceuticals  \
+1   M   0         0.0              366     1372209.26         31191.20   
+2   M   0       101.0              590     1682944.17         25898.73   
+3   M   0       102.0              295     1553933.53         29514.18   
+4   M   0       103.0              288      827427.31         19263.79   
+5   M   0       105.0              998     2965316.12         61610.42   
+</p>
+
+<p>
+   mental_care  GP_capitation  GP_fee_for_service  GP_other  dental care  \
+1       285.98        5548.60             5540.05  11525.93       681.02   
+2     20774.91        9816.63            10130.12  20532.03         0.00   
+3      7970.01        5317.49             6576.70  17426.30        21.29   
+4       941.40        5014.97             5708.41  14168.90         0.00   
+5      4780.48       16842.06            19676.01  43794.06       166.98   
+</p>
+
+<p>
+   physiotherapy  maternity_care  obstetrics  \
+1       12150.91             0.0         0.0   
+2       17777.00             0.0         0.0   
+3       20459.17             0.0         0.0   
+4        9098.71             0.0         0.0   
+5       42332.18             0.0         0.0   
+</p>
+
+<p>
+   health_expenditure_under_deductible  
+1                           1425823.15  
+2                           1753560.87  
+3                           1617184.58  
+4                            865867.07  
+5                           3118357.71  
+</p>
 <div>
 <table border="1" class="dataframe">
   <thead>
@@ -1656,41 +1730,6 @@ One solution in python is to define a function that does all these steps for you
   </tbody>
 </table>
 </div>
-<p>
-  sex age  POSTCODE_3  number_citizens  hospital_care  pharmaceuticals  \
-1   M   0         0.0              366     1372209.26         31191.20
-2   M   0       101.0              590     1682944.17         25898.73
-3   M   0       102.0              295     1553933.53         29514.18
-4   M   0       103.0              288      827427.31         19263.79
-5   M   0       105.0              998     2965316.12         61610.42
-</p>
-
-<p>
-   mental_care  GP_capitation  GP_fee_for_service  GP_other  dental care  \
-1       285.98        5548.60             5540.05  11525.93       681.02
-2     20774.91        9816.63            10130.12  20532.03         0.00
-3      7970.01        5317.49             6576.70  17426.30        21.29
-4       941.40        5014.97             5708.41  14168.90         0.00
-5      4780.48       16842.06            19676.01  43794.06       166.98
-</p>
-
-<p>
-   physiotherapy  maternity_care  obstetrics  \
-1       12150.91             0.0         0.0
-2       17777.00             0.0         0.0
-3       20459.17             0.0         0.0
-4        9098.71             0.0         0.0
-5       42332.18             0.0         0.0
-</p>
-
-<p>
-   health_expenditure_under_deductible
-1                           1425823.15
-2                           1753560.87
-3                           1617184.58
-4                            865867.07
-5                           3118357.71
-</p>
 
 
 
@@ -1703,7 +1742,7 @@ The first three columns are 'sex', 'age' and 'postal code' (3 digit). These 3 va
 Note that the first postal code is '000' which python thinks of as '0.0'. The
 <a href="http://www.vektis.nl/images/open_data/Bijsluiter_bij_de_Vektis_Open_Databestanden_Zorgverzekeringswet_2011_-_2014.pdf">data description</a> explains that postal code '000' is used to aggregate people who
 live in a postal code with so few people that the privacy of their data is no
-longer guaranteed. As we want to think of `sex`, `age` and `postal code` as an observation, we drop the first row (labelled as `0`) of the dataframe.
+longer guaranteed. As we want to think of <code>sex</code>, <code>age</code> and <code>postal code</code> as an observation, we drop the first row (labelled as <code>0</code>) of the dataframe.
 </p>
 
 <div class="org-src-container">
@@ -1714,40 +1753,160 @@ df_postal_code.head()
 </div>
 
 <p>
+
+</p>
+
+<p>
   sex age  POSTCODE_3  number_citizens  hospital_care  pharmaceuticals  \
-2   M   0       101.0              590     1682944.17         25898.73
-3   M   0       102.0              295     1553933.53         29514.18
-4   M   0       103.0              288      827427.31         19263.79
-5   M   0       105.0              998     2965316.12         61610.42
-6   M   0       106.0             1056     3716382.22         87140.60
+2   M   0       101.0              590     1682944.17         25898.73   
+3   M   0       102.0              295     1553933.53         29514.18   
+4   M   0       103.0              288      827427.31         19263.79   
+5   M   0       105.0              998     2965316.12         61610.42   
+6   M   0       106.0             1056     3716382.22         87140.60   
 </p>
 
 <p>
    mental_care  GP_capitation  GP_fee_for_service  GP_other  dental care  \
-2     20774.91        9816.63            10130.12  20532.03         0.00
-3      7970.01        5317.49             6576.70  17426.30        21.29
-4       941.40        5014.97             5708.41  14168.90         0.00
-5      4780.48       16842.06            19676.01  43794.06       166.98
-6     25006.18       19517.84            24045.35  65572.64       114.05
+2     20774.91        9816.63            10130.12  20532.03         0.00   
+3      7970.01        5317.49             6576.70  17426.30        21.29   
+4       941.40        5014.97             5708.41  14168.90         0.00   
+5      4780.48       16842.06            19676.01  43794.06       166.98   
+6     25006.18       19517.84            24045.35  65572.64       114.05   
 </p>
 
 <p>
    physiotherapy  maternity_care  obstetrics  \
-2       17777.00             0.0         0.0
-3       20459.17             0.0         0.0
-4        9098.71             0.0         0.0
-5       42332.18             0.0         0.0
-6       28299.76             0.0         0.0
+2       17777.00             0.0         0.0   
+3       20459.17             0.0         0.0   
+4        9098.71             0.0         0.0   
+5       42332.18             0.0         0.0   
+6       28299.76             0.0         0.0   
 </p>
 
 <p>
-   health_expenditure_under_deductible
-2                           1753560.87
-3                           1617184.58
-4                            865867.07
-5                           3118357.71
-6                           3885368.16
+   health_expenditure_under_deductible  
+2                           1753560.87  
+3                           1617184.58  
+4                            865867.07  
+5                           3118357.71  
+6                           3885368.16  
 </p>
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sex</th>
+      <th>age</th>
+      <th>POSTCODE_3</th>
+      <th>number_citizens</th>
+      <th>hospital_care</th>
+      <th>pharmaceuticals</th>
+      <th>mental_care</th>
+      <th>GP_capitation</th>
+      <th>GP_fee_for_service</th>
+      <th>GP_other</th>
+      <th>dental care</th>
+      <th>physiotherapy</th>
+      <th>maternity_care</th>
+      <th>obstetrics</th>
+      <th>health_expenditure_under_deductible</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>M</td>
+      <td>0</td>
+      <td>101.0</td>
+      <td>590</td>
+      <td>1682944.17</td>
+      <td>25898.73</td>
+      <td>20774.91</td>
+      <td>9816.63</td>
+      <td>10130.12</td>
+      <td>20532.03</td>
+      <td>0.00</td>
+      <td>17777.00</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1753560.87</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>M</td>
+      <td>0</td>
+      <td>102.0</td>
+      <td>295</td>
+      <td>1553933.53</td>
+      <td>29514.18</td>
+      <td>7970.01</td>
+      <td>5317.49</td>
+      <td>6576.70</td>
+      <td>17426.30</td>
+      <td>21.29</td>
+      <td>20459.17</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1617184.58</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>M</td>
+      <td>0</td>
+      <td>103.0</td>
+      <td>288</td>
+      <td>827427.31</td>
+      <td>19263.79</td>
+      <td>941.40</td>
+      <td>5014.97</td>
+      <td>5708.41</td>
+      <td>14168.90</td>
+      <td>0.00</td>
+      <td>9098.71</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>865867.07</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>M</td>
+      <td>0</td>
+      <td>105.0</td>
+      <td>998</td>
+      <td>2965316.12</td>
+      <td>61610.42</td>
+      <td>4780.48</td>
+      <td>16842.06</td>
+      <td>19676.01</td>
+      <td>43794.06</td>
+      <td>166.98</td>
+      <td>42332.18</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>3118357.71</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>M</td>
+      <td>0</td>
+      <td>106.0</td>
+      <td>1056</td>
+      <td>3716382.22</td>
+      <td>87140.60</td>
+      <td>25006.18</td>
+      <td>19517.84</td>
+      <td>24045.35</td>
+      <td>65572.64</td>
+      <td>114.05</td>
+      <td>28299.76</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>3885368.16</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <p>
 The end of the dataframe is given by the following.
@@ -1761,62 +1920,62 @@ The end of the dataframe is given by the following.
 
 <p>
        sex  age  POSTCODE_3  number_citizens  hospital_care  pharmaceuticals  \
-136463   V  90+       988.0               10       19698.83          4011.31
-136464   V  90+       990.0              151      257046.54         99187.66
-136465   V  90+       991.0               51       95990.43         52682.34
-136466   V  90+       993.0              170      278000.11        124809.41
-136467   V  90+       994.0               38       28454.41         36590.90
-136468   V  90+       995.0               88      200183.72         64315.53
-136469   V  90+       996.0               44       46723.13         39419.64
-136470   V  90+       997.0               38       98954.45         34308.68
-136471   V  90+       998.0              116      168802.54        116907.93
-136472   V  90+       999.0               38      109842.07         40607.06
+136463   V  90+       988.0               10       19698.83          4011.31   
+136464   V  90+       990.0              151      257046.54         99187.66   
+136465   V  90+       991.0               51       95990.43         52682.34   
+136466   V  90+       993.0              170      278000.11        124809.41   
+136467   V  90+       994.0               38       28454.41         36590.90   
+136468   V  90+       995.0               88      200183.72         64315.53   
+136469   V  90+       996.0               44       46723.13         39419.64   
+136470   V  90+       997.0               38       98954.45         34308.68   
+136471   V  90+       998.0              116      168802.54        116907.93   
+136472   V  90+       999.0               38      109842.07         40607.06   
 </p>
 
 <p>
         mental_care  GP_capitation  GP_fee_for_service  GP_other  dental care  \
-136463         0.00         894.25              567.45   1283.11         0.00
-136464     37614.24       11880.75            20144.21  24522.70      1619.74
-136465      1102.77        4854.50            14575.32  15550.40       801.65
-136466     12652.77       12646.44            13305.75  19040.63      2495.54
-136467      2251.30        3652.03             5742.81  16966.62       143.16
-136468      3691.37        6438.60            11593.30  15929.91      2729.32
-136469      2833.17        4011.35             5459.40  15185.71       979.06
-136470      4480.09        3347.05             5395.18   7061.51       897.98
-136471     13830.16       10424.40            13527.80  28548.80      1577.91
-136472      3273.62        3704.75             4197.46   6763.69        60.97
+136463         0.00         894.25              567.45   1283.11         0.00   
+136464     37614.24       11880.75            20144.21  24522.70      1619.74   
+136465      1102.77        4854.50            14575.32  15550.40       801.65   
+136466     12652.77       12646.44            13305.75  19040.63      2495.54   
+136467      2251.30        3652.03             5742.81  16966.62       143.16   
+136468      3691.37        6438.60            11593.30  15929.91      2729.32   
+136469      2833.17        4011.35             5459.40  15185.71       979.06   
+136470      4480.09        3347.05             5395.18   7061.51       897.98   
+136471     13830.16       10424.40            13527.80  28548.80      1577.91   
+136472      3273.62        3704.75             4197.46   6763.69        60.97   
 </p>
 
 <p>
         physiotherapy  maternity_care  obstetrics  \
-136463            0.0             0.0         0.0
-136464        12000.6             0.0         0.0
-136465          462.0             0.0         0.0
-136466         1675.0             0.0         0.0
-136467         1409.2             0.0         0.0
-136468         4352.1             0.0         0.0
-136469         6537.2             0.0         0.0
-136470         9201.0             0.0         0.0
-136471         1875.6             0.0         0.0
-136472          290.0             0.0         0.0
+136463            0.0             0.0         0.0   
+136464        12000.6             0.0         0.0   
+136465          462.0             0.0         0.0   
+136466         1675.0             0.0         0.0   
+136467         1409.2             0.0         0.0   
+136468         4352.1             0.0         0.0   
+136469         6537.2             0.0         0.0   
+136470         9201.0             0.0         0.0   
+136471         1875.6             0.0         0.0   
+136472          290.0             0.0         0.0   
 </p>
 
 <p>
-        health_expenditure_under_deductible
-136463                             33079.01
-136464                            790837.02
-136465                            207319.25
-136466                            535215.22
-136467                            106569.94
-136468                            378170.95
-136469                            156304.71
-136470                            193232.92
-136471                            455608.75
-136472                            198874.20
+        health_expenditure_under_deductible  
+136463                             33079.01  
+136464                            790837.02  
+136465                            207319.25  
+136466                            535215.22  
+136467                            106569.94  
+136468                            378170.95  
+136469                            156304.71  
+136470                            193232.92  
+136471                            455608.75  
+136472                            198874.20  
 </p>
 
 <p>
-As we saw above, the datatype of `age` was `object`, although we would expect `integer`. Now we see that there is this category `90+`, which is not an integer. We will drop this age category as it is quite special. Before we do this, let's count how many people we have in our dataset.
+As we saw above, the datatype of <code>age</code> was <code>object</code>, although we would expect <code>integer</code>. Now we see that there is this category <code>90+</code>, which is not an integer. We will drop this age category as it is quite special. Before we do this, let's count how many people we have in our dataset.
 </p>
 
 <div class="org-src-container">
@@ -1834,7 +1993,7 @@ That is, almost 17 million people, which is about right.
 </p>
 
 <p>
-Let's drop the '90+' category and turn `age` into an integer variable.
+Let's drop the '90+' category and turn <code>age</code> into an integer variable.
 </p>
 
 <div class="org-src-container">
@@ -1845,7 +2004,11 @@ Let's drop the '90+' category and turn `age` into an integer variable.
 </div>
 
 <p>
-Let's summarize the variables that are numeric (integer or float). For each of these variables we have 135,063 observations (that is, combinations of `sex`, `age` and `postal code`). The mean for number of citizens is 124. With \(135,063*124\) we are close to 17 million again.
+
+</p>
+
+<p>
+Let's summarize the variables that are numeric (integer or float). For each of these variables we have 135,063 observations (that is, combinations of <code>sex</code>, <code>age</code> and <code>postal code</code>). The mean for number of citizens is 124. With \(135,063*124\) we are close to 17 million again.
 </p>
 
 <div class="org-src-container">
@@ -1855,52 +2018,217 @@ Let's summarize the variables that are numeric (integer or float). For each of t
 </div>
 
 <p>
+
+</p>
+
+<p>
                  age     POSTCODE_3  number_citizens  hospital_care  \
-count  135063.000000  135063.000000    135063.000000   1.350630e+05
-mean       43.753959     541.250002       123.950327   1.534887e+05
-std        25.535582     258.016742       129.491359   1.965840e+05
-min         0.000000       0.000000        10.000000  -2.300980e+04
-25%        22.000000     318.000000        40.000000   3.055294e+04
-50%        44.000000     539.000000        82.000000   8.262627e+04
-75%        66.000000     763.000000       161.000000   2.006986e+05
-max        89.000000     999.000000      2228.000000   5.263426e+06
+count  135063.000000  135063.000000    135063.000000   1.350630e+05   
+mean       43.753959     541.250002       123.950327   1.534887e+05   
+std        25.535582     258.016742       129.491359   1.965840e+05   
+min         0.000000       0.000000        10.000000  -2.300980e+04   
+25%        22.000000     318.000000        40.000000   3.055294e+04   
+50%        44.000000     539.000000        82.000000   8.262627e+04   
+75%        66.000000     763.000000       161.000000   2.006986e+05   
+max        89.000000     999.000000      2228.000000   5.263426e+06   
 </p>
 
 <p>
        pharmaceuticals    mental_care  GP_capitation  GP_fee_for_service  \
-count     1.350630e+05  135063.000000  135063.000000       135063.000000
-mean      3.146225e+04   23296.150212    7693.165768         4528.021995
-std       4.483099e+04   45078.454602    7676.781993         5060.276133
-min      -2.857890e+03  -29164.050000       0.000000            0.000000
-25%       5.034130e+03     299.260000    2585.970000         1351.340000
-50%       1.547225e+04    5702.020000    5244.990000         2900.080000
-75%       4.037718e+04   24546.195000   10140.510000         5899.600000
-max       1.546412e+06  885045.050000  155453.330000       194903.830000
+count     1.350630e+05  135063.000000  135063.000000       135063.000000   
+mean      3.146225e+04   23296.150212    7693.165768         4528.021995   
+std       4.483099e+04   45078.454602    7676.781993         5060.276133   
+min      -2.857890e+03  -29164.050000       0.000000            0.000000   
+25%       5.034130e+03     299.260000    2585.970000         1351.340000   
+50%       1.547225e+04    5702.020000    5244.990000         2900.080000   
+75%       4.037718e+04   24546.195000   10140.510000         5899.600000   
+max       1.546412e+06  885045.050000  155453.330000       194903.830000   
 </p>
 
 <p>
             GP_other    dental care  physiotherapy  maternity_care  \
-count  135063.000000  135063.000000  135063.000000   135063.000000
-mean     5938.297319    5438.213219    3287.127334     2201.230080
-std      6329.471736   10190.600213    4659.495994    10426.252898
-min         0.000000    -458.190000    -106.800000    -1898.420000
-25%      1934.255000     150.075000     143.745000        0.000000
-50%      4002.870000    1746.990000    1617.300000        0.000000
-75%      7691.255000    6293.135000    4463.975000        0.000000
-max    276119.620000  254585.130000  106169.130000   399960.460000
+count  135063.000000  135063.000000  135063.000000   135063.000000   
+mean     5938.297319    5438.213219    3287.127334     2201.230080   
+std      6329.471736   10190.600213    4659.495994    10426.252898   
+min         0.000000    -458.190000    -106.800000    -1898.420000   
+25%      1934.255000     150.075000     143.745000        0.000000   
+50%      4002.870000    1746.990000    1617.300000        0.000000   
+75%      7691.255000    6293.135000    4463.975000        0.000000   
+max    276119.620000  254585.130000  106169.130000   399960.460000   
 </p>
 
 <p>
-          obstetrics  health_expenditure_under_deductible
-count  135063.000000                         1.350630e+05
-mean     1612.545851                         2.192913e+05
-std      7853.598487                         2.719250e+05
-min         0.000000                         0.000000e+00
-25%         0.000000                         4.791477e+04
-50%         0.000000                         1.234374e+05
-75%         0.000000                         2.872767e+05
-max    321751.460000                         9.012553e+06
+          obstetrics  health_expenditure_under_deductible  
+count  135063.000000                         1.350630e+05  
+mean     1612.545851                         2.192913e+05  
+std      7853.598487                         2.719250e+05  
+min         0.000000                         0.000000e+00  
+25%         0.000000                         4.791477e+04  
+50%         0.000000                         1.234374e+05  
+75%         0.000000                         2.872767e+05  
+max    321751.460000                         9.012553e+06  
 </p>
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>POSTCODE_3</th>
+      <th>number_citizens</th>
+      <th>hospital_care</th>
+      <th>pharmaceuticals</th>
+      <th>mental_care</th>
+      <th>GP_capitation</th>
+      <th>GP_fee_for_service</th>
+      <th>GP_other</th>
+      <th>dental care</th>
+      <th>physiotherapy</th>
+      <th>maternity_care</th>
+      <th>obstetrics</th>
+      <th>health_expenditure_under_deductible</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>135063.000000</td>
+      <td>135063.000000</td>
+      <td>135063.000000</td>
+      <td>1.350630e+05</td>
+      <td>1.350630e+05</td>
+      <td>135063.000000</td>
+      <td>135063.000000</td>
+      <td>135063.000000</td>
+      <td>135063.000000</td>
+      <td>135063.000000</td>
+      <td>135063.000000</td>
+      <td>135063.000000</td>
+      <td>135063.000000</td>
+      <td>1.350630e+05</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>43.753959</td>
+      <td>541.250002</td>
+      <td>123.950327</td>
+      <td>1.534887e+05</td>
+      <td>3.146225e+04</td>
+      <td>23296.150212</td>
+      <td>7693.165768</td>
+      <td>4528.021995</td>
+      <td>5938.297319</td>
+      <td>5438.213219</td>
+      <td>3287.127334</td>
+      <td>2201.230080</td>
+      <td>1612.545851</td>
+      <td>2.192913e+05</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>25.535582</td>
+      <td>258.016742</td>
+      <td>129.491359</td>
+      <td>1.965840e+05</td>
+      <td>4.483099e+04</td>
+      <td>45078.454602</td>
+      <td>7676.781993</td>
+      <td>5060.276133</td>
+      <td>6329.471736</td>
+      <td>10190.600213</td>
+      <td>4659.495994</td>
+      <td>10426.252898</td>
+      <td>7853.598487</td>
+      <td>2.719250e+05</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>10.000000</td>
+      <td>-2.300980e+04</td>
+      <td>-2.857890e+03</td>
+      <td>-29164.050000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-458.190000</td>
+      <td>-106.800000</td>
+      <td>-1898.420000</td>
+      <td>0.000000</td>
+      <td>0.000000e+00</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>22.000000</td>
+      <td>318.000000</td>
+      <td>40.000000</td>
+      <td>3.055294e+04</td>
+      <td>5.034130e+03</td>
+      <td>299.260000</td>
+      <td>2585.970000</td>
+      <td>1351.340000</td>
+      <td>1934.255000</td>
+      <td>150.075000</td>
+      <td>143.745000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>4.791477e+04</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>44.000000</td>
+      <td>539.000000</td>
+      <td>82.000000</td>
+      <td>8.262627e+04</td>
+      <td>1.547225e+04</td>
+      <td>5702.020000</td>
+      <td>5244.990000</td>
+      <td>2900.080000</td>
+      <td>4002.870000</td>
+      <td>1746.990000</td>
+      <td>1617.300000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.234374e+05</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>66.000000</td>
+      <td>763.000000</td>
+      <td>161.000000</td>
+      <td>2.006986e+05</td>
+      <td>4.037718e+04</td>
+      <td>24546.195000</td>
+      <td>10140.510000</td>
+      <td>5899.600000</td>
+      <td>7691.255000</td>
+      <td>6293.135000</td>
+      <td>4463.975000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>2.872767e+05</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>89.000000</td>
+      <td>999.000000</td>
+      <td>2228.000000</td>
+      <td>5.263426e+06</td>
+      <td>1.546412e+06</td>
+      <td>885045.050000</td>
+      <td>155453.330000</td>
+      <td>194903.830000</td>
+      <td>276119.620000</td>
+      <td>254585.130000</td>
+      <td>106169.130000</td>
+      <td>399960.460000</td>
+      <td>321751.460000</td>
+      <td>9.012553e+06</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <div class="org-src-container">
 
@@ -1908,9 +2236,33 @@ max    321751.460000                         9.012553e+06
 </pre>
 </div>
 
+<p>
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+Int64Index: 135063 entries, 2 to 135741
+Data columns (total 15 columns):
+sex                                    135063 non-null category
+age                                    135063 non-null int64
+POSTCODE_3                             135063 non-null float64
+number_citizens                        135063 non-null int64
+hospital_care                          135063 non-null float64
+pharmaceuticals                        135063 non-null float64
+mental_care                            135063 non-null float64
+GP_capitation                          135063 non-null float64
+GP_fee_for_service                     135063 non-null float64
+GP_other                               135063 non-null float64
+dental care                            135063 non-null float64
+physiotherapy                          135063 non-null float64
+maternity_care                         135063 non-null float64
+obstetrics                             135063 non-null float64
+health_expenditure_under_deductible    135063 non-null float64
+dtypes: category(1), float64(12), int64(2)
+memory usage: 15.6 MB
+</p>
+
+
 
 <p>
-Now let's define the costs per head. For each observation, we divide the total health care costs (under the deductible) for a combination of `sex`, `age` and `postal code` by the number of people in this combination of `sex`, `age` and `postal code`. This gives the health costs per head.
+Now let's define the costs per head. For each observation, we divide the total health care costs (under the deductible) for a combination of <code>sex</code>, <code>age</code> and <code>postal code</code> by the number of people in this combination of <code>sex</code>, <code>age</code> and <code>postal code</code>. This gives the health costs per head.
 </p>
 
 <div class="org-src-container">
@@ -1920,7 +2272,7 @@ Now let's define the costs per head. For each observation, we divide the total h
 </div>
 
 <p>
-So for, say, 18 year old males, we have a distribution of costs per head over the different `postal codes`. For each combination of age and sex, we can look at the average expenditure. With <code>pandas</code> this is easy to do. We use <code>groupby</code>, specify the dimensions over which we want to group, the variable we are interested in and give the function to aggregate (mean, in this case).
+So for, say, 18 year old males, we have a distribution of costs per head over the different <code>postal codes</code>. For each combination of age and sex, we can look at the average expenditure. With <code>pandas</code> this is easy to do. We use <code>groupby</code>, specify the dimensions over which we want to group, the variable we are interested in and give the function to aggregate (mean, in this case).
 </p>
 
 <div class="org-src-container">
@@ -1928,8 +2280,13 @@ So for, say, 18 year old males, we have a distribution of costs per head over th
 <pre class="src src-ipython" id="edward-minnesota-social-equal"><span style="color: #BA36A5;">costs_per_sex_age</span> = df_postal_code.groupby([<span style="color: #008000;">'sex'</span>,<span style="color: #008000;">'age'</span>])[<span style="color: #008000;">'health_costs_per_head'</span>].mean()
 </pre>
 </div>
+</div>
+</div>
 
 
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> matplotlib</h3>
+<div class="outline-text-3" id="text-2-2">
 <p>
 Then we can plot this distribution of health care expenditure per head with age for males and females.
 </p>
@@ -1955,6 +2312,64 @@ fig.savefig(<span style="color: #008000;">"males.png"</span>)
 <p><img src="./males.png" class="img-responsive" alt="males.png">
 </p>
 </figure>
+
+
+<hr >
+
+<p>
+<b>Exercise</b>
+</p>
+
+<p>
+Finish the following code block to show how total obstetrics vary with 'age' and 'sex' (what would you guess&#x2026;). 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="winter-papa-single-delaware"><span style="color: #BA36A5;">obstetrics_per_sex_age</span> = df_postal_code.groupby([<span style="color: #008000;">'sex'</span>,<span style="color: #008000;">'age'</span>])[<span style="color: #008000;">'obstetrics'</span>].<span style="color: #006FE0;">sum</span>()
+
+....
+
+fig.savefig(<span style="color: #008000;">"obstetrics.png"</span>)
+</pre>
+</div>
+
+
+<hr >
+
+<p>
+We can plot a histogram of the distribution of hospital care expenditure across postal code areas.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="cola-sink-leopard-nebraska"><span style="color: #BA36A5;">hospital_care_expenditure</span> = df_postal_code.groupby([<span style="color: #008000;">'age'</span>,<span style="color: #008000;">'POSTCODE_3'</span>])[<span style="color: #008000;">'hospital_care'</span>].<span style="color: #006FE0;">sum</span>()
+
+plt.clf()
+plt.hist(hospital_care_expenditure[7],normed = <span style="color: #D0372D;">True</span>, bins = 100)
+plt.show()
+</pre>
+</div>
+
+
+<hr >
+
+<p>
+<b>Exercise</b>
+</p>
+
+<p>
+In which fraction of postal code areas does hospital expenditures on 50 year olds exceed 50000 euro? Finish the following code block to find out.
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="juliet-sweet-item-vermont"><span style="color: #006FE0;">sum</span>()/<span style="color: #006FE0;">len</span>()
+</pre>
+</div>
+
+<hr >
 
 
 <p>
@@ -1983,29 +2398,33 @@ fig.savefig(<span style="color: #008000;">'fig14to22.png'</span>)
 <p><img src="./fig14to22.png" class="img-responsive" alt="fig14to22.png">
 </p>
 </figure>
+</div>
+</div>
 
 
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> plotly</h3>
+<div class="outline-text-3" id="text-2-3">
 <p>
-Instead of <code>matplotlib</code> to plot, we can also use <code>plotly</code>. With <code>plotly</code> you can make interactive graphs.
+Instead of <code>matplotlib</code> to plot, we can also use <code>plotly</code>. With <code>plotly</code> you can make interactive graphs. The graph runs on plotly's servers and can for instance be included in presentations.
 </p>
 
-
+<p>
+We are going to plot the cumulative distribution functions of health care expenditure for different age groups. We first define the cumulative distribution function <code>ecdf</code>.
+</p>
 
 <div class="org-src-container">
 
 <pre class="src src-ipython" id="whiskey-south-stream-speaker"><span style="color: #0000FF;">def</span> <span style="color: #006699;">ecdf</span>(data):
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #BA36A5;">x</span> = np.sort(data)
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #BA36A5;">y</span> = np.arange(1.0, <span style="color: #006FE0;">len</span>(x)+1.0) / <span style="color: #006FE0;">len</span>(x)
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #0000FF;">return</span> x, y
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #BA36A5;">x</span> = np.sort(data)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #BA36A5;">y</span> = np.arange(1.0, <span style="color: #006FE0;">len</span>(x)+1.0) / <span style="color: #006FE0;">len</span>(x)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #0000FF;">return</span> x, y
 </pre>
 </div>
 
-
-<div class="org-src-container">
-
-<pre class="src src-ipython" id="south-oklahoma-mirror-beryllium">df_postal_code.health_costs_per_head[(df_postal_code[<span style="color: #008000;">'age'</span>] == 17)]
-</pre>
-</div>
+<p>
+Then we define the \(x\) and \(y\) coordinates of the functions we want to plot: the <code>ecdf</code> of health care expenditures for ages 16, 17, 19 and 20.
+</p>
 
 <div class="org-src-container">
 
@@ -2019,6 +2438,9 @@ Instead of <code>matplotlib</code> to plot, we can also use <code>plotly</code>.
 </div>
 
 
+<p>
+We import plotly.
+</p>
 
 <div class="org-src-container">
 
@@ -2028,58 +2450,56 @@ Instead of <code>matplotlib</code> to plot, we can also use <code>plotly</code>.
 </pre>
 </div>
 
+<p>
+Finally, we define the graph itself. We specify the "Scatter's" and the layout. The web address can be used if you want to include this graph in a presentation.
+</p>
 
 <div class="org-src-container">
 
 <pre class="src src-ipython" id="artist-mockingbird-florida-hot"><span style="color: #BA36A5;">age16</span> = Scatter(
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   x=x_16,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   y=y_16,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   mode=<span style="color: #008000;">'markers+lines'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   name = <span style="color: #008000;">'age 16'</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   x=x_16,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   y=y_16,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   mode=<span style="color: #008000;">'markers+lines'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   name = <span style="color: #008000;">'age 16'</span>
 )
 <span style="color: #BA36A5;">age17</span> = Scatter(
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   x=x_17,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   y=y_17,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   mode=<span style="color: #008000;">'markers+lines'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   name = <span style="color: #008000;">'age 17'</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   x=x_17,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   y=y_17,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   mode=<span style="color: #008000;">'markers+lines'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   name = <span style="color: #008000;">'age 17'</span>
 )
 <span style="color: #BA36A5;">age19</span> = Scatter(
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   x=x_19,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   y=y_19,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   mode=<span style="color: #008000;">'markers+lines'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   name = <span style="color: #008000;">'age 19'</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   x=x_19,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   y=y_19,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   mode=<span style="color: #008000;">'markers+lines'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   name = <span style="color: #008000;">'age 19'</span>
 )
 <span style="color: #BA36A5;">age20</span> = Scatter(
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   x=x_20,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   y=y_20,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   mode=<span style="color: #008000;">'markers+lines'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   name = <span style="color: #008000;">'age 20'</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   x=x_20,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   y=y_20,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   mode=<span style="color: #008000;">'markers+lines'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   name = <span style="color: #008000;">'age 20'</span>
 )
 
-
-
-
-
-
 <span style="color: #BA36A5;">layout</span> = Layout(
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   title=<span style="color: #008000;">'Health care expend. distribution functions'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   xaxis=XAxis(
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #006FE0;">range</span>=[0,3000],
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   title=<span style="color: #008000;">'expenditure per head'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   titlefont=Font(
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   family=<span style="color: #008000;">'Courier New, monospace'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   size=18,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   color=<span style="color: #008000;">'#7f7f7f'</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   )
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   ),
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   yaxis=YAxis(
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   title=<span style="color: #008000;">'cum. distribution function'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   titlefont=Font(
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   family=<span style="color: #008000;">'Courier New, monospace'</span>,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   size=18,
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   color=<span style="color: #008000;">'#7f7f7f'</span>
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   <span style="color: #4C9ED9; background-color: #ffffff;"> </span>   )
-<span style="color: #4C9ED9; background-color: #ffffff;"> </span>   )
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   title=<span style="color: #008000;">'Health care expend. distribution functions'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   xaxis=XAxis(
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #006FE0;">range</span>=[0,3000],
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   title=<span style="color: #008000;">'expenditure per head'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   titlefont=Font(
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   family=<span style="color: #008000;">'Courier New, monospace'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   size=18,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   color=<span style="color: #008000;">'#7f7f7f'</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   )
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   ),
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   yaxis=YAxis(
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   title=<span style="color: #008000;">'cum. distribution function'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   titlefont=Font(
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   family=<span style="color: #008000;">'Courier New, monospace'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   size=18,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   color=<span style="color: #008000;">'#7f7f7f'</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   )
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   )
 )
 
 <span style="color: #BA36A5;">data</span> = Data([age16,age17,age19,age20])
@@ -2096,6 +2516,475 @@ tls.embed(<span style="color: #008000;">"https://plot.ly/~janboone/301"</span>)
 </div>
 </div>
 </div>
+
+
+
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> A first look at machine learning</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Python is used a lot in data science. If you are interested you can check out libraries like <a href="https://www.tensorflow.org/">TensorFlow</a> and <a href="https://keras.io/">keras</a>. We will have a (brief) look at <a href="http://scikit-learn.org/stable/index.html">scikit-learn</a>. If you want to know more, go to <a href="https://campus.datacamp.com/courses/supervised-learning-with-scikit-learn/classification?ex=1">Datacamp</a> and follow the course before your subscription runs out&#x2026;
+</p>
+
+<p>
+We will use the data set above and see whether we can distinguish different age-categories based on their health care expenditure. From the dataframe we select the age categories 25 and 70. Then we use the expenditure per head in each category to predict the age-sex category of this postal code area.
+</p>
+
+<p>
+As above we import the relevant libraries and data.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython"><span style="color: #0000FF;">import</span> numpy <span style="color: #0000FF;">as</span> np
+<span style="color: #0000FF;">import</span> pandas <span style="color: #0000FF;">as</span> pd
+<span style="color: #0000FF;">import</span> matplotlib <span style="color: #0000FF;">as</span> plt
+<span style="color: #BA36A5;">df_postal_code</span> = pd.read_csv(<span style="color: #008000;">'Vektis_Open_Databestand_Zorgverzekeringswet_2014_-_postcode3.csv'</span>, sep = <span style="color: #008000;">';'</span>)
+df_postal_code.dtypes
+</pre>
+</div>
+
+<p>
+
+</p>
+
+<p>
+GESLACHT                                   object
+LEEFTIJDSKLASSE                            object
+POSTCODE_3                                float64
+AANTAL_BSN                                  int64
+AANTAL_VERZEKERDEJAREN                    float64
+KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG       float64
+KOSTEN_FARMACIE                           float64
+KOSTEN_TWEEDELIJNS_GGZ                    float64
+KOSTEN_HUISARTS_INSCHRIJFTARIEF           float64
+KOSTEN_HUISARTS_CONSULT                   float64
+KOSTEN_HUISARTS_OVERIG                    float64
+KOSTEN_HULPMIDDELEN                       float64
+KOSTEN_MONDZORG                           float64
+KOSTEN_PARAMEDISCHE_ZORG_FYSIOTHERAPIE    float64
+KOSTEN_PARAMEDISCHE_ZORG_OVERIG           float64
+KOSTEN_ZIEKENVERVOER_ZITTEND              float64
+KOSTEN_ZIEKENVERVOER_LIGGEND              float64
+KOSTEN_KRAAMZORG                          float64
+KOSTEN_VERLOSKUNDIGE_ZORG                 float64
+KOSTEN_GENERALISTISCHE_BASIS_GGZ          float64
+KOSTEN_GRENSOVERSCHRIJDENDE_ZORG          float64
+KOSTEN_EERSTELIJNS_ONDERSTEUNING          float64
+KOSTEN_GERIATRISCHE_REVALIDATIEZORG       float64
+KOSTEN_OVERIG                             float64
+dtype: object
+</p>
+
+<p>
+We now use a slightly different way to get the data into shape and hence we rename the function.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="kitten-kilo-one-july"><span style="color: #0000FF;">def</span> <span style="color: #006699;">get_data_into_shape_2</span>(df):
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #BA36A5;">df</span> = df.rename_axis({
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'GESLACHT'</span>:<span style="color: #008000;">'sex'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'LEEFTIJDSKLASSE'</span>:<span style="color: #008000;">'age'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'GEMEENTENAAM'</span>:<span style="color: #008000;">'MUNICIPALITY'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'AANTAL_BSN'</span>:<span style="color: #008000;">'number_citizens'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_MEDISCH_SPECIALISTISCHE_ZORG'</span>:<span style="color: #008000;">'hospital_care'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_FARMACIE'</span>:<span style="color: #008000;">'pharmaceuticals'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_TWEEDELIJNS_GGZ'</span>:<span style="color: #008000;">'mental_care'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_HUISARTS_INSCHRIJFTARIEF'</span>:<span style="color: #008000;">'GP_capitation'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_HUISARTS_CONSULT'</span>:<span style="color: #008000;">'GP_fee_for_service'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_HUISARTS_OVERIG'</span>:<span style="color: #008000;">'GP_other'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_MONDZORG'</span>:<span style="color: #008000;">'dental_care'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_PARAMEDISCHE_ZORG_FYSIOTHERAPIE'</span>:<span style="color: #008000;">'physiotherapy'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_KRAAMZORG'</span>:<span style="color: #008000;">'maternity_care'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_VERLOSKUNDIGE_ZORG'</span>:<span style="color: #008000;">'obstetrics'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #008000;">'KOSTEN_GERIATRISCHE_REVALIDATIEZORG'</span>:<span style="color: #008000;">'geriatrics'</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   }, axis=<span style="color: #008000;">'columns'</span>)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   df.drop([<span style="color: #008000;">'AANTAL_VERZEKERDEJAREN'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_HULPMIDDELEN'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_PARAMEDISCHE_ZORG_OVERIG'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_ZIEKENVERVOER_ZITTEND'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_ZIEKENVERVOER_LIGGEND'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_GRENSOVERSCHRIJDENDE_ZORG'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_OVERIG'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_GENERALISTISCHE_BASIS_GGZ'</span>,
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #9B9B9B; background-color: #EDEDED;"> </span><span style="color: #008000;">'KOSTEN_EERSTELIJNS_ONDERSTEUNING'</span>],inplace=<span style="color: #D0372D;">True</span>,axis=1)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   df.drop(df.index[[0]], inplace=<span style="color: #D0372D;">True</span>)
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #0000FF;">return</span> df
+
+</pre>
+</div>
+
+<p>
+
+</p>
+
+
+<p>
+With the function above, we first get the data into the shape that we want.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython" id="autumn-spaghetti-april-jupiter"><span style="color: #BA36A5;">df_postal_code</span> = get_data_into_shape_2(df_postal_code)
+</pre>
+</div>
+
+<p>
+We are going to consider the ages 25 and 70. As age can be integer or string, we include both in the list of age-values that we wish to select.
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-ipython"><span style="color: #BA36A5;">df_25_70</span> = df_postal_code[df_postal_code[<span style="color: #008000;">'age'</span>].isin([<span style="color: #008000;">'25'</span>,<span style="color: #008000;">'70'</span>, 25, 70])]
+</pre>
+</div>
+
+<p>
+We define the groups as "25M" for 25 year old males. In order to add the columns "sex" and "age", they need to be strings as in python adding the strings `"abc"+"def"` yields `"abcdef"`; which is exactly what we want.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython"><span style="color: #BA36A5;">df_25_70.age</span> = df_25_70.age.astype(<span style="color: #008000;">'str'</span>)
+<span style="color: #BA36A5;">df_25_70.sex</span> = df_25_70.sex.astype(<span style="color: #008000;">'str'</span>)
+<span style="color: #BA36A5;">df_25_70</span>[<span style="color: #008000;">'target'</span>] = df_25_70.age+df_25_70.sex
+
+</pre>
+</div>
+
+<p>
+This combination of age and sex (4 categories) is the variable that we want to predict. Hence, we call the variable `target`. We turn `target` into a category and find that there are indeed 4 of these categories.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython"><span style="color: #BA36A5;">df_25_70</span>[<span style="color: #008000;">'target'</span>] = df_25_70[<span style="color: #008000;">'target'</span>].astype(<span style="color: #008000;">'category'</span>)
+df_25_70[<span style="color: #008000;">'target'</span>].cat.categories
+</pre>
+</div>
+
+<p>
+
+</p>
+
+<p>
+Index(['25.0M', '25V', '70M', '70V'], dtype='object')
+</p>
+
+<p>
+With `.cat.codes` we turn our categories into integers 0, 1, 2, 3. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython">df_25_70[<span style="color: #008000;">'target'</span>].cat.codes
+</pre>
+</div>
+
+<p>
+We redefine expenditures in each care category as per head expenditure in the 3 digit postal code area. We then think of each area as being an "individual". Based on the individuals expenditure per care category, we predict age and sex. The following code redefines for each care category the total expenditure into an expenditure per head.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython"><span style="color: #BA36A5;">care_categories</span> = [<span style="color: #008000;">'hospital_care'</span>, <span style="color: #008000;">'pharmaceuticals'</span>, <span style="color: #008000;">'mental_care'</span>, <span style="color: #008000;">'GP_capitation'</span>, <span style="color: #008000;">'GP_fee_for_service'</span>, <span style="color: #008000;">'GP_other'</span>, <span style="color: #008000;">'dental_care'</span>, <span style="color: #008000;">'physiotherapy'</span>, <span style="color: #008000;">'maternity_care'</span>, <span style="color: #008000;">'obstetrics'</span>, <span style="color: #008000;">'geriatrics'</span>]
+
+<span style="color: #0000FF;">for</span> variable <span style="color: #0000FF;">in</span> care_categories:
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   <span style="color: #BA36A5;">df_25_70</span>[variable] = df_25_70[variable]/df_25_70[<span style="color: #008000;">'number_citizens'</span>]
+
+df_25_70.head()
+</pre>
+</div>
+
+<p>
+
+</p>
+
+<p>
+      sex   age  POSTCODE_3  number_citizens  hospital_care  pharmaceuticals  \
+13802   M  25.0         0.0              235     421.241149        48.540128   
+13803   M  25.0       101.0             1042     280.514837        54.957889   
+13804   M  25.0       102.0              302     280.264238        56.674834   
+13805   M  25.0       103.0              325     527.719046        51.940738   
+13806   M  25.0       105.0             1318     383.394932        69.232117   
+</p>
+
+<p>
+       mental_care  GP_capitation  GP_fee_for_service   GP_other  dental_care  \
+13802   565.833574      53.478723           15.990043  42.183702     1.607149   
+13803   131.044347      51.035441           16.187322  33.947015     3.483599   
+13804    54.191556      53.066325           15.761258  29.762450     0.000000   
+13805   994.862554      53.742369           18.363385  34.537046     1.208769   
+13806   210.617398      52.937853           17.693247  32.583392     2.972602   
+</p>
+
+<p>
+       physiotherapy  maternity_care  obstetrics  geriatrics target  
+13802       1.490255             0.0         0.0         0.0  25.0M  
+13803       8.594050             0.0         0.0         0.0  25.0M  
+13804      22.604437             0.0         0.0         0.0  25.0M  
+13805      10.232308             0.0         0.0         0.0  25.0M  
+13806       8.429659             0.0         0.0         0.0  25.0M  
+</p>
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sex</th>
+      <th>age</th>
+      <th>POSTCODE_3</th>
+      <th>number_citizens</th>
+      <th>hospital_care</th>
+      <th>pharmaceuticals</th>
+      <th>mental_care</th>
+      <th>GP_capitation</th>
+      <th>GP_fee_for_service</th>
+      <th>GP_other</th>
+      <th>dental_care</th>
+      <th>physiotherapy</th>
+      <th>maternity_care</th>
+      <th>obstetrics</th>
+      <th>geriatrics</th>
+      <th>target</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>13802</th>
+      <td>M</td>
+      <td>25.0</td>
+      <td>0.0</td>
+      <td>235</td>
+      <td>421.241149</td>
+      <td>48.540128</td>
+      <td>565.833574</td>
+      <td>53.478723</td>
+      <td>15.990043</td>
+      <td>42.183702</td>
+      <td>1.607149</td>
+      <td>1.490255</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>25.0M</td>
+    </tr>
+    <tr>
+      <th>13803</th>
+      <td>M</td>
+      <td>25.0</td>
+      <td>101.0</td>
+      <td>1042</td>
+      <td>280.514837</td>
+      <td>54.957889</td>
+      <td>131.044347</td>
+      <td>51.035441</td>
+      <td>16.187322</td>
+      <td>33.947015</td>
+      <td>3.483599</td>
+      <td>8.594050</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>25.0M</td>
+    </tr>
+    <tr>
+      <th>13804</th>
+      <td>M</td>
+      <td>25.0</td>
+      <td>102.0</td>
+      <td>302</td>
+      <td>280.264238</td>
+      <td>56.674834</td>
+      <td>54.191556</td>
+      <td>53.066325</td>
+      <td>15.761258</td>
+      <td>29.762450</td>
+      <td>0.000000</td>
+      <td>22.604437</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>25.0M</td>
+    </tr>
+    <tr>
+      <th>13805</th>
+      <td>M</td>
+      <td>25.0</td>
+      <td>103.0</td>
+      <td>325</td>
+      <td>527.719046</td>
+      <td>51.940738</td>
+      <td>994.862554</td>
+      <td>53.742369</td>
+      <td>18.363385</td>
+      <td>34.537046</td>
+      <td>1.208769</td>
+      <td>10.232308</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>25.0M</td>
+    </tr>
+    <tr>
+      <th>13806</th>
+      <td>M</td>
+      <td>25.0</td>
+      <td>105.0</td>
+      <td>1318</td>
+      <td>383.394932</td>
+      <td>69.232117</td>
+      <td>210.617398</td>
+      <td>52.937853</td>
+      <td>17.693247</td>
+      <td>32.583392</td>
+      <td>2.972602</td>
+      <td>8.429659</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>25.0M</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+<p>
+The variable `target` is the variable we would like to predict. Hence, we call it \(y\). We choose a subset of health care expenditure categories (you can experiment with this yourself) as predictors (independent variables) and denote the variables in this subset by \(X\).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython"><span style="color: #BA36A5;">y</span> = df_25_70.target
+
+<span style="color: #BA36A5;">subset_care_categories</span> = [<span style="color: #008000;">'physiotherapy'</span>, <span style="color: #008000;">'obstetrics'</span>, <span style="color: #008000;">'geriatrics'</span>, <span style="color: #008000;">'pharmaceuticals'</span>]
+<span style="color: #BA36A5;">X</span> = df_25_70[subset_care_categories]
+
+
+</pre>
+</div>
+
+<p>
+In this version of the notebook we use four cost categories to separate the different age-sex types. The algorithm below makes this separation in four dimensional space. To get a first intuition, we can consider the data points in two dimensional space, using pairwise combinations of the cost categories. The function `scatter_matrix` does this for each pairwise combination of the cost categories. By turning the variable `target` into integers 0,1,2,3 we can use this variable to color the points. Each category has its own color. For this translation to integers, we use the `.cat.codes` attribute that we saw above.
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-ipython"><span style="color: #0000FF;">from</span> pandas.tools.plotting <span style="color: #0000FF;">import</span> scatter_matrix <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Import the function to plot a scatterplot</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   
+%matplotlib inline
+
+scatter_matrix(
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   X,  <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">drop the none feature columns</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   figsize=(12, 12),                                             <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">square figuresize for the matrix</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   alpha=0.5,                                                    <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">alpha of 0.5 to see overlapping dots</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   s=50,                                                         <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">fixed size of 50</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   c=[plt.cm.get_cmap(<span style="color: #008000;">'rainbow'</span>, 4)(idx) <span style="color: #0000FF;">for</span> idx <span style="color: #0000FF;">in</span> df_25_70[<span style="color: #008000;">'target'</span>].cat.codes],
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   diagonal=<span style="color: #008000;">'kde'</span>);                                              <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">diagonal line are feature distributions</span>
+
+</pre>
+</div>
+
+<p>
+
+</p>
+
+<p>
+&lt;matplotlib.figure.Figure at 0x10cfe5c88&gt;
+<img src="ipython-inline-images/ob-ipython-839aaf4e559c09388a0b7de83fa61130.png" class="img-responsive" alt="ob-ipython-839aaf4e559c09388a0b7de83fa61130.png">
+</p>
+
+<p>
+In order to classify points, we use the k-neighbours method. The idea is as follows. To classify a point, we consider its \(k\) closest neighbours. If the majority of these neighbours have label, say '70M', then we classify this point also as '70M'.
+</p>
+
+<p>
+As the goal here is to predict, we do not worry about concepts like normal distribution, p-values, co-linearity. We simply split the data set into two subsets. We estimate (train) the model on the first data set. Then we apply the estimated model on the other (test) data. For the test data we calculate how often we get it right.
+</p>
+
+<p>
+From scikit-learn we import the function `train_test_split`. This function splits our data \(X,y\) into a training and a testing data set. The size of the test data set is set at 30% here. We can set the seed (21) for the random number generator &#x2013;don't worry if this does not mean anything to you. Finally, we stratify the data such that the distribution of labels is the same in the training and testing data.
+</p>
+
+<p>
+Here we set the number of neighbours equal to \(k=8\). Higher values of \(k\) give smoother results and lead to a "simpler" model but misses local subtleties. The extreme is where \(k=n\) (the number of observations). Then all observations get the same label (the mode of the distribution). 
+</p>
+
+<p>
+Then we fit this model `knn` to our training data. After we fitted the model, we can predict labels in the test data set. The score indicates the percentage of labels we got right in the test data.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython"><span style="color: #0000FF;">from</span> sklearn.model_selection <span style="color: #0000FF;">import</span> train_test_split
+<span style="color: #0000FF;">from</span> sklearn.neighbors <span style="color: #0000FF;">import</span> KNeighborsClassifier
+
+<span style="color: #BA36A5;">X_train</span>, <span style="color: #BA36A5;">X_test</span>, <span style="color: #BA36A5;">y_train</span>, <span style="color: #BA36A5;">y_test</span> = train_test_split(X, y, test_size=0.3, random_state=21, stratify=y)
+<span style="color: #BA36A5;">knn</span> = KNeighborsClassifier(n_neighbors=8)
+knn.fit(X_train, y_train)
+<span style="color: #BA36A5;">y_pred</span> = knn.predict(X_test)
+<span style="color: #0000FF;">print</span>(knn.score(X_test, y_test))
+</pre>
+</div>
+
+<p>
+0.77032967033
+</p>
+
+<p>
+Now let us focus on women with age 25 and 70. Intuitively, with categories like 'obstetrics' and 'geriatrics' we should be able to separate these categories perfectly. And indeed we are.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython"><span style="color: #BA36A5;">df_female</span> = df_25_70[df_25_70[<span style="color: #008000;">'target'</span>].isin([<span style="color: #008000;">'25V'</span>,<span style="color: #008000;">'70V'</span>])]
+
+<span style="color: #BA36A5;">y_f</span> = df_female.target
+
+<span style="color: #BA36A5;">subset_care_categories</span> = [<span style="color: #008000;">'physiotherapy'</span>, <span style="color: #008000;">'obstetrics'</span>, <span style="color: #008000;">'geriatrics'</span>, <span style="color: #008000;">'pharmaceuticals'</span>]
+<span style="color: #BA36A5;">X_f</span> = df_female[subset_care_categories]
+
+scatter_matrix(
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   X_f,  <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">drop the none feature columns</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   figsize=(12, 12),                                             <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">square figuresize for the matrix</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   alpha=0.5,                                                    <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">alpha of 0.5 to see overlapping dots</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   s=50,                                                         <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">fixed size of 50</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   c=[plt.cm.get_cmap(<span style="color: #008000;">'rainbow'</span>, 4)(idx) <span style="color: #0000FF;">for</span> idx <span style="color: #0000FF;">in</span> df_female[<span style="color: #008000;">'target'</span>].cat.codes],
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>   diagonal=<span style="color: #008000;">'kde'</span>);                                              <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">diagonal line are feature distributions</span>
+
+
+</pre>
+</div>
+
+<p>
+
+</p>
+
+<p>
+&lt;matplotlib.figure.Figure at 0x120f415c0&gt;
+<img src="ipython-inline-images/ob-ipython-59e2750aa18291b80acb71d3a3dfbf1a.png" class="img-responsive" alt="ob-ipython-59e2750aa18291b80acb71d3a3dfbf1a.png">
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ipython"><span style="color: #BA36A5;">X_train</span>, <span style="color: #BA36A5;">X_test</span>, <span style="color: #BA36A5;">y_train</span>, <span style="color: #BA36A5;">y_test</span> = train_test_split(X_f, y_f, test_size=0.3, random_state=21, stratify=y_f)
+<span style="color: #BA36A5;">knn</span> = KNeighborsClassifier(n_neighbors=8)
+knn.fit(X_train, y_train)
+<span style="color: #BA36A5;">y_pred</span> = knn.predict(X_test)
+<span style="color: #0000FF;">print</span>(knn.score(X_test, y_test))
+</pre>
+</div>
+
+<p>
+0.991169977925
+</p>
+</div>
+</div>
 </div><div class="col-md-3"><nav id="table-of-contents">
 <div id="text-table-of-contents" class="bs-docs-sidebar">
 <ul class="nav">
@@ -2108,16 +2997,19 @@ tls.embed(<span style="color: #008000;">"https://plot.ly/~janboone/301"</span>)
 <li><a href="#sec-2">2. Health care expenditure and age</a>
 <ul class="nav">
 <li><a href="#sec-2-1">2.1. read in the data</a></li>
+<li><a href="#sec-2-2">2.2. matplotlib</a></li>
+<li><a href="#sec-2-3">2.3. plotly</a></li>
 </ul>
 </li>
+<li><a href="#sec-3">3. A first look at machine learning</a></li>
 </ul>
 </div>
 </nav>
 </div></div></div>
 <footer id="postamble" class="">
 <div><p class="author">Author: Jan Boone</p>
-<p class="date">Created: 2017-07-01 Sat 16:44</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.1 (<a href="http://orgmode.org">Org-mode</a> 9.0.6)</p>
+<p class="date">Created: 2017-09-08 Fri 15:48</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.0.50 (<a href="http://orgmode.org">Org-mode</a> 9.0.9)</p>
 </div>
 </footer>
 </body>
